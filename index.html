@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Creator Partnership CRM</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #121a30;
+      --panel-2: #182341;
+      --muted: #93a0bf;
+      --text: #eef3ff;
+      --accent: #6ea8fe;
+      --accent-2: #8b5cf6;
+      --success: #22c55e;
+      --warn: #f59e0b;
+      --danger: #ef4444;
+      --border: rgba(255,255,255,.08);
+      --shadow: 0 10px 30px rgba(0,0,0,.25);
+      --radius: 18px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #09101d 0%, #0b1020 100%);
+      color: var(--text);
+    }
+    .app {
+      display: grid;
+      grid-template-columns: 270px 1fr;
+      min-height: 100vh;
+    }
+    aside {
+      border-right: 1px solid var(--border);
+      background: rgba(11,16,32,.9);
+      backdrop-filter: blur(10px);
+      padding: 22px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 26px;
+    }
+    .logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: white;
+      box-shadow: var(--shadow);
+    }
+    .brand h1 { margin: 0; font-size: 18px; }
+    .brand p { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
+    nav { display: grid; gap: 8px; }
+    .nav-btn {
+      width: 100%;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text);
+      padding: 12px 14px;
+      border-radius: 14px;
+      text-align: left;
+      cursor: pointer;
+      font-size: 14px;
+      transition: .18s ease;
+    }
+    .nav-btn:hover, .nav-btn.active {
+      background: var(--panel-2);
+      border-color: var(--border);
+    }
+    main {
+      padding: 24px;
+    }
+    .topbar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+    .title h2 { margin: 0; font-size: 28px; }
+    .title p { margin: 4px 0 0; color: var(--muted); }
+    .row { display: grid; gap: 16px; }
+    .row-2 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .row-3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
+    .row-4 { grid-template-columns: repeat(4, minmax(0,1fr)); }
+    .card {
+      background: rgba(18,26,48,.92);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+    .card h3 {
+      margin: 0 0 12px;
+      font-size: 16px;
+    }
+    .kpi {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .kpi .label { color: var(--muted); font-size: 13px; }
+    .kpi .value { font-size: 30px; font-weight: 800; }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    input, select, textarea, button {
+      font: inherit;
+    }
+    input, select, textarea {
+      width: 100%;
+      background: #0c1428;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 11px 12px;
+      border-radius: 12px;
+      outline: none;
+    }
+    textarea { min-height: 100px; resize: vertical; }
+    .btn {
+      border: 1px solid var(--border);
+      background: var(--panel-2);
+      color: var(--text);
+      padding: 11px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+    .btn.primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border: none;
+      color: white;
+      font-weight: 700;
+    }
+    .btn.ghost { background: transparent; }
+    .btn.danger { background: rgba(239,68,68,.14); color: #ffb3b3; }
+    .hidden { display: none !important; }
+    .section { display: none; }
+    .section.active { display: block; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    th, td {
+      text-align: left;
+      padding: 11px 10px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    th { color: var(--muted); font-weight: 600; }
+    .table-wrap {
+      overflow: auto;
+      max-height: 500px;
+    }
+    .pill {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      white-space: nowrap;
+    }
+    .grid-form {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+    }
+    .grid-form .full { grid-column: 1 / -1; }
+    .muted { color: var(--muted); }
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      padding: 14px 16px;
+      background: #0d1730;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      z-index: 1000;
+      max-width: 340px;
+    }
+    .split {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 16px;
+    }
+    .small { font-size: 12px; }
+    .config-note {
+      margin-top: 18px;
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(110,168,254,.12);
+      color: #dbe9ff;
+      border: 1px solid rgba(110,168,254,.2);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .chart-bars {
+      display: grid;
+      gap: 10px;
+    }
+    .bar-row { display: grid; gap: 8px; }
+    .bar-label { font-size: 13px; color: var(--muted); display: flex; justify-content: space-between; }
+    .bar-track {
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    }
+    .actions {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    @media (max-width: 1100px) {
+      .app { grid-template-columns: 1fr; }
+      aside { position: relative; height: auto; }
+      .split, .row-2, .row-3, .row-4 { grid-template-columns: 1fr; }
+      .grid-form { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <div class="brand">
+        <div class="logo">CP</div>
+        <div>
+          <h1>Creator CRM</h1>
+          <p>Partners · Leads · Outreach</p>
+        </div>
+      </div>
+      <nav>
+        <button class="nav-btn active" data-section="dashboard">Dashboard</button>
+        <button class="nav-btn" data-section="companies">Partner</button>
+        <button class="nav-btn" data-section="contacts">Kontakte</button>
+        <button class="nav-btn" data-section="deals">Deals</button>
+        <button class="nav-btn" data-section="placements">Placements</button>
+        <button class="nav-btn" data-section="links">Link-Bibliothek</button>
+        <button class="nav-btn" data-section="social">Social Tracking</button>
+        <button class="nav-btn" data-section="leads">Lead Finder</button>
+        <button class="nav-btn" data-section="outreach">Outreach</button>
+        <button class="nav-btn" data-section="tasks">Tasks</button>
+        <button class="nav-btn" data-section="settings">Einstellungen</button>
+      </nav>
+      <div class="config-note">
+        Trage unten in <b>Einstellungen</b> deine <b>Supabase URL</b> und den <b>Anon Key</b> ein. Die Werte werden lokal im Browser gespeichert.
+      </div>
+    </aside>
+
+    <main>
+      <div class="topbar">
+        <div class="title">
+          <h2 id="pageTitle">Dashboard</h2>
+          <p id="pageSubtitle">Überblick über Partner, Leads, Links und Performance.</p>
+        </div>
+        <div class="actions">
+          <button class="btn ghost" id="reloadAllBtn">Neu laden</button>
+          <button class="btn primary" id="quickSyncBtn">Dashboard Sync</button>
+        </div>
+      </div>
+
+      <section class="section active" id="section-dashboard">
+        <div class="row row-4" id="dashboardKpis"></div>
+        <div class="row row-2" style="margin-top:16px;">
+          <div class="card">
+            <h3>Lead Pipeline</h3>
+            <div class="chart-bars" id="leadPipelineBars"></div>
+          </div>
+          <div class="card">
+            <h3>Top Partner nach Link-Umsatz</h3>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Partner</th><th>Links</th><th>Revenue</th></tr></thead>
+                <tbody id="topPartnersBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="section-companies">
+        <div class="split">
+          <div class="card">
+            <h3>Partner anlegen / bearbeiten</h3>
+            <form id="companyForm" class="grid-form">
+              <input type="hidden" id="company_id" />
+              <div><label>Name</label><input id="company_name" required /></div>
+              <div><label>Website</label><input id="company_website" placeholder="https://..." /></div>
+              <div><label>Instagram</label><input id="company_instagram" placeholder="@brand" /></div>
+              <div><label>TikTok</label><input id="company_tiktok" /></div>
+              <div><label>Land</label><input id="company_country" /></div>
+              <div><label>Sprache</label><input id="company_language" value="de" /></div>
+              <div><label>Kategorie</label><input id="company_category" placeholder="Filament, Tools, Software..." /></div>
+              <div><label>Partner-Typ</label>
+                <select id="company_partner_type">
+                  <option value="brand">Brand</option>
+                  <option value="affiliate">Affiliate</option>
+                  <option value="partner">Partner</option>
+                  <option value="lead">Lead</option>
+                </select>
+              </div>
+              <div><label>Status</label>
+                <select id="company_status">
+                  <option value="lead_new">lead_new</option>
+                  <option value="researched">researched</option>
+                  <option value="qualified">qualified</option>
+                  <option value="contacted">contacted</option>
+                  <option value="interested">interested</option>
+                  <option value="negotiating">negotiating</option>
+                  <option value="active">active</option>
+                  <option value="closed">closed</option>
+                  <option value="rejected">rejected</option>
+                </select>
+              </div>
+              <div><label>Priorität</label>
+                <select id="company_priority">
+                  <option value="low">low</option>
+                  <option value="medium">medium</option>
+                  <option value="high">high</option>
+                </select>
+              </div>
+              <div class="full"><label>Beschreibung</label><textarea id="company_description"></textarea></div>
+              <div class="full"><label>Notizen</label><textarea id="company_notes"></textarea></div>
+              <div class="full actions">
+                <button class="btn primary" type="submit">Speichern</button>
+                <button class="btn" type="button" onclick="App.resetCompanyForm()">Reset</button>
+              </div>
+            </form>
+          </div>
+          <div class="card">
+            <div class="toolbar">
+              <input id="companySearch" placeholder="Partner suchen..." />
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Name</th><th>Status</th><th>Kategorie</th><th>Website</th><th></th></tr></thead>
+                <tbody id="companiesBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="section-contacts">
+        <div class="split">
+          <div class="card">
+            <h3>Kontakt anlegen / bearbeiten</h3>
+            <form id="contactForm" class="grid-form">
+              <input type="hidden" id="contact_id" />
+              <div><label>Firma</label><select id="contact_company_id"></select></div>
+              <div><label>Name</label><input id="contact_full_name" required /></div>
+              <div><label>Rolle</label><input id="contact_role" /></div>
+              <div><label>E-Mail</label><input id="contact_email" type="email" /></div>
+              <div><label>Telefon</label><input id="contact_phone" /></div>
+              <div><label>LinkedIn</label><input id="contact_linkedin_url" /></div>
+              <div><label>Channel</label>
+                <select id="contact_preferred_channel">
+                  <option value="email">email</option>
+                  <option value="instagram_dm">instagram_dm</option>
+                  <option value="linkedin">linkedin</option>
+                </select>
+              </div>
+              <div><label>Primary</label>
+                <select id="contact_is_primary"><option value="true">true</option><option value="false">false</option></select>
+              </div>
+              <div class="full"><label>Notizen</label><textarea id="contact_notes"></textarea></div>
+              <div class="full actions">
+                <button class="btn primary" type="submit">Speichern</button>
+                <button class="btn" type="button" onclick="App.resetContactForm()">Reset</button>
+              </div>
+            </form>
+          </div>
+          <div class="card">
+            <div class="toolbar"><input id="contactSearch" placeholder="Kontakt suchen..." /></div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Name</th><th>Firma</th><th>E-Mail</th><th>Rolle</th><th></th></tr></thead>
+                <tbody id="contactsBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="section-deals">
+        <div class="split">
+          <div class="card">
+            <h3>Deal anlegen / bearbeiten</h3>
+            <form id="dealForm" class="grid-form">
+              <input type="hidden" id="deal_id" />
+              <div><label>Firma</label><select id="deal_company_id"></select></div>
+              <div><label>Titel</label><input id="deal_title" required /></div>
+              <div><label>Deal-Typ</label>
+                <select id="deal_deal_type">
+                  <option value="affiliate">affiliate</option>
+                  <option value="paid_post">paid_post</option>
+                  <option value="product_seeding">product_seeding</option>
+                  <option value="long_term">long_term</option>
+                  <option value="discount_code">discount_code</option>
+                  <option value="sponsoring">sponsoring</option>
+                </select>
+              </div>
+              <div><label>Status</label>
+                <select id="deal_status">
+                  <option value="draft">draft</option>
+                  <option value="active">active</option>
+                  <option value="completed">completed</option>
+                  <option value="cancelled">cancelled</option>
+                </select>
+              </div>
+              <div><label>Startdatum</label><input id="deal_start_date" type="date" /></div>
+              <div><label>Enddatum</label><input id="deal_end_date" type="date" /></div>
+              <div><label>Betrag</label><input id="deal_amount" type="number" step="0.01" /></div>
+              <div><label>Währung</label><input id="deal_currency" value="EUR" /></div>
+              <div><label>Coupon Code</label><input id="deal_coupon_code" /></div>
+              <div><label>Vertrag URL</label><input id="deal_contract_url" /></div>
+              <div class="full"><label>Notizen</label><textarea id="deal_notes"></textarea></div>
+              <div class="full actions">
+                <button class="btn primary" type="submit">Speichern</button>
+                <button class="btn" type="button" onclick="App.resetDealForm()">Reset</button>
+              </div>
+            </form>
+          </div>
+          <div class="card">
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Titel</th><th>Firma</th><th>Typ</th><th>Status</th><th>Betrag</th><th></th></tr></thead>
+                <tbody id="dealsBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="section-placements">
+        <div class="split">
+          <div class="card">
+            <h3>Placement / Content-Eintrag</h3>
+            <form id="placementForm" class="grid-form">
+              <input type="hidden" id="placement_id" />
+              <div><label>Firma</label><select id="placement_company_id"></select></div>
+              <div><label>Deal</label><select id="placement_deal_id"></select></div>
+              <div><label>Plattform</label>
+                <select id="placement_platform">
+                  <option value="youtube">youtube</option>
+                  <option value="instagram">instagram</option>
+                  <option value="tiktok">tiktok</option>
+                  <option value="website">website</option>
+                </select>
+              </div>
+              <div><label>Content Typ</label>
+                <select id="placement_content_type">
+                  <option value="video">video</option>
+                  <option value="reel">reel</option>
+                  <option value="story">story</option>
+                  <option value="post">post</option>
+                  <option value="short">short</option>
+                </select>
+              </div>
+              <div><label>Titel</label><input id="placement_content_title" /></div>
+              <div><label>Content URL</label><input id="placement_content_url" /></div>
+              <div><label>Veröffentlicht am</label><input id="placement_published_at" type="date" /></div>
+              <div><label>Timestamp im Video</label><input id="placement_video_timestamp" placeholder="z. B. 02:31" /></div>
+              <div><label>Mention Typ</label><input id="placement_mention_type" placeholder="Beschreibung, verbale Erwähnung, CTA" /></div>
+              <div class="full"><label>Caption / CTA</label><textarea id="placement_caption_text"></textarea></div>
+              <div class="full"><label>Notizen</label><textarea id="placement_notes"></textarea></div>
+              <div class="full actions">
+                <button class="btn primary" type="submit">Speichern</button>
+                <button class="btn" type="button" onclick="App.resetPlacementForm()">Reset</button>
+              </div>
+            </form>
+          </div>
+          <div class="card">
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Titel</th><th>Plattform</th><th>Datum</th><th>Firma</th><th></th></tr></thead>
+                <tbody id="placementsBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="section-links">
+        <div class="split">
+          <div class="card">
+            <h3>Link-Bibliothek</h3>
+            <form id="linkForm" class="grid-form">
+              <input type="hidden" id="link_id" />
+              <div><label>Firma</label><select id="link_company_id"></select></div>
+              <div><label>Deal</label><select id="link_deal_id"></select></div>
+              <div><label>Placement</label><select id="link_placement_id"></select></div>
+              <div><label>Link Typ</label>
+                <select id="link_link_type">
+                  <option value="affiliate">affiliate</option>
+                  <option value="discount">discount</option>
+                  <option value="landingpage">landingpage</option>
+                  <option value="product">product</option>
+                </select>
+              </div>
+              <div class="full"><label>Original URL</label><input id="link_original_url" required /></div>
+              <div class="full"><label>Short URL</label><input id="link_short_url" /></div>
+              <div><label>UTM Source</label><input id="link_utm_source" /></div>
+              <div><label>UTM Medium</label><input id="link_utm_medium" /></div>
+              <div><label>UTM Campaign</label><input id="link_utm_campaign" /></div>
+              <div><label>UTM Content</label><input id="link_utm_content" /></div>
+              <div><label>Coupon Code</label><input id="link_coupon_code" /></div>
+              <div><label>Klicks</label><input id="link_clicks" type="number" value="0" /></div>
+              <div><label>Conversions</label><input id="link_conversions" type="number" value="0" /></div>
+              <div><label>Revenue</label><input id="link_revenue" type="number" step="0.01" value="0" /></div>
+              <div><label>Provision</label><input id="link_commission_earned" type="number" step="0.01" value="0" /></div>
+              <div class="full actions">
+                <button class="btn primary" type="submit">Speichern</button>
+                <button class="btn" type="button" onclick="App.resetLinkForm()">Reset</button>
+              </div>
+            </form>
+          </div>
+          <div class="card">
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Firma</th><th>Typ</th><th>Klicks</th><th>Revenue</th><th>Placement</th><th></th></tr></thead>
+                <tbody id="linksBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="section-social">
+        <div class="split">
+          <div class="card">
+            <h3>Social Account Snapshot</h3>
+            <form id="socialForm" class="grid-form">
+              <div><label>Account</label><select id="social_account_id"></select></div>
+              <div><label>Datum</label><input id="social_snapshot_date" type="date" /></div>
+              <div><label>Follower</label><input id="social_followers" type="number" value="0" /></div>
+              <div><label>Following</label><input id="social_following" type="number" value="0" /></div>
+              <div><label>Posts</label><input id="social_posts_count" type="number" value="0" /></div>
+              <div><label>Impressions</label><input id="social_impressions" type="number" value="0" /></div>
+              <div><label>Reach</label><input id="social_reach" type="number" value="0" /></div>
+              <div><label>Profilaufrufe</label><input id="social_profile_visits" type="number" value="0" /></div>
+              <div><label>Website Klicks</label><input id="social_website_clicks" type="number" value="0" /></div>
+              <div><label>Likes</label><input id="social_likes" type="number" value="0" /></div>
+              <div><label>Kommentare</label><input id="social_comments" type="number" value="0" /></div>
+              <div><label>Shares</label><input id="social_shares" type="number" value="0" /></div>
+              <div><label>Saves</label><input id="social_saves" type="number" value="0" /></div>
+              <div><label>Views</label><input id="social_views" type="number" value="0" /></div>
+              <div class="full actions"><button class="btn primary" type="submit">Snapshot speichern</button></div>
+            </form>
+          </div>
+          <div class="card">
+            <h3>Neuester Snapshot je Account</h3>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Account</th><th>Datum</th><th>Follower</th><th>Reach</th><th>Klicks</th></tr></thead>
+                <tbody id="socialBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="section-leads">
+        <div class="split">
+          <div class="card">
+            <h3>Lead manuell anlegen</h3>
+            <form id="leadForm" class="grid-form">
+              <input type="hidden" id="lead_id" />
+              <div><label>Firmenname</label><input id="lead_company_name" required /></div>
+              <div><label>Website</label><input id="lead_website" /></div>
+              <div><label>E-Mail</label><input id="lead_email" type="email" /></div>
+              <div><label>Instagram</label><input id="lead_instagram_handle" /></div>
+              <div><label>Land</label><input id="lead_country" /></div>
+              <div><label>Kategorie</label><input id="lead_category" /></div>
+              <div><label>Quelle URL</label><input id="lead_source_url" /></div>
+              <div><label>Quelle Typ</label><input id="lead_source_type" placeholder="google, directory, manual" /></div>
+              <div><label>Lead Score</label><input id="lead_lead_score" type="number" min="0" max="100" value="50" /></div>
+              <div><label>Qualification</label>
+                <select id="lead_qualification_status">
+                  <option value="new">new</option>
+                  <option value="qualified">qualified</option>
+                  <option value="unqualified">unqualified</option>
+                </select>
+              </div>
+              <div><label>Outreach</label>
+                <select id="lead_outreach_status">
+                  <option value="not_started">not_started</option>
+                  <option value="drafted">drafted</option>
+                  <option value="sent">sent</option>
+                  <option value="replied">replied</option>
+                </select>
+              </div>
+              <div class="full"><label>Summary</label><textarea id="lead_summary"></textarea></div>
+              <div class="full"><label>Notizen</label><textarea id="lead_notes"></textarea></div>
+              <div class="full actions">
+                <button class="btn primary" type="submit">Lead speichern</button>
+                <button class="btn" type="button" onclick="App.resetLeadForm()">Reset</button>
+              </div>
+            </form>
+          </div>
+          <div class="card">
+            <div class="toolbar">
+              <input id="leadSearch" placeholder="Lead suchen..." />
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Firma</th><th>Score</th><th>Quali</th><th>Outreach</th><th></th></tr></thead>
+                <tbody id="leadsBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="section-outreach">
+        <div class="split">
+          <div class="card">
+            <h3>Outreach Nachricht anlegen</h3>
+            <form id="messageForm" class="grid-form">
+              <input type="hidden" id="message_id" />
+              <div><label>Firma</label><select id="message_company_id"></select></div>
+              <div><label>Kontakt</label><select id="message_contact_id"></select></div>
+              <div><label>Lead</label><select id="message_lead_candidate_id"></select></div>
+              <div><label>Channel</label>
+                <select id="message_channel">
+                  <option value="email">email</option>
+                  <option value="instagram_dm">instagram_dm</option>
+                </select>
+              </div>
+              <div class="full"><label>Betreff</label><input id="message_subject" /></div>
+              <div class="full"><label>Body</label><textarea id="message_body"></textarea></div>
+              <div><label>Status</label>
+                <select id="message_status">
+                  <option value="draft">draft</option>
+                  <option value="queued">queued</option>
+                  <option value="sent">sent</option>
+                  <option value="replied">replied</option>
+                  <option value="failed">failed</option>
+                </select>
+              </div>
+              <div><label>Follow-up Nummer</label><input id="message_follow_up_number" type="number" value="0" /></div>
+              <div class="full actions"><button class="btn primary" type="submit">Nachricht speichern</button></div>
+            </form>
+          </div>
+          <div class="card">
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Betreff</th><th>Status</th><th>Firma</th><th>Kontakt</th><th>Gesendet</th></tr></thead>
+                <tbody id="messagesBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="section-tasks">
+        <div class="split">
+          <div class="card">
+            <h3>Task anlegen</h3>
+            <form id="taskForm" class="grid-form">
+              <input type="hidden" id="task_id" />
+              <div><label>Titel</label><input id="task_title" required /></div>
+              <div><label>Fälligkeitsdatum</label><input id="task_due_date" type="date" /></div>
+              <div><label>Status</label>
+                <select id="task_status">
+                  <option value="open">open</option>
+                  <option value="in_progress">in_progress</option>
+                  <option value="done">done</option>
+                </select>
+              </div>
+              <div><label>Priorität</label>
+                <select id="task_priority">
+                  <option value="low">low</option>
+                  <option value="medium">medium</option>
+                  <option value="high">high</option>
+                </select>
+              </div>
+              <div><label>Typ</label><input id="task_related_type" placeholder="company, deal, lead..." /></div>
+              <div><label>Entity ID</label><input id="task_related_id" /></div>
+              <div class="full"><label>Notizen</label><textarea id="task_notes"></textarea></div>
+              <div class="full actions"><button class="btn primary" type="submit">Task speichern</button></div>
+            </form>
+          </div>
+          <div class="card">
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Titel</th><th>Due</th><th>Status</th><th>Priorität</th><th></th></tr></thead>
+                <tbody id="tasksBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="section-settings">
+        <div class="card">
+          <h3>Supabase Verbindung</h3>
+          <form id="settingsForm" class="grid-form">
+            <div class="full"><label>Supabase URL</label><input id="supabase_url" placeholder="https://xyzcompany.supabase.co" /></div>
+            <div class="full"><label>Supabase Anon Key</label><textarea id="supabase_anon_key" placeholder="eyJ..."></textarea></div>
+            <div class="full actions">
+              <button class="btn primary" type="submit">Verbindung speichern</button>
+              <button class="btn" type="button" id="testConnectionBtn">Verbindung testen</button>
+            </div>
+          </form>
+          <p class="muted">Diese Werte werden nur lokal im Browser gespeichert.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const App = {
+      state: {
+        supabase: null,
+        companies: [],
+        contacts: [],
+        deals: [],
+        placements: [],
+        links: [],
+        socialAccounts: [],
+        socialSnapshots: [],
+        leads: [],
+        messages: [],
+        tasks: [],
+        dashboard: []
+      },
+
+      async init() {
+        this.bindNav();
+        this.bindForms();
+        this.loadStoredConfig();
+        this.setTodayDefaults();
+        this.renderEmptySelects();
+      },
+
+      bindNav() {
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('section-' + btn.dataset.section).classList.add('active');
+            document.getElementById('pageTitle').textContent = btn.textContent;
+            const subtitles = {
+              dashboard: 'Überblick über Partner, Leads, Links und Performance.',
+              companies: 'Verwalte Brands, Partner und Affiliate-Firmen.',
+              contacts: 'Pflege Ansprechpartner und Kommunikationskanäle.',
+              deals: 'Behalte laufende und geplante Kooperationen im Blick.',
+              placements: 'Dokumentiere Videos, Reels, Stories und Posts.',
+              links: 'Alle Partnerlinks mit Performance, Placement und Umsatz.',
+              social: 'Follower und KPIs als historische Snapshots tracken.',
+              leads: 'Neue potenzielle Partner sammeln und qualifizieren.',
+              outreach: 'Outreach-Nachrichten, Drafts und Statusübersicht.',
+              tasks: 'Offene Schritte, Follow-ups und Erinnerungen.',
+              settings: 'Supabase-Verbindung und lokale Konfiguration.'
+            };
+            document.getElementById('pageSubtitle').textContent = subtitles[btn.dataset.section] || '';
+          });
+        });
+
+        document.getElementById('reloadAllBtn').addEventListener('click', () => this.loadAll());
+        document.getElementById('quickSyncBtn').addEventListener('click', () => this.loadDashboardOnly());
+      },
+
+      bindForms() {
+        document.getElementById('settingsForm').addEventListener('submit', e => { e.preventDefault(); this.saveConfig(); });
+        document.getElementById('testConnectionBtn').addEventListener('click', () => this.testConnection());
+        document.getElementById('companyForm').addEventListener('submit', e => { e.preventDefault(); this.saveCompany(); });
+        document.getElementById('contactForm').addEventListener('submit', e => { e.preventDefault(); this.saveContact(); });
+        document.getElementById('dealForm').addEventListener('submit', e => { e.preventDefault(); this.saveDeal(); });
+        document.getElementById('placementForm').addEventListener('submit', e => { e.preventDefault(); this.savePlacement(); });
+        document.getElementById('linkForm').addEventListener('submit', e => { e.preventDefault(); this.saveLink(); });
+        document.getElementById('socialForm').addEventListener('submit', e => { e.preventDefault(); this.saveSocialSnapshot(); });
+        document.getElementById('leadForm').addEventListener('submit', e => { e.preventDefault(); this.saveLead(); });
+        document.getElementById('messageForm').addEventListener('submit', e => { e.preventDefault(); this.saveMessage(); });
+        document.getElementById('taskForm').addEventListener('submit', e => { e.preventDefault(); this.saveTask(); });
+        document.getElementById('companySearch').addEventListener('input', e => this.renderCompanies(e.target.value));
+        document.getElementById('contactSearch').addEventListener('input', e => this.renderContacts(e.target.value));
+        document.getElementById('leadSearch').addEventListener('input', e => this.renderLeads(e.target.value));
+      },
+
+      loadStoredConfig() {
+        document.getElementById('supabase_url').value = localStorage.getItem('crm_supabase_url') || '';
+        document.getElementById('supabase_anon_key').value = localStorage.getItem('crm_supabase_anon_key') || '';
+        if (document.getElementById('supabase_url').value && document.getElementById('supabase_anon_key').value) {
+          this.setupSupabase();
+          this.loadAll();
+        }
+      },
+
+      setTodayDefaults() {
+        const today = new Date().toISOString().slice(0,10);
+        ['social_snapshot_date','deal_start_date','placement_published_at','task_due_date'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el && !el.value) el.value = today;
+        });
+      },
+
+      saveConfig() {
+        const url = document.getElementById('supabase_url').value.trim();
+        const key = document.getElementById('supabase_anon_key').value.trim();
+        localStorage.setItem('crm_supabase_url', url);
+        localStorage.setItem('crm_supabase_anon_key', key);
+        this.setupSupabase();
+        this.toast('Supabase Verbindung gespeichert.');
+        this.loadAll();
+      },
+
+      setupSupabase() {
+        const url = localStorage.getItem('crm_supabase_url');
+        const key = localStorage.getItem('crm_supabase_anon_key');
+        if (!url || !key) return;
+        this.state.supabase = window.supabase.createClient(url, key);
+      },
+
+      async testConnection() {
+        try {
+          this.setupSupabase();
+          if (!this.state.supabase) throw new Error('Supabase nicht konfiguriert');
+          const { error } = await this.state.supabase.from('companies').select('id').limit(1);
+          if (error) throw error;
+          this.toast('Verbindung erfolgreich getestet.');
+        } catch (err) {
+          this.toast('Verbindung fehlgeschlagen: ' + err.message, true);
+        }
+      },
+
+      async loadAll() {
+        if (!this.state.supabase) {
+          this.toast('Bitte zuerst Supabase URL und Anon Key eintragen.', true);
+          return;
+        }
+        try {
+          await Promise.all([
+            this.loadCompanies(),
+            this.loadContacts(),
+            this.loadDeals(),
+            this.loadPlacements(),
+            this.loadLinks(),
+            this.loadSocialAccounts(),
+            this.loadSocialSnapshots(),
+            this.loadLeads(),
+            this.loadMessages(),
+            this.loadTasks(),
+            this.loadDashboardOnly()
+          ]);
+          this.populateRelationSelects();
+          this.toast('Daten aktualisiert.');
+        } catch (err) {
+          this.toast('Fehler beim Laden: ' + err.message, true);
+        }
+      },
+
+      async loadDashboardOnly() {
+        if (!this.state.supabase) return;
+        try {
+          const { data, error } = await this.state.supabase.from('dashboard_kpis').select('*');
+          if (error) throw error;
+          this.state.dashboard = data || [];
+          this.renderDashboard();
+        } catch (err) {
+          console.error(err);
+        }
+      },
+
+      async loadCompanies() {
+        const { data, error } = await this.state.supabase.from('companies').select('*').order('created_at', { ascending: false });
+        if (error) throw error;
+        this.state.companies = data || [];
+        this.renderCompanies();
+      },
+
+      async loadContacts() {
+        const { data, error } = await this.state.supabase.from('contacts').select('*, companies(name)').order('created_at', { ascending: false });
+        if (error) throw error;
+        this.state.contacts = data || [];
+        this.renderContacts();
+      },
+
+      async loadDeals() {
+        const { data, error } = await this.state.supabase.from('deals').select('*, companies(name)').order('created_at', { ascending: false });
+        if (error) throw error;
+        this.state.deals = data || [];
+        this.renderDeals();
+      },
+
+      async loadPlacements() {
+        const { data, error } = await this.state.supabase.from('placements').select('*, companies(name), deals(title)').order('published_at', { ascending: false, nullsFirst: false });
+        if (error) throw error;
+        this.state.placements = data || [];
+        this.renderPlacements();
+      },
+
+      async loadLinks() {
+        const { data, error } = await this.state.supabase.from('link_library_view').select('*').order('created_at', { ascending: false });
+        if (error) {
+          const fallback = await this.state.supabase.from('tracking_links').select('*').order('created_at', { ascending: false });
+          if (fallback.error) throw fallback.error;
+          this.state.links = fallback.data || [];
+        } else {
+          this.state.links = data || [];
+        }
+        this.renderLinks();
+      },
+
+      async loadSocialAccounts() {
+        const { data, error } = await this.state.supabase.from('social_accounts').select('*').order('created_at', { ascending: false });
+        if (error) throw error;
+        this.state.socialAccounts = data || [];
+      },
+
+      async loadSocialSnapshots() {
+        const { data, error } = await this.state.supabase.from('social_snapshots').select('*, social_accounts(handle, platform)').order('snapshot_date', { ascending: false });
+        if (error) throw error;
+        this.state.socialSnapshots = data || [];
+        this.renderSocial();
+      },
+
+      async loadLeads() {
+        const { data, error } = await this.state.supabase.from('lead_candidates').select('*').order('created_at', { ascending: false });
+        if (error) throw error;
+        this.state.leads = data || [];
+        this.renderLeads();
+      },
+
+      async loadMessages() {
+        const { data, error } = await this.state.supabase.from('outreach_messages').select('*, companies(name), contacts(full_name), lead_candidates(company_name)').order('created_at', { ascending: false });
+        if (error) throw error;
+        this.state.messages = data || [];
+        this.renderMessages();
+      },
+
+      async loadTasks() {
+        const { data, error } = await this.state.supabase.from('tasks').select('*').order('due_date', { ascending: true, nullsFirst: false });
+        if (error) throw error;
+        this.state.tasks = data || [];
+        this.renderTasks();
+      },
+
+      renderDashboard() {
+        const kpiContainer = document.getElementById('dashboardKpis');
+        const map = Object.fromEntries((this.state.dashboard || []).map(x => [x.metric_key, x.metric_value]));
+        const cards = [
+          ['Partner', map.companies_total || this.state.companies.length || 0],
+          ['Deals aktiv', map.deals_active || this.state.deals.filter(d => d.status === 'active').length || 0],
+          ['Leads offen', map.leads_open || this.state.leads.filter(l => l.outreach_status !== 'replied').length || 0],
+          ['Offene Tasks', map.tasks_open || this.state.tasks.filter(t => t.status !== 'done').length || 0],
+          ['Links', map.tracking_links_total || this.state.links.length || 0],
+          ['Link Revenue', Number(map.tracking_links_revenue || 0).toFixed(2) + ' €'],
+          ['Outreach gesendet', map.outreach_sent || this.state.messages.filter(m => m.status === 'sent').length || 0],
+          ['Social Snapshots', map.social_snapshots_total || this.state.socialSnapshots.length || 0]
+        ];
+        kpiContainer.innerHTML = cards.map(([label, value]) => `<div class="card"><div class="kpi"><div class="label">${label}</div><div class="value">${value}</div></div></div>`).join('');
+
+        const statuses = ['new','qualified','unqualified'];
+        const counts = statuses.map(s => this.state.leads.filter(l => l.qualification_status === s).length);
+        const max = Math.max(1, ...counts);
+        document.getElementById('leadPipelineBars').innerHTML = statuses.map((s, i) => `
+          <div class="bar-row">
+            <div class="bar-label"><span>${s}</span><span>${counts[i]}</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:${(counts[i]/max)*100}%"></div></div>
+          </div>
+        `).join('');
+
+        const byCompany = {};
+        this.state.links.forEach(l => {
+          const name = l.company_name || this.companyNameById(l.company_id) || '—';
+          if (!byCompany[name]) byCompany[name] = { count: 0, revenue: 0 };
+          byCompany[name].count += 1;
+          byCompany[name].revenue += Number(l.revenue || 0);
+        });
+        document.getElementById('topPartnersBody').innerHTML = Object.entries(byCompany)
+          .sort((a,b) => b[1].revenue - a[1].revenue)
+          .slice(0,8)
+          .map(([name, v]) => `<tr><td>${name}</td><td>${v.count}</td><td>${v.revenue.toFixed(2)} €</td></tr>`)
+          .join('') || '<tr><td colspan="3" class="muted">Noch keine Daten</td></tr>';
+      },
+
+      renderCompanies(search='') {
+        const q = search.toLowerCase();
+        const rows = this.state.companies.filter(c => !q || [c.name,c.category,c.website,c.status].join(' ').toLowerCase().includes(q));
+        document.getElementById('companiesBody').innerHTML = rows.map(c => `
+          <tr>
+            <td><b>${c.name || ''}</b><div class="small muted">${c.country || ''}</div></td>
+            <td><span class="pill">${c.status || ''}</span></td>
+            <td>${c.category || ''}</td>
+            <td>${c.website ? `<a href="${c.website}" target="_blank">${c.website}</a>` : ''}</td>
+            <td class="actions">
+              <button class="btn" onclick="App.editCompany('${c.id}')">Bearbeiten</button>
+              <button class="btn danger" onclick="App.deleteRow('companies','${c.id}')">Löschen</button>
+            </td>
+          </tr>
+        `).join('') || '<tr><td colspan="5" class="muted">Keine Partner gefunden.</td></tr>';
+      },
+
+      renderContacts(search='') {
+        const q = search.toLowerCase();
+        const rows = this.state.contacts.filter(c => !q || [c.full_name,c.email,c.role,c.companies?.name].join(' ').toLowerCase().includes(q));
+        document.getElementById('contactsBody').innerHTML = rows.map(c => `
+          <tr>
+            <td><b>${c.full_name || ''}</b></td>
+            <td>${c.companies?.name || this.companyNameById(c.company_id) || ''}</td>
+            <td>${c.email || ''}</td>
+            <td>${c.role || ''}</td>
+            <td class="actions">
+              <button class="btn" onclick="App.editContact('${c.id}')">Bearbeiten</button>
+              <button class="btn danger" onclick="App.deleteRow('contacts','${c.id}')">Löschen</button>
+            </td>
+          </tr>
+        `).join('') || '<tr><td colspan="5" class="muted">Keine Kontakte gefunden.</td></tr>';
+      },
+
+      renderDeals() {
+        document.getElementById('dealsBody').innerHTML = this.state.deals.map(d => `
+          <tr>
+            <td><b>${d.title || ''}</b></td>
+            <td>${d.companies?.name || this.companyNameById(d.company_id) || ''}</td>
+            <td>${d.deal_type || ''}</td>
+            <td><span class="pill">${d.status || ''}</span></td>
+            <td>${d.amount ? `${Number(d.amount).toFixed(2)} ${d.currency || 'EUR'}` : ''}</td>
+            <td class="actions">
+              <button class="btn" onclick="App.editDeal('${d.id}')">Bearbeiten</button>
+              <button class="btn danger" onclick="App.deleteRow('deals','${d.id}')">Löschen</button>
+            </td>
+          </tr>
+        `).join('') || '<tr><td colspan="6" class="muted">Keine Deals vorhanden.</td></tr>';
+      },
+
+      renderPlacements() {
+        document.getElementById('placementsBody').innerHTML = this.state.placements.map(p => `
+          <tr>
+            <td><b>${p.content_title || ''}</b><div class="small muted">${p.video_timestamp || ''}</div></td>
+            <td>${p.platform || ''} / ${p.content_type || ''}</td>
+            <td>${p.published_at || ''}</td>
+            <td>${p.companies?.name || this.companyNameById(p.company_id) || ''}</td>
+            <td class="actions">
+              <button class="btn" onclick="App.editPlacement('${p.id}')">Bearbeiten</button>
+              <button class="btn danger" onclick="App.deleteRow('placements','${p.id}')">Löschen</button>
+            </td>
+          </tr>
+        `).join('') || '<tr><td colspan="5" class="muted">Keine Placements vorhanden.</td></tr>';
+      },
+
+      renderLinks() {
+        document.getElementById('linksBody').innerHTML = this.state.links.map(l => `
+          <tr>
+            <td><b>${l.company_name || this.companyNameById(l.company_id) || ''}</b><div class="small muted">${l.short_url || l.original_url || ''}</div></td>
+            <td>${l.link_type || ''}</td>
+            <td>${l.clicks || 0}</td>
+            <td>${Number(l.revenue || 0).toFixed(2)} €</td>
+            <td>${l.placement_title || this.placementTitleById(l.placement_id) || ''}</td>
+            <td class="actions">
+              <button class="btn" onclick="App.editLink('${l.id}')">Bearbeiten</button>
+              <button class="btn danger" onclick="App.deleteRow('tracking_links','${l.id}')">Löschen</button>
+            </td>
+          </tr>
+        `).join('') || '<tr><td colspan="6" class="muted">Keine Links vorhanden.</td></tr>';
+      },
+
+      renderSocial() {
+        const latestByAccount = {};
+        this.state.socialSnapshots.forEach(s => {
+          if (!latestByAccount[s.social_account_id]) latestByAccount[s.social_account_id] = s;
+        });
+        document.getElementById('socialBody').innerHTML = Object.values(latestByAccount).map(s => `
+          <tr>
+            <td>${s.social_accounts?.handle || this.socialHandleById(s.social_account_id) || ''}</td>
+            <td>${s.snapshot_date || ''}</td>
+            <td>${s.followers || 0}</td>
+            <td>${s.reach || 0}</td>
+            <td>${s.website_clicks || 0}</td>
+          </tr>
+        `).join('') || '<tr><td colspan="5" class="muted">Noch keine Snapshots.</td></tr>';
+      },
+
+      renderLeads(search='') {
+        const q = search.toLowerCase();
+        const rows = this.state.leads.filter(l => !q || [l.company_name,l.website,l.email,l.category,l.summary].join(' ').toLowerCase().includes(q));
+        document.getElementById('leadsBody').innerHTML = rows.map(l => `
+          <tr>
+            <td><b>${l.company_name || ''}</b><div class="small muted">${l.email || ''}</div></td>
+            <td>${l.lead_score || 0}</td>
+            <td><span class="pill">${l.qualification_status || ''}</span></td>
+            <td>${l.outreach_status || ''}</td>
+            <td class="actions">
+              <button class="btn" onclick="App.editLead('${l.id}')">Bearbeiten</button>
+              <button class="btn danger" onclick="App.deleteRow('lead_candidates','${l.id}')">Löschen</button>
+            </td>
+          </tr>
+        `).join('') || '<tr><td colspan="5" class="muted">Keine Leads vorhanden.</td></tr>';
+      },
+
+      renderMessages() {
+        document.getElementById('messagesBody').innerHTML = this.state.messages.map(m => `
+          <tr>
+            <td><b>${m.subject || ''}</b><div class="small muted">${m.channel || ''}</div></td>
+            <td><span class="pill">${m.status || ''}</span></td>
+            <td>${m.companies?.name || this.companyNameById(m.company_id) || m.lead_candidates?.company_name || ''}</td>
+            <td>${m.contacts?.full_name || this.contactNameById(m.contact_id) || ''}</td>
+            <td>${m.sent_at ? String(m.sent_at).slice(0,10) : ''}</td>
+          </tr>
+        `).join('') || '<tr><td colspan="5" class="muted">Keine Outreach Nachrichten.</td></tr>';
+      },
+
+      renderTasks() {
+        document.getElementById('tasksBody').innerHTML = this.state.tasks.map(t => `
+          <tr>
+            <td><b>${t.title || ''}</b><div class="small muted">${t.related_type || ''} ${t.related_id || ''}</div></td>
+            <td>${t.due_date || ''}</td>
+            <td><span class="pill">${t.status || ''}</span></td>
+            <td>${t.priority || ''}</td>
+            <td class="actions">
+              <button class="btn" onclick="App.editTask('${t.id}')">Bearbeiten</button>
+              <button class="btn danger" onclick="App.deleteRow('tasks','${t.id}')">Löschen</button>
+            </td>
+          </tr>
+        `).join('') || '<tr><td colspan="5" class="muted">Keine Tasks vorhanden.</td></tr>';
+      },
+
+      renderEmptySelects() {
+        ['contact_company_id','deal_company_id','placement_company_id','link_company_id','message_company_id'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.innerHTML = '<option value="">Bitte zuerst Partner anlegen</option>';
+        });
+      },
+
+      populateRelationSelects() {
+        const companyOptions = '<option value="">Bitte wählen</option>' + this.state.companies.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+        ['contact_company_id','deal_company_id','placement_company_id','link_company_id','message_company_id'].forEach(id => {
+          const el = document.getElementById(id); if (el) el.innerHTML = companyOptions;
+        });
+
+        const dealOptions = '<option value="">Bitte wählen</option>' + this.state.deals.map(d => `<option value="${d.id}">${d.title}</option>`).join('');
+        ['placement_deal_id','link_deal_id'].forEach(id => {
+          const el = document.getElementById(id); if (el) el.innerHTML = dealOptions;
+        });
+
+        const placementOptions = '<option value="">Bitte wählen</option>' + this.state.placements.map(p => `<option value="${p.id}">${p.content_title || p.content_url || p.id}</option>`).join('');
+        const placementEl = document.getElementById('link_placement_id');
+        if (placementEl) placementEl.innerHTML = placementOptions;
+
+        const contactOptions = '<option value="">Bitte wählen</option>' + this.state.contacts.map(c => `<option value="${c.id}">${c.full_name}${c.email ? ' — ' + c.email : ''}</option>`).join('');
+        document.getElementById('message_contact_id').innerHTML = contactOptions;
+
+        const leadOptions = '<option value="">Bitte wählen</option>' + this.state.leads.map(l => `<option value="${l.id}">${l.company_name}</option>`).join('');
+        document.getElementById('message_lead_candidate_id').innerHTML = leadOptions;
+
+        const socialOptions = '<option value="">Bitte wählen</option>' + this.state.socialAccounts.map(a => `<option value="${a.id}">${a.platform} — ${a.handle}</option>`).join('');
+        document.getElementById('social_account_id').innerHTML = socialOptions || '<option value="">Bitte zuerst social_accounts befüllen</option>';
+      },
+
+      async saveCompany() {
+        const payload = {
+          name: v('company_name'), website: v('company_website'), instagram_handle: v('company_instagram'), tiktok_handle: v('company_tiktok'),
+          country: v('company_country'), language: v('company_language'), category: v('company_category'), partner_type: v('company_partner_type'),
+          status: v('company_status'), priority: v('company_priority'), description: v('company_description'), notes: v('company_notes')
+        };
+        await this.upsert('companies', 'company_id', payload, this.resetCompanyForm.bind(this), this.loadAll.bind(this));
+      },
+      async saveContact() {
+        const payload = {
+          company_id: nullable(v('contact_company_id')), full_name: v('contact_full_name'), role: v('contact_role'), email: v('contact_email'), phone: v('contact_phone'),
+          linkedin_url: v('contact_linkedin_url'), preferred_channel: v('contact_preferred_channel'), is_primary: v('contact_is_primary') === 'true', notes: v('contact_notes')
+        };
+        await this.upsert('contacts', 'contact_id', payload, this.resetContactForm.bind(this), this.loadAll.bind(this));
+      },
+      async saveDeal() {
+        const payload = {
+          company_id: nullable(v('deal_company_id')), title: v('deal_title'), deal_type: v('deal_deal_type'), status: v('deal_status'), start_date: nullable(v('deal_start_date')),
+          end_date: nullable(v('deal_end_date')), amount: num(v('deal_amount')), currency: v('deal_currency'), coupon_code: v('deal_coupon_code'),
+          contract_url: v('deal_contract_url'), notes: v('deal_notes')
+        };
+        await this.upsert('deals', 'deal_id', payload, this.resetDealForm.bind(this), this.loadAll.bind(this));
+      },
+      async savePlacement() {
+        const payload = {
+          company_id: nullable(v('placement_company_id')), deal_id: nullable(v('placement_deal_id')), platform: v('placement_platform'), content_type: v('placement_content_type'),
+          content_title: v('placement_content_title'), content_url: v('placement_content_url'), published_at: nullable(v('placement_published_at')), video_timestamp: v('placement_video_timestamp'),
+          mention_type: v('placement_mention_type'), caption_text: v('placement_caption_text'), notes: v('placement_notes')
+        };
+        await this.upsert('placements', 'placement_id', payload, this.resetPlacementForm.bind(this), this.loadAll.bind(this));
+      },
+      async saveLink() {
+        const payload = {
+          company_id: nullable(v('link_company_id')), deal_id: nullable(v('link_deal_id')), placement_id: nullable(v('link_placement_id')), link_type: v('link_link_type'),
+          original_url: v('link_original_url'), short_url: v('link_short_url'), utm_source: v('link_utm_source'), utm_medium: v('link_utm_medium'), utm_campaign: v('link_utm_campaign'),
+          utm_content: v('link_utm_content'), coupon_code: v('link_coupon_code'), clicks: num(v('link_clicks')), conversions: num(v('link_conversions')),
+          revenue: num(v('link_revenue')), commission_earned: num(v('link_commission_earned'))
+        };
+        await this.upsert('tracking_links', 'link_id', payload, this.resetLinkForm.bind(this), this.loadAll.bind(this));
+      },
+      async saveSocialSnapshot() {
+        const payload = {
+          social_account_id: nullable(v('social_account_id')), snapshot_date: nullable(v('social_snapshot_date')), followers: num(v('social_followers')),
+          following: num(v('social_following')), posts_count: num(v('social_posts_count')), impressions: num(v('social_impressions')), reach: num(v('social_reach')),
+          profile_visits: num(v('social_profile_visits')), website_clicks: num(v('social_website_clicks')), likes: num(v('social_likes')), comments: num(v('social_comments')),
+          shares: num(v('social_shares')), saves: num(v('social_saves')), views: num(v('social_views'))
+        };
+        const { error } = await this.state.supabase.from('social_snapshots').insert(payload);
+        if (error) return this.toast(error.message, true);
+        this.toast('Snapshot gespeichert.');
+        document.getElementById('socialForm').reset();
+        this.setTodayDefaults();
+        this.loadAll();
+      },
+      async saveLead() {
+        const payload = {
+          company_name: v('lead_company_name'), website: v('lead_website'), email: v('lead_email'), instagram_handle: v('lead_instagram_handle'), country: v('lead_country'),
+          category: v('lead_category'), source_url: v('lead_source_url'), source_type: v('lead_source_type'), lead_score: num(v('lead_lead_score')),
+          qualification_status: v('lead_qualification_status'), outreach_status: v('lead_outreach_status'), summary: v('lead_summary'), notes: v('lead_notes')
+        };
+        await this.upsert('lead_candidates', 'lead_id', payload, this.resetLeadForm.bind(this), this.loadAll.bind(this));
+      },
+      async saveMessage() {
+        const payload = {
+          company_id: nullable(v('message_company_id')), contact_id: nullable(v('message_contact_id')), lead_candidate_id: nullable(v('message_lead_candidate_id')),
+          channel: v('message_channel'), subject: v('message_subject'), body: v('message_body'), status: v('message_status'), follow_up_number: num(v('message_follow_up_number'))
+        };
+        await this.upsert('outreach_messages', 'message_id', payload, () => document.getElementById('messageForm').reset(), this.loadAll.bind(this));
+      },
+      async saveTask() {
+        const payload = {
+          title: v('task_title'), due_date: nullable(v('task_due_date')), status: v('task_status'), priority: v('task_priority'), related_type: v('task_related_type'),
+          related_id: v('task_related_id'), notes: v('task_notes')
+        };
+        await this.upsert('tasks', 'task_id', payload, () => document.getElementById('taskForm').reset(), this.loadAll.bind(this));
+      },
+
+      async upsert(table, idField, payload, resetFn, reloadFn) {
+        try {
+          const id = v(idField);
+          if (id) {
+            const { error } = await this.state.supabase.from(table).update(payload).eq('id', id);
+            if (error) throw error;
+            this.toast('Eintrag aktualisiert.');
+          } else {
+            const { error } = await this.state.supabase.from(table).insert(payload);
+            if (error) throw error;
+            this.toast('Eintrag gespeichert.');
+          }
+          resetFn();
+          reloadFn();
+        } catch (err) {
+          this.toast(err.message, true);
+        }
+      },
+
+      async deleteRow(table, id) {
+        if (!confirm('Wirklich löschen?')) return;
+        try {
+          const { error } = await this.state.supabase.from(table).delete().eq('id', id);
+          if (error) throw error;
+          this.toast('Eintrag gelöscht.');
+          this.loadAll();
+        } catch (err) {
+          this.toast(err.message, true);
+        }
+      },
+
+      editCompany(id) {
+        const c = this.state.companies.find(x => x.id === id); if (!c) return;
+        setv('company_id', c.id); setv('company_name', c.name); setv('company_website', c.website); setv('company_instagram', c.instagram_handle); setv('company_tiktok', c.tiktok_handle);
+        setv('company_country', c.country); setv('company_language', c.language); setv('company_category', c.category); setv('company_partner_type', c.partner_type); setv('company_status', c.status);
+        setv('company_priority', c.priority); setv('company_description', c.description); setv('company_notes', c.notes);
+      },
+      editContact(id) {
+        const c = this.state.contacts.find(x => x.id === id); if (!c) return;
+        setv('contact_id', c.id); setv('contact_company_id', c.company_id); setv('contact_full_name', c.full_name); setv('contact_role', c.role); setv('contact_email', c.email);
+        setv('contact_phone', c.phone); setv('contact_linkedin_url', c.linkedin_url); setv('contact_preferred_channel', c.preferred_channel || 'email'); setv('contact_is_primary', String(!!c.is_primary)); setv('contact_notes', c.notes);
+      },
+      editDeal(id) {
+        const d = this.state.deals.find(x => x.id === id); if (!d) return;
+        setv('deal_id', d.id); setv('deal_company_id', d.company_id); setv('deal_title', d.title); setv('deal_deal_type', d.deal_type); setv('deal_status', d.status);
+        setv('deal_start_date', d.start_date); setv('deal_end_date', d.end_date); setv('deal_amount', d.amount); setv('deal_currency', d.currency); setv('deal_coupon_code', d.coupon_code); setv('deal_contract_url', d.contract_url); setv('deal_notes', d.notes);
+      },
+      editPlacement(id) {
+        const p = this.state.placements.find(x => x.id === id); if (!p) return;
+        setv('placement_id', p.id); setv('placement_company_id', p.company_id); setv('placement_deal_id', p.deal_id); setv('placement_platform', p.platform); setv('placement_content_type', p.content_type);
+        setv('placement_content_title', p.content_title); setv('placement_content_url', p.content_url); setv('placement_published_at', p.published_at); setv('placement_video_timestamp', p.video_timestamp);
+        setv('placement_mention_type', p.mention_type); setv('placement_caption_text', p.caption_text); setv('placement_notes', p.notes);
+      },
+      editLink(id) {
+        const l = this.state.links.find(x => x.id === id); if (!l) return;
+        setv('link_id', l.id); setv('link_company_id', l.company_id); setv('link_deal_id', l.deal_id); setv('link_placement_id', l.placement_id); setv('link_link_type', l.link_type);
+        setv('link_original_url', l.original_url); setv('link_short_url', l.short_url); setv('link_utm_source', l.utm_source); setv('link_utm_medium', l.utm_medium); setv('link_utm_campaign', l.utm_campaign);
+        setv('link_utm_content', l.utm_content); setv('link_coupon_code', l.coupon_code); setv('link_clicks', l.clicks); setv('link_conversions', l.conversions); setv('link_revenue', l.revenue); setv('link_commission_earned', l.commission_earned);
+      },
+      editLead(id) {
+        const l = this.state.leads.find(x => x.id === id); if (!l) return;
+        setv('lead_id', l.id); setv('lead_company_name', l.company_name); setv('lead_website', l.website); setv('lead_email', l.email); setv('lead_instagram_handle', l.instagram_handle);
+        setv('lead_country', l.country); setv('lead_category', l.category); setv('lead_source_url', l.source_url); setv('lead_source_type', l.source_type); setv('lead_lead_score', l.lead_score);
+        setv('lead_qualification_status', l.qualification_status); setv('lead_outreach_status', l.outreach_status); setv('lead_summary', l.summary); setv('lead_notes', l.notes);
+      },
+      editTask(id) {
+        const t = this.state.tasks.find(x => x.id === id); if (!t) return;
+        setv('task_id', t.id); setv('task_title', t.title); setv('task_due_date', t.due_date); setv('task_status', t.status); setv('task_priority', t.priority);
+        setv('task_related_type', t.related_type); setv('task_related_id', t.related_id); setv('task_notes', t.notes);
+      },
+
+      resetCompanyForm() { document.getElementById('companyForm').reset(); setv('company_id',''); setv('company_language','de'); setv('company_status','lead_new'); setv('company_partner_type','brand'); setv('company_priority','medium'); },
+      resetContactForm() { document.getElementById('contactForm').reset(); setv('contact_id',''); setv('contact_is_primary','true'); setv('contact_preferred_channel','email'); },
+      resetDealForm() { document.getElementById('dealForm').reset(); setv('deal_id',''); setv('deal_currency','EUR'); setv('deal_status','draft'); setv('deal_deal_type','affiliate'); this.setTodayDefaults(); },
+      resetPlacementForm() { document.getElementById('placementForm').reset(); setv('placement_id',''); setv('placement_platform','youtube'); setv('placement_content_type','video'); this.setTodayDefaults(); },
+      resetLinkForm() { document.getElementById('linkForm').reset(); setv('link_id',''); setv('link_clicks','0'); setv('link_conversions','0'); setv('link_revenue','0'); setv('link_commission_earned','0'); },
+      resetLeadForm() { document.getElementById('leadForm').reset(); setv('lead_id',''); setv('lead_lead_score','50'); setv('lead_qualification_status','new'); setv('lead_outreach_status','not_started'); },
+
+      companyNameById(id) { return this.state.companies.find(x => x.id === id)?.name || ''; },
+      contactNameById(id) { return this.state.contacts.find(x => x.id === id)?.full_name || ''; },
+      placementTitleById(id) { return this.state.placements.find(x => x.id === id)?.content_title || ''; },
+      socialHandleById(id) { return this.state.socialAccounts.find(x => x.id === id)?.handle || ''; },
+
+      toast(message, isError=false) {
+        const existing = document.querySelector('.toast');
+        if (existing) existing.remove();
+        const el = document.createElement('div');
+        el.className = 'toast';
+        el.style.borderColor = isError ? 'rgba(239,68,68,.3)' : 'var(--border)';
+        el.innerHTML = `<b>${isError ? 'Fehler' : 'Info'}</b><div class="small" style="margin-top:4px;line-height:1.5;">${message}</div>`;
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 3400);
+      }
+    };
+
+    function v(id) { return document.getElementById(id)?.value?.trim() || ''; }
+    function setv(id, value) { const el = document.getElementById(id); if (el) el.value = value ?? ''; }
+    function nullable(value) { return value === '' ? null : value; }
+    function num(value) { return value === '' ? 0 : Number(value); }
+
+    window.App = App;
+    App.init();
+  </script>
+</body>
+</html>
