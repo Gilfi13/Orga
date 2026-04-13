@@ -195,10 +195,15 @@
       max-width: 340px;
     }
     .split {
-      display: grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap: 16px;
-    }
+  display: grid;
+  grid-template-columns: 1.1fr .9fr;
+  gap: 16px;
+}
+
+.companies-layout {
+  grid-template-columns: 300px minmax(680px, 980px);
+  justify-content: start;
+}
     .small { font-size: 12px; }
     .config-note {
       margin-top: 18px;
