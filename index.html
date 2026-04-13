@@ -587,7 +587,79 @@
       </section>
 
       <section class="section" id="section-leads">
-        <div class="split">
+        <div class="row" style="margin-bottom:16px;">
+  <div class="card">
+    <h3>Automatischer Lead Finder</h3>
+
+    <div class="grid-form">
+      <div class="full">
+        <label>Keywords (eine Zeile pro Keyword)</label>
+        <textarea id="leadSearchKeywords" placeholder="3d printing filament europe
+3d printer accessories germany
+filament brand eu"></textarea>
+      </div>
+
+      <div>
+        <label>Location</label>
+        <input id="leadSearchLocation" type="text" value="Europe" />
+      </div>
+
+      <div>
+        <label>Max Results</label>
+        <input id="leadSearchMaxResults" type="number" value="10" />
+      </div>
+
+      <div class="full actions">
+        <button class="btn primary" type="button" id="runLeadSearchBtn">
+          Leads automatisch finden
+        </button>
+
+        <button class="btn" type="button" id="reloadLeadsBtn">
+          Leads neu laden
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="split">
+        <div class="row" style="margin-bottom:16px;">
+  <div class="card">
+    <h3>Automatischer Lead Finder</h3>
+
+    <div class="grid-form">
+      <div class="full">
+        <label>Keywords (eine Zeile pro Keyword)</label>
+        <textarea id="leadSearchKeywords"
+          placeholder="3d printing filament europe
+3d printer accessories germany
+filament brand eu"></textarea>
+      </div>
+
+      <div>
+        <label>Location</label>
+        <input id="leadSearchLocation" type="text" value="Europe" />
+      </div>
+
+      <div>
+        <label>Max Results</label>
+        <input id="leadSearchMaxResults" type="number" value="10" />
+      </div>
+
+      <div class="full actions">
+        <button class="btn primary" type="button" id="runLeadSearchBtn">
+          Leads automatisch finden
+        </button>
+
+        <button class="btn" type="button" id="reloadLeadsBtn">
+          Leads neu laden
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="split">
           <div class="card">
             <h3>Lead manuell anlegen</h3>
             <form id="leadForm" class="grid-form">
@@ -718,22 +790,44 @@
         </div>
       </section>
 
-      <section class="section" id="section-settings">
-        <div class="card">
-          <h3>Supabase Verbindung</h3>
-          <form id="settingsForm" class="grid-form">
-            <div class="full"><label>Supabase URL</label><input id="supabase_url" placeholder="https://xyzcompany.supabase.co" /></div>
-            <div class="full"><label>Supabase Anon Key</label><textarea id="supabase_anon_key" placeholder="eyJ..."></textarea></div>
-            <label>n8n Lead Webhook URL</label>
-            <input id="n8nLeadWebhook" type="text" placeholder="https://domebi.app.n8n.cloud/webhook-test/find-leeds" />
-            <div class="full actions">
-              <button class="btn primary" type="submit">Verbindung speichern</button>
-              <button class="btn" type="button" id="testConnectionBtn">Verbindung testen</button>
-            </div>
-          </form>
-          <p class="muted">Diese Werte werden nur lokal im Browser gespeichert.</p>
-        </div>
-      </section>
+    <section class="section" id="section-settings">
+  <div class="card">
+    <h3>Supabase Verbindung</h3>
+
+    <form id="settingsForm" class="grid-form">
+
+      <div class="full">
+        <label>Supabase URL</label>
+        <input id="supabase_url" placeholder="https://xyzcompany.supabase.co" />
+      </div>
+
+      <div class="full">
+        <label>Supabase Anon Key</label>
+        <textarea id="supabase_anon_key" placeholder="eyJ..."></textarea>
+      </div>
+
+      <div class="full">
+        <label>n8n Lead Webhook URL</label>
+        <input id="n8nLeadWebhook" type="text" placeholder="https://dein-n8n/webhook/find-leads" />
+      </div>
+
+      <div class="full actions">
+        <button class="btn primary" type="submit">
+          Verbindung speichern
+        </button>
+
+        <button class="btn" type="button" id="testConnectionBtn">
+          Verbindung testen
+        </button>
+      </div>
+
+    </form>
+
+    <p class="muted">
+      Diese Werte werden nur lokal im Browser gespeichert.
+    </p>
+  </div>
+</section>
     </main>
   </div>
 
@@ -806,16 +900,31 @@
         document.getElementById('companySearch').addEventListener('input', e => this.renderCompanies(e.target.value));
         document.getElementById('contactSearch').addEventListener('input', e => this.renderContacts(e.target.value));
         document.getElementById('leadSearch').addEventListener('input', e => this.renderLeads(e.target.value));
+        const runLeadSearchBtn = document.getElementById('runLeadSearchBtn');
+if (runLeadSearchBtn) {
+  runLeadSearchBtn.addEventListener('click', () => this.runLeadSearchFromApp());
+}
+
+const reloadLeadsBtn = document.getElementById('reloadLeadsBtn');
+if (reloadLeadsBtn) {
+  reloadLeadsBtn.addEventListener('click', () => this.loadLeads());
+}
       },
 
       loadStoredConfig() {
-        document.getElementById('supabase_url').value = localStorage.getItem('crm_supabase_url') || '';
-        document.getElementById('supabase_anon_key').value = localStorage.getItem('crm_supabase_anon_key') || '';
-        if (document.getElementById('supabase_url').value && document.getElementById('supabase_anon_key').value) {
-          this.setupSupabase();
-          this.loadAll();
-        }
-      },
+  document.getElementById('supabase_url').value = localStorage.getItem('crm_supabase_url') || '';
+  document.getElementById('supabase_anon_key').value = localStorage.getItem('crm_supabase_anon_key') || '';
+
+  const webhookField = document.getElementById('n8nLeadWebhook');
+  if (webhookField) {
+    webhookField.value = localStorage.getItem('crm_n8n_lead_webhook') || '';
+  }
+
+  if (document.getElementById('supabase_url').value && document.getElementById('supabase_anon_key').value) {
+    this.setupSupabase();
+    this.loadAll();
+  }
+},
 
       setTodayDefaults() {
         const today = new Date().toISOString().slice(0,10);
@@ -826,14 +935,18 @@
       },
 
       saveConfig() {
-        const url = document.getElementById('supabase_url').value.trim();
-        const key = document.getElementById('supabase_anon_key').value.trim();
-        localStorage.setItem('crm_supabase_url', url);
-        localStorage.setItem('crm_supabase_anon_key', key);
-        this.setupSupabase();
-        this.toast('Supabase Verbindung gespeichert.');
-        this.loadAll();
-      },
+  const url = document.getElementById('supabase_url').value.trim();
+  const key = document.getElementById('supabase_anon_key').value.trim();
+  const n8nLeadWebhook = document.getElementById('n8nLeadWebhook').value.trim();
+
+  localStorage.setItem('crm_supabase_url', url);
+  localStorage.setItem('crm_supabase_anon_key', key);
+  localStorage.setItem('crm_n8n_lead_webhook', n8nLeadWebhook);
+
+  this.setupSupabase();
+  this.toast('Verbindung gespeichert.');
+  this.loadAll();
+}
 
       setupSupabase() {
         const url = localStorage.getItem('crm_supabase_url');
@@ -843,6 +956,111 @@
       },
 
       async testConnection() {
+        async runLeadSearchFromApp() {
+  try {
+    const webhookUrl = localStorage.getItem('crm_n8n_lead_webhook') || '';
+
+    if (!webhookUrl) {
+      this.toast('Bitte zuerst n8n Webhook in Einstellungen speichern.', true);
+      return;
+    }
+
+    const rawKeywords = document.getElementById('leadSearchKeywords').value || '';
+    const location = document.getElementById('leadSearchLocation').value || 'Europe';
+    const maxResults = Number(document.getElementById('leadSearchMaxResults').value || 10);
+
+    const keywords = rawKeywords
+      .split('\\n')
+      .map(k => k.trim())
+      .filter(Boolean);
+
+    if (!keywords.length) {
+      this.toast('Bitte Keywords eingeben.', true);
+      return;
+    }
+
+    const btn = document.getElementById('runLeadSearchBtn');
+    btn.disabled = true;
+    btn.innerText = 'Suche läuft...';
+
+    const res = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ keywords, location, maxResults })
+    });
+
+    const text = await res.text();
+
+    if (!res.ok) {
+      throw new Error(text || 'Webhook Fehler');
+    }
+
+    this.toast('Leads werden geladen...');
+
+    setTimeout(() => {
+      this.loadLeads();
+    }, 2500);
+
+    btn.disabled = false;
+    btn.innerText = 'Leads automatisch finden';
+  } catch (err) {
+    const btn = document.getElementById('runLeadSearchBtn');
+    if (btn) {
+      btn.disabled = false;
+      btn.innerText = 'Leads automatisch finden';
+    }
+
+    this.toast('Fehler: ' + err.message, true);
+  }
+}
+
+    const rawKeywords = document.getElementById('leadSearchKeywords').value || '';
+    const location = document.getElementById('leadSearchLocation').value || 'Europe';
+    const maxResults = Number(document.getElementById('leadSearchMaxResults').value || 10);
+
+    const keywords = rawKeywords
+      .split('\n')
+      .map(k => k.trim())
+      .filter(Boolean);
+
+    if (!keywords.length) {
+      this.toast('Bitte Keywords eingeben.', true);
+      return;
+    }
+
+    const btn = document.getElementById('runLeadSearchBtn');
+    btn.disabled = true;
+    btn.innerText = 'Suche läuft...';
+
+    const res = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ keywords, location, maxResults })
+    });
+
+    const text = await res.text();
+
+    if (!res.ok) {
+      throw new Error(text || 'Webhook Fehler');
+    }
+
+    this.toast('Leads werden geladen...');
+
+    setTimeout(() => {
+      this.loadLeads();
+    }, 2500);
+
+    btn.disabled = false;
+    btn.innerText = 'Leads automatisch finden';
+  } catch (err) {
+    const btn = document.getElementById('runLeadSearchBtn');
+    if (btn) {
+      btn.disabled = false;
+      btn.innerText = 'Leads automatisch finden';
+    }
+    this.toast('Fehler: ' + err.message, true);
+  }
+}
         try {
           this.setupSupabase();
           if (!this.state.supabase) throw new Error('Supabase nicht konfiguriert');
