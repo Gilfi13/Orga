@@ -587,7 +587,42 @@
       </section>
 
       <section class="section" id="section-leads">
-        <div class="split">
+        <div class="row" style="margin-bottom:16px;">
+  <div class="card">
+    <h3>Leads automatisch finden</h3>
+
+    <div class="grid-form">
+      <div class="full">
+        <label>Keywords (eine Zeile pro Keyword)</label>
+        <textarea id="leadSearchKeywords" placeholder="3d printing filament europe
+3d printer accessories germany
+filament brand eu"></textarea>
+      </div>
+
+      <div>
+        <label>Location</label>
+        <input id="leadSearchLocation" type="text" value="Europe" />
+      </div>
+
+      <div>
+        <label>Max Results</label>
+        <input id="leadSearchMaxResults" type="number" value="10" />
+      </div>
+
+      <div class="full actions">
+        <button class="btn primary" type="button" id="runLeadSearchBtn">
+          Leads automatisch finden
+        </button>
+
+        <button class="btn" type="button" id="reloadLeadsBtn">
+          Leads neu laden
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="split">
           <div class="card">
             <h3>Lead manuell anlegen</h3>
             <form id="leadForm" class="grid-form">
