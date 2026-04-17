@@ -21,521 +21,532 @@
       --shadow: 0 10px 30px rgba(0,0,0,.25);
       --radius: 18px;
     }
+
     * { box-sizing: border-box; }
+
     html, body {
-  width: 100%;
-  min-height: 100%;
-  margin: 0;
-  padding: 0;
-}
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
-  margin: 0;
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  background: linear-gradient(180deg, #09101d 0%, #0b1020 100%);
-  color: var(--text);
-}
-
-.app {
-  display: grid;
-  grid-template-columns: 270px minmax(0, 1fr);
-  min-height: 100vh;
-  width: 100%;
-}
-
-aside {
-  border-right: 1px solid var(--border);
-  background: rgba(11,16,32,.9);
-  backdrop-filter: blur(10px);
-  padding: 22px;
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  overflow-y: auto;
-}
-
-.brand {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  margin-bottom: 26px;
-}
-
-.logo {
-  width: 42px;
-  height: 42px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  display: grid;
-  place-items: center;
-  font-weight: 800;
-  color: white;
-  box-shadow: var(--shadow);
-}
-
-.brand h1 {
-  margin: 0;
-  font-size: 18px;
-}
-
-.brand p {
-  margin: 2px 0 0;
-  color: var(--muted);
-  font-size: 12px;
-}
-
-nav {
-  display: grid;
-  gap: 8px;
-}
-
-.nav-btn {
-  width: 100%;
-  border: 1px solid transparent;
-  background: transparent;
-  color: var(--text);
-  padding: 12px 14px;
-  border-radius: 14px;
-  text-align: left;
-  cursor: pointer;
-  font-size: 14px;
-  transition: .18s ease;
-}
-
-.nav-btn:hover,
-.nav-btn.active {
-  background: var(--panel-2);
-  border-color: var(--border);
-}
-
-main {
-  padding: 24px;
-  width: 100%;
-  min-width: 0;
-}
-
-.topbar {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 18px;
-  flex-wrap: wrap;
-}
-
-.title h2 {
-  margin: 0;
-  font-size: 28px;
-}
-
-.title p {
-  margin: 4px 0 0;
-  color: var(--muted);
-}
-
-.row {
-  display: grid;
-  gap: 16px;
-}
-
-.row-2 {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.row-3 {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.row-4 {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
-.card {
-  background: rgba(18,26,48,.92);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 18px;
-  box-shadow: var(--shadow);
-  min-width: 0;
-}
-
-.card h3 {
-  margin: 0 0 12px;
-  font-size: 16px;
-}
-
-.kpi {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.kpi .label {
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.kpi .value {
-  font-size: 30px;
-  font-weight: 800;
-}
-
-.toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-
-input,
-select,
-textarea,
-button {
-  font: inherit;
-}
-
-input,
-select,
-textarea {
-  width: 100%;
-  background: #0c1428;
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: 11px 12px;
-  border-radius: 12px;
-  outline: none;
-}
-
-textarea {
-  min-height: 100px;
-  resize: vertical;
-}
-
-.btn {
-  border: 1px solid var(--border);
-  background: var(--panel-2);
-  color: var(--text);
-  padding: 11px 14px;
-  border-radius: 12px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  white-space: nowrap;
-}
-
-.topbar .actions .btn {
-  flex: 0 0 auto;
-}
-
-.btn.primary {
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  border: none;
-  color: white;
-  font-weight: 700;
-}
-
-.btn.ghost {
-  background: transparent;
-}
-
-.btn.danger {
-  background: rgba(239,68,68,.14);
-  color: #ffb3b3;
-}
-
-.hidden {
-  display: none !important;
-}
-
-.section {
-  display: none;
-}
-
-.section.active {
-  display: block;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 14px;
-}
-
-th,
-td {
-  text-align: left;
-  padding: 11px 10px;
-  border-bottom: 1px solid var(--border);
-  vertical-align: top;
-}
-
-th {
-  color: var(--muted);
-  font-weight: 600;
-}
-
-.table-wrap {
-  overflow: auto;
-  max-height: 500px;
-  width: 100%;
-  max-width: 100%;
-}
-
-.pill {
-  display: inline-block;
-  padding: 5px 10px;
-  border-radius: 999px;
-  font-size: 12px;
-  border: 1px solid var(--border);
-  background: rgba(255,255,255,.04);
-  white-space: nowrap;
-}
-
-.grid-form {
-  display: grid;
-  gap: 12px;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.grid-form .full {
-  grid-column: 1 / -1;
-}
-
-.muted {
-  color: var(--muted);
-}
-
-.toast {
-  position: fixed;
-  right: 18px;
-  bottom: 18px;
-  padding: 14px 16px;
-  background: #0d1730;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  box-shadow: var(--shadow);
-  z-index: 1000;
-  max-width: 340px;
-}
-
-.split {
-  display: grid;
-  grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
-  gap: 16px;
-  width: 100%;
-  align-items: start;
-}
-
-.companies-layout {
-  grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
-  width: 100%;
-}
-
-.small {
-  font-size: 12px;
-}
-
-.config-note {
-  margin-top: 18px;
-  padding: 12px;
-  border-radius: 14px;
-  background: rgba(110,168,254,.12);
-  color: #dbe9ff;
-  border: 1px solid rgba(110,168,254,.2);
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-.chart-bars {
-  display: grid;
-  gap: 10px;
-}
-
-.bar-row {
-  display: grid;
-  gap: 8px;
-}
-
-.bar-label {
-  font-size: 13px;
-  color: var(--muted);
-  display: flex;
-  justify-content: space-between;
-}
-
-.bar-track {
-  height: 10px;
-  border-radius: 999px;
-  background: rgba(255,255,255,.06);
-  overflow: hidden;
-}
-
-.bar-fill {
-  height: 100%;
-  border-radius: 999px;
-  background: linear-gradient(90deg, var(--accent), var(--accent-2));
-}
-
-.actions {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.sidebar-calendar {
-  margin-top: 18px;
-  padding: 14px;
-  border-radius: 16px;
-}
-
-.calendar-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-
-.calendar-header h3 {
-  margin: 0;
-  font-size: 15px;
-}
-
-.calendar-nav {
-  min-width: 38px;
-  min-height: 38px;
-  padding: 8px;
-}
-
-.calendar-weekdays {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 6px;
-  margin-bottom: 8px;
-  text-align: center;
-  font-size: 11px;
-  color: var(--muted);
-}
-
-.calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 6px;
-  margin-bottom: 12px;
-}
-
-.calendar-day {
-  aspect-ratio: 1 / 1;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: rgba(255,255,255,.03);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  font-size: 12px;
-}
-
-.calendar-day.muted-day {
-  opacity: 0.35;
-}
-
-.calendar-day.today {
-  outline: 1px solid var(--accent);
-}
-
-.calendar-day.has-placement::after {
-  content: "";
-  position: absolute;
-  bottom: 5px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 6px;
-  height: 6px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-}
-
-.calendar-day.future-placement {
-  background: rgba(110,168,254,.08);
-}
-
-.calendar-legend {
-  margin-bottom: 12px;
-}
-
-.calendar-events h4 {
-  margin: 0 0 8px;
-  font-size: 13px;
-}
-
-.calendar-upcoming-list {
-  display: grid;
-  gap: 8px;
-}
-
-.calendar-event-item {
-  padding: 10px;
-  border-radius: 12px;
-  background: rgba(255,255,255,.04);
-  border: 1px solid var(--border);
-}
-
-.calendar-event-item b {
-  display: block;
-  margin-bottom: 4px;
-  font-size: 13px;
-}
-
-.calendar-event-item .date {
-  font-size: 12px;
-  color: var(--muted);
-}
-
-@media (max-width: 1100px) {
-  .app {
-    grid-template-columns: 1fr;
-  }
-
-  aside {
-    position: relative;
-    height: auto;
-  }
-
-  .split,
-  .row-2,
-  .row-3,
-  .row-4 {
-    grid-template-columns: 1fr;
-  }
-
-  .grid-form {
-    grid-template-columns: 1fr;
-  }
-
-  .topbar {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .topbar .actions {
-    width: 100%;
-  }
-
-  .topbar .actions .btn {
-    width: auto;
-  }
-
-  .sidebar-calendar {
-    padding: 12px;
-  }
-
-  .calendar-day {
-    font-size: 11px;
-  }
-}
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #09101d 0%, #0b1020 100%);
+      color: var(--text);
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: 270px minmax(0, 1fr);
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    aside {
+      border-right: 1px solid var(--border);
+      background: rgba(11,16,32,.9);
+      backdrop-filter: blur(10px);
+      padding: 22px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 26px;
+    }
+
+    .logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: white;
+      box-shadow: var(--shadow);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .brand p {
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    nav {
+      display: grid;
+      gap: 8px;
+    }
+
+    .nav-btn {
+      width: 100%;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text);
+      padding: 12px 14px;
+      border-radius: 14px;
+      text-align: left;
+      cursor: pointer;
+      font-size: 14px;
+      transition: .18s ease;
+    }
+
+    .nav-btn:hover,
+    .nav-btn.active {
+      background: var(--panel-2);
+      border-color: var(--border);
+    }
+
+    main {
+      padding: 24px;
+      width: 100%;
+      min-width: 0;
+    }
+
+    .topbar {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .title h2 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    .title p {
+      margin: 4px 0 0;
+      color: var(--muted);
+    }
+
+    .row {
+      display: grid;
+      gap: 16px;
+    }
+
+    .row-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .row-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .row-4 {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .card {
+      background: rgba(18,26,48,.92);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      min-width: 0;
+    }
+
+    .card h3 {
+      margin: 0 0 12px;
+      font-size: 16px;
+    }
+
+    .kpi {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .kpi .label {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .kpi .value {
+      font-size: 30px;
+      font-weight: 800;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+      align-items: center;
+    }
+
+    input,
+    select,
+    textarea,
+    button {
+      font: inherit;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      background: #0c1428;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 11px 12px;
+      border-radius: 12px;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .btn {
+      border: 1px solid var(--border);
+      background: var(--panel-2);
+      color: var(--text);
+      padding: 11px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      white-space: nowrap;
+      text-decoration: none;
+    }
+
+    .topbar .actions .btn {
+      flex: 0 0 auto;
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border: none;
+      color: white;
+      font-weight: 700;
+    }
+
+    .btn.ghost {
+      background: transparent;
+    }
+
+    .btn.danger {
+      background: rgba(239,68,68,.14);
+      color: #ffb3b3;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 11px 10px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .table-wrap {
+      overflow: auto;
+      max-height: 560px;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      white-space: nowrap;
+    }
+
+    .grid-form {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .grid-form .full {
+      grid-column: 1 / -1;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      padding: 14px 16px;
+      background: #0d1730;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      z-index: 1000;
+      max-width: 340px;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(340px, 420px);
+      gap: 16px;
+      width: 100%;
+      align-items: start;
+    }
+
+    .small {
+      font-size: 12px;
+    }
+
+    .chart-bars {
+      display: grid;
+      gap: 10px;
+    }
+
+    .bar-row {
+      display: grid;
+      gap: 8px;
+    }
+
+    .bar-label {
+      font-size: 13px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .bar-track {
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .detail-panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .detail-title {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .link-short {
+      display: inline-block;
+      max-width: 250px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      vertical-align: bottom;
+    }
+
+    .calendar-shell {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 16px;
+    }
+
+    .calendar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .calendar-nav {
+      min-width: 42px;
+      min-height: 42px;
+      padding: 8px;
+    }
+
+    .calendar-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      margin-bottom: 8px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+    }
+
+    .calendar-day {
+      min-height: 112px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(255,255,255,.03);
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .calendar-day.muted-day {
+      opacity: 0.35;
+    }
+
+    .calendar-day.today {
+      outline: 1px solid var(--accent);
+      background: rgba(110,168,254,.08);
+    }
+
+    .calendar-day-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+    }
+
+    .calendar-markers {
+      display: grid;
+      gap: 6px;
+    }
+
+    .calendar-marker {
+      font-size: 11px;
+      padding: 6px 8px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .calendar-marker.task {
+      background: rgba(245,158,11,.12);
+    }
+
+    .calendar-marker.placement {
+      background: rgba(110,168,254,.12);
+    }
+
+    .calendar-side-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .calendar-side-item {
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--border);
+    }
+
+    .calendar-side-item b {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .section-toolbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+      align-items: center;
+    }
+
+    @media (max-width: 1180px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      aside {
+        position: relative;
+        height: auto;
+      }
+
+      .split,
+      .row-2,
+      .row-3,
+      .row-4,
+      .calendar-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .grid-form {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .topbar .actions {
+        width: 100%;
+      }
+
+      .topbar .actions .btn {
+        width: auto;
+      }
+
+      .calendar-day {
+        min-height: 90px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -548,10 +559,10 @@ th {
           <p>Partners · Leads · Outreach</p>
         </div>
       </div>
+
       <nav>
         <button class="nav-btn active" data-section="dashboard">Dashboard</button>
         <button class="nav-btn" data-section="companies">Partner</button>
-       
         <button class="nav-btn" data-section="deals">Deals</button>
         <button class="nav-btn" data-section="placements">Placements</button>
         <button class="nav-btn" data-section="links">Link-Bibliothek</button>
@@ -559,42 +570,9 @@ th {
         <button class="nav-btn" data-section="leads">Lead Finder</button>
         <button class="nav-btn" data-section="outreach">Outreach</button>
         <button class="nav-btn" data-section="tasks">Tasks</button>
+        <button class="nav-btn" data-section="calendar">Kalender</button>
         <button class="nav-btn" data-section="settings">Einstellungen</button>
       </nav>
-      <div class="sidebar-calendar card">
-  <div class="calendar-header">
-    <button class="btn ghost calendar-nav" id="calendarPrevBtn" type="button">◀</button>
-    <div>
-      <h3 id="calendarMonthLabel">Kalender</h3>
-      <div class="small muted">Geplante Placements</div>
-    </div>
-    <button class="btn ghost calendar-nav" id="calendarNextBtn" type="button">▶</button>
-  </div>
-
-  <div class="calendar-weekdays">
-    <span>Mo</span>
-    <span>Di</span>
-    <span>Mi</span>
-    <span>Do</span>
-    <span>Fr</span>
-    <span>Sa</span>
-    <span>So</span>
-  </div>
-
-  <div id="calendarGrid" class="calendar-grid"></div>
-
-  <div class="calendar-legend small muted">
-    ● Placement vorhanden
-  </div>
-
-  <div class="calendar-events">
-    <h4>Nächste Placements</h4>
-    <div id="calendarUpcomingList" class="calendar-upcoming-list"></div>
-  </div>
-</div>
-      <div class="config-note">
-        Trage unten in <b>Einstellungen</b> deine <b>Supabase URL</b> und den <b>Anon Key</b> ein. Die Werte werden lokal im Browser gespeichert.
-      </div>
     </aside>
 
     <main>
@@ -629,59 +607,82 @@ th {
       </section>
 
       <section class="section" id="section-companies">
-  <div class="split companies-layout">
+        <div class="split">
           <div class="card">
-            <h3>Partner anlegen / bearbeiten</h3>
-           <form id="companyForm" class="grid-form">
-  <input type="hidden" id="company_id" />
-  <div><label>Name</label><input id="company_name" required /></div>
-  <div><label>Website</label><input id="company_website" placeholder="https://..." /></div>
-  <div><label>Ansprechpartner</label><input id="company_contact_person" /></div>
-  <div><label>E-Mail</label><input id="company_contact_email" type="email" /></div>
-  <div><label>Kategorie</label><input id="company_category" placeholder="Filament, Tools, Software..." /></div>
-  <div><label>Partner-Typ</label>
-    <select id="company_partner_type">
-      <option value="brand">Brand</option>
-      <option value="affiliate">Affiliate</option>
-      <option value="partner">Partner</option>
-      <option value="lead">Lead</option>
-    </select>
-  </div>
-  <div><label>Status</label>
-    <select id="company_status">
-      <option value="lead_new">lead new</option>
-      <option value="researched">researched</option>
-      <option value="contacted">contacted</option>
-      <option value="interested">interested</option>
-      <option value="active">active</option>
-      <option value="closed">closed</option>
-    </select>
-  </div>
-  <div><label>Priorität</label>
-    <select id="company_priority">
-      <option value="low">low</option>
-      <option value="medium">medium</option>
-      <option value="high">high</option>
-    </select>
-  </div>
-  <div class="full"><label>Beschreibung</label><textarea id="company_description"></textarea></div>
-  <div class="full"><label>Notizen</label><textarea id="company_notes"></textarea></div>
-  <div class="full actions">
-    <button class="btn primary" type="submit">Speichern</button>
-    <button class="btn" type="button" onclick="App.resetCompanyForm()">Reset</button>
-  </div>
-</form>
-          </div>
-          <div class="card">
-            <div class="toolbar">
-              <input id="companySearch" placeholder="Partner suchen..." />
+            <div class="section-toolbar">
+              <div class="actions">
+                <button class="btn primary" type="button" onclick="App.showCompanyPanel()">Neuen Partner anlegen</button>
+              </div>
+              <div style="min-width:260px; flex:1;">
+                <input id="companySearch" placeholder="Partner suchen..." />
+              </div>
             </div>
+
             <div class="table-wrap">
               <table>
-                <thead><tr><th>Name</th><th>Status</th><th>Ansprechpartner</th><th>E-Mail</th><th>Website</th><th></th></tr></thead>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Ansprechpartner</th>
+                    <th>E-Mail</th>
+                    <th>Website</th>
+                    <th></th>
+                  </tr>
+                </thead>
                 <tbody id="companiesBody"></tbody>
               </table>
             </div>
+          </div>
+
+          <div class="card hidden" id="companyPanel">
+            <div class="detail-panel-header">
+              <div>
+                <h3 class="detail-title" id="companyPanelTitle">Partner bearbeiten</h3>
+                <div class="small muted">Partnerdetails ansehen und bearbeiten</div>
+              </div>
+              <button class="btn ghost" type="button" onclick="App.hideCompanyPanel()">Schließen</button>
+            </div>
+
+            <form id="companyForm" class="grid-form">
+              <input type="hidden" id="company_id" />
+              <div><label>Name</label><input id="company_name" required /></div>
+              <div><label>Website</label><input id="company_website" placeholder="https://..." /></div>
+              <div><label>Ansprechpartner</label><input id="company_contact_person" /></div>
+              <div><label>E-Mail</label><input id="company_contact_email" type="email" /></div>
+              <div><label>Kategorie</label><input id="company_category" placeholder="Filament, Tools, Software..." /></div>
+              <div><label>Partner-Typ</label>
+                <select id="company_partner_type">
+                  <option value="brand">Brand</option>
+                  <option value="affiliate">Affiliate</option>
+                  <option value="partner">Partner</option>
+                  <option value="lead">Lead</option>
+                </select>
+              </div>
+              <div><label>Status</label>
+                <select id="company_status">
+                  <option value="lead_new">lead new</option>
+                  <option value="researched">researched</option>
+                  <option value="contacted">contacted</option>
+                  <option value="interested">interested</option>
+                  <option value="active">active</option>
+                  <option value="closed">closed</option>
+                </select>
+              </div>
+              <div><label>Priorität</label>
+                <select id="company_priority">
+                  <option value="low">low</option>
+                  <option value="medium">medium</option>
+                  <option value="high">high</option>
+                </select>
+              </div>
+              <div class="full"><label>Beschreibung</label><textarea id="company_description"></textarea></div>
+              <div class="full"><label>Notizen</label><textarea id="company_notes"></textarea></div>
+              <div class="full actions">
+                <button class="btn primary" type="submit">Speichern</button>
+                <button class="btn" type="button" onclick="App.resetCompanyForm()">Reset</button>
+              </div>
+            </form>
           </div>
         </div>
       </section>
@@ -689,7 +690,29 @@ th {
       <section class="section" id="section-deals">
         <div class="split">
           <div class="card">
-            <h3>Deal anlegen / bearbeiten</h3>
+            <div class="section-toolbar">
+              <div class="actions">
+                <button class="btn primary" type="button" onclick="App.showDealPanel()">Neuen Deal anlegen</button>
+              </div>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Titel</th><th>Firma</th><th>Typ</th><th>Status</th><th>Betrag</th><th></th></tr></thead>
+                <tbody id="dealsBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card hidden" id="dealPanel">
+            <div class="detail-panel-header">
+              <div>
+                <h3 class="detail-title" id="dealPanelTitle">Deal bearbeiten</h3>
+                <div class="small muted">Deal-Details ansehen und bearbeiten</div>
+              </div>
+              <button class="btn ghost" type="button" onclick="App.hideDealPanel()">Schließen</button>
+            </div>
+
             <form id="dealForm" class="grid-form">
               <input type="hidden" id="deal_id" />
               <div><label>Firma</label><select id="deal_company_id"></select></div>
@@ -725,21 +748,35 @@ th {
               </div>
             </form>
           </div>
-          <div class="card">
-            <div class="table-wrap">
-              <table>
-                <thead><tr><th>Titel</th><th>Firma</th><th>Typ</th><th>Status</th><th>Betrag</th><th></th></tr></thead>
-                <tbody id="dealsBody"></tbody>
-              </table>
-            </div>
-          </div>
         </div>
       </section>
 
       <section class="section" id="section-placements">
         <div class="split">
           <div class="card">
-            <h3>Placement / Content-Eintrag</h3>
+            <div class="section-toolbar">
+              <div class="actions">
+                <button class="btn primary" type="button" onclick="App.showPlacementPanel()">Neues Placement anlegen</button>
+              </div>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Placement</th><th>Plattform</th><th>Datum</th><th>Firma</th><th></th></tr></thead>
+                <tbody id="placementsBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card hidden" id="placementPanel">
+            <div class="detail-panel-header">
+              <div>
+                <h3 class="detail-title" id="placementPanelTitle">Placement bearbeiten</h3>
+                <div class="small muted">Placement-Details ansehen und bearbeiten</div>
+              </div>
+              <button class="btn ghost" type="button" onclick="App.hidePlacementPanel()">Schließen</button>
+            </div>
+
             <form id="placementForm" class="grid-form">
               <input type="hidden" id="placement_id" />
               <div><label>Firma</label><select id="placement_company_id"></select></div>
@@ -770,21 +807,35 @@ th {
               </div>
             </form>
           </div>
-          <div class="card">
-            <div class="table-wrap">
-              <table>
-                <thead><tr><th>Titel</th><th>Plattform</th><th>Datum</th><th>Firma</th><th></th></tr></thead>
-                <tbody id="placementsBody"></tbody>
-              </table>
-            </div>
-          </div>
         </div>
       </section>
 
       <section class="section" id="section-links">
         <div class="split">
           <div class="card">
-            <h3>Link-Bibliothek</h3>
+            <div class="section-toolbar">
+              <div class="actions">
+                <button class="btn primary" type="button" onclick="App.showLinkPanel()">Neuen Link anlegen</button>
+              </div>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Firma</th><th>Typ</th><th>Klicks</th><th>Revenue</th><th>Link</th><th></th></tr></thead>
+                <tbody id="linksBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card hidden" id="linkPanel">
+            <div class="detail-panel-header">
+              <div>
+                <h3 class="detail-title" id="linkPanelTitle">Link bearbeiten</h3>
+                <div class="small muted">Linkdetails ansehen und bearbeiten</div>
+              </div>
+              <button class="btn ghost" type="button" onclick="App.hideLinkPanel()">Schließen</button>
+            </div>
+
             <form id="linkForm" class="grid-form">
               <input type="hidden" id="link_id" />
               <div><label>Firma</label><select id="link_company_id"></select></div>
@@ -800,10 +851,8 @@ th {
               </div>
               <div class="full"><label>Original URL</label><input id="link_original_url" required /></div>
               <div class="full"><label>Short URL</label><input id="link_short_url" /></div>
-              
               <div><label>Coupon Code</label><input id="link_coupon_code" /></div>
               <div><label>Klicks</label><input id="link_clicks" type="number" value="0" /></div>
-              
               <div><label>Revenue</label><input id="link_revenue" type="number" step="0.01" value="0" /></div>
               <div><label>Provision %</label><input id="link_commission_earned" type="number" step="0.01" value="0" /></div>
               <div class="full actions">
@@ -811,14 +860,6 @@ th {
                 <button class="btn" type="button" onclick="App.resetLinkForm()">Reset</button>
               </div>
             </form>
-          </div>
-          <div class="card">
-            <div class="table-wrap">
-              <table>
-                <thead><tr><th>Firma</th><th>Typ</th><th>Klicks</th><th>Revenue</th><th>Placement</th><th></th></tr></thead>
-                <tbody id="linksBody"></tbody>
-              </table>
-            </div>
           </div>
         </div>
       </section>
@@ -840,7 +881,7 @@ th {
             <h3>Neuester Snapshot je Account</h3>
             <div class="table-wrap">
               <table>
-                <thead><tr><th>Account</th><th>Datum</th><th>Follower</th><th>Reach</th><th>Klicks</th></tr></thead>
+                <thead><tr><th>Account</th><th>Datum</th><th>Follower</th><th>Posts</th><th>Profilaufrufe</th></tr></thead>
                 <tbody id="socialBody"></tbody>
               </table>
             </div>
@@ -850,41 +891,35 @@ th {
 
       <section class="section" id="section-leads">
         <div class="row" style="margin-bottom:16px;">
-  <div class="card">
-    <h3>Leads automatisch finden</h3>
-
-    <div class="grid-form">
-      <div class="full">
-        <label>Keywords (eine Zeile pro Keyword)</label>
-        <textarea id="leadSearchKeywords" placeholder="3d printing filament europe
+          <div class="card">
+            <h3>Leads automatisch finden</h3>
+            <div class="grid-form">
+              <div class="full">
+                <label>Keywords (eine Zeile pro Keyword)</label>
+                <textarea id="leadSearchKeywords" placeholder="3d printing filament europe
 3d printer accessories germany
 filament brand eu"></textarea>
-      </div>
+              </div>
 
-      <div>
-        <label>Location</label>
-        <input id="leadSearchLocation" type="text" value="Europe" />
-      </div>
+              <div>
+                <label>Location</label>
+                <input id="leadSearchLocation" type="text" value="Europe" />
+              </div>
 
-      <div>
-        <label>Max Results</label>
-        <input id="leadSearchMaxResults" type="number" value="10" />
-      </div>
+              <div>
+                <label>Max Results</label>
+                <input id="leadSearchMaxResults" type="number" value="10" />
+              </div>
 
-      <div class="full actions">
-        <button class="btn primary" type="button" id="runLeadSearchBtn">
-          Leads automatisch finden
-        </button>
+              <div class="full actions">
+                <button class="btn primary" type="button" id="runLeadSearchBtn">Leads automatisch finden</button>
+                <button class="btn" type="button" id="reloadLeadsBtn">Leads neu laden</button>
+              </div>
+            </div>
+          </div>
+        </div>
 
-        <button class="btn" type="button" id="reloadLeadsBtn">
-          Leads neu laden
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="split">
+        <div class="split">
           <div class="card">
             <h3>Lead manuell anlegen</h3>
             <form id="leadForm" class="grid-form">
@@ -921,6 +956,7 @@ filament brand eu"></textarea>
               </div>
             </form>
           </div>
+
           <div class="card">
             <div class="toolbar">
               <input id="leadSearch" placeholder="Lead suchen..." />
@@ -942,7 +978,6 @@ filament brand eu"></textarea>
             <form id="messageForm" class="grid-form">
               <input type="hidden" id="message_id" />
               <div><label>Firma</label><select id="message_company_id"></select></div>
-              
               <div><label>Lead</label><select id="message_lead_candidate_id"></select></div>
               <div><label>Channel</label>
                 <select id="message_channel">
@@ -1004,6 +1039,7 @@ filament brand eu"></textarea>
               <div class="full actions"><button class="btn primary" type="submit">Task speichern</button></div>
             </form>
           </div>
+
           <div class="card">
             <div class="table-wrap">
               <table>
@@ -1011,6 +1047,38 @@ filament brand eu"></textarea>
                 <tbody id="tasksBody"></tbody>
               </table>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="section-calendar">
+        <div class="calendar-shell">
+          <div class="card">
+            <div class="calendar-header">
+              <button class="btn ghost calendar-nav" id="calendarPrevBtn" type="button">◀</button>
+              <div>
+                <h3 id="calendarMonthLabel" style="margin:0;">Kalender</h3>
+                <div class="small muted">Tasks und Placements im Monatsüberblick</div>
+              </div>
+              <button class="btn ghost calendar-nav" id="calendarNextBtn" type="button">▶</button>
+            </div>
+
+            <div class="calendar-weekdays">
+              <span>Mo</span>
+              <span>Di</span>
+              <span>Mi</span>
+              <span>Do</span>
+              <span>Fr</span>
+              <span>Sa</span>
+              <span>So</span>
+            </div>
+
+            <div id="calendarGrid" class="calendar-grid"></div>
+          </div>
+
+          <div class="card">
+            <h3>Nächste Einträge</h3>
+            <div id="calendarUpcomingList" class="calendar-side-list"></div>
           </div>
         </div>
       </section>
@@ -1035,31 +1103,32 @@ filament brand eu"></textarea>
   </div>
 
   <script>
-  const App = {
-    state: {
-      supabase: null,
-      companies: [],
-      deals: [],
-      placements: [],
-      links: [],
-      socialAccounts: [],
-      socialSnapshots: [],
-      leads: [],
-      messages: [],
-      tasks: [],
-      dashboard: [],
-      calendarDate: new Date()
-    },
+    const App = {
+      state: {
+        supabase: null,
+        companies: [],
+        deals: [],
+        placements: [],
+        links: [],
+        socialAccounts: [],
+        socialSnapshots: [],
+        leads: [],
+        messages: [],
+        tasks: [],
+        dashboard: [],
+        calendarDate: new Date()
+      },
 
-    async init() {
-      this.bindNav();
-      this.bindForms();
-      this.bindCalendar();
-      this.loadStoredConfig();
-      this.setTodayDefaults();
-      this.renderEmptySelects();
-      this.renderSidebarCalendar();
-    },
+      async init() {
+        this.bindNav();
+        this.bindForms();
+        this.bindCalendar();
+        this.loadStoredConfig();
+        this.setTodayDefaults();
+        this.renderEmptySelects();
+        this.renderCalendar();
+      },
+
       bindNav() {
         document.querySelectorAll('.nav-btn').forEach(btn => {
           btn.addEventListener('click', () => {
@@ -1068,18 +1137,20 @@ filament brand eu"></textarea>
             btn.classList.add('active');
             document.getElementById('section-' + btn.dataset.section).classList.add('active');
             document.getElementById('pageTitle').textContent = btn.textContent;
+
             const subtitles = {
-  dashboard: 'Überblick über Partner, Leads, Links und Performance.',
-  companies: 'Verwalte Brands, Partner und Affiliate-Firmen.',
-  deals: 'Behalte laufende und geplante Kooperationen im Blick.',
-  placements: 'Dokumentiere Videos, Reels, Stories und Posts.',
-  links: 'Alle Partnerlinks mit Performance, Placement und Umsatz.',
-  social: 'Follower und KPIs als historische Snapshots tracken.',
-  leads: 'Neue potenzielle Partner sammeln und qualifizieren.',
-  outreach: 'Outreach-Nachrichten, Drafts und Statusübersicht.',
-  tasks: 'Offene Schritte, Follow-ups und Erinnerungen.',
-  settings: 'Supabase-Verbindung und lokale Konfiguration.'
-};
+              dashboard: 'Überblick über Partner, Leads, Links und Performance.',
+              companies: 'Verwalte Brands, Partner und Ansprechpartner.',
+              deals: 'Behalte laufende und geplante Kooperationen im Blick.',
+              placements: 'Dokumentiere geplante und veröffentlichte Placements.',
+              links: 'Alle Partnerlinks mit Performance, Placement und Umsatz.',
+              social: 'Follower und KPIs als historische Snapshots tracken.',
+              leads: 'Neue potenzielle Partner sammeln und qualifizieren.',
+              outreach: 'Outreach-Nachrichten, Drafts und Statusübersicht.',
+              tasks: 'Offene Schritte, Follow-ups und Erinnerungen.',
+              calendar: 'Monatsansicht für Tasks und Placements.',
+              settings: 'Supabase-Verbindung und lokale Konfiguration.'
+            };
             document.getElementById('pageSubtitle').textContent = subtitles[btn.dataset.section] || '';
           });
         });
@@ -1089,41 +1160,79 @@ filament brand eu"></textarea>
       },
 
       bindForms() {
-  document.getElementById('settingsForm').addEventListener('submit', e => { e.preventDefault(); this.saveConfig(); });
-  document.getElementById('testConnectionBtn').addEventListener('click', () => this.testConnection());
-  document.getElementById('companyForm').addEventListener('submit', e => { e.preventDefault(); this.saveCompany(); });
-  document.getElementById('dealForm').addEventListener('submit', e => { e.preventDefault(); this.saveDeal(); });
-  document.getElementById('placementForm').addEventListener('submit', e => { e.preventDefault(); this.savePlacement(); });
-  document.getElementById('linkForm').addEventListener('submit', e => { e.preventDefault(); this.saveLink(); });
-  document.getElementById('socialForm').addEventListener('submit', e => { e.preventDefault(); this.saveSocialSnapshot(); });
-  document.getElementById('leadForm').addEventListener('submit', e => { e.preventDefault(); this.saveLead(); });
-  document.getElementById('messageForm').addEventListener('submit', e => { e.preventDefault(); this.saveMessage(); });
-  document.getElementById('taskForm').addEventListener('submit', e => { e.preventDefault(); this.saveTask(); });
-  document.getElementById('companySearch').addEventListener('input', e => this.renderCompanies(e.target.value));
-  document.getElementById('leadSearch').addEventListener('input', e => this.renderLeads(e.target.value));
-},
+        document.getElementById('settingsForm').addEventListener('submit', e => { e.preventDefault(); this.saveConfig(); });
+        document.getElementById('testConnectionBtn').addEventListener('click', () => this.testConnection());
+        document.getElementById('companyForm').addEventListener('submit', e => { e.preventDefault(); this.saveCompany(); });
+        document.getElementById('dealForm').addEventListener('submit', e => { e.preventDefault(); this.saveDeal(); });
+        document.getElementById('placementForm').addEventListener('submit', e => { e.preventDefault(); this.savePlacement(); });
+        document.getElementById('linkForm').addEventListener('submit', e => { e.preventDefault(); this.saveLink(); });
+        document.getElementById('socialForm').addEventListener('submit', e => { e.preventDefault(); this.saveSocialSnapshot(); });
+        document.getElementById('leadForm').addEventListener('submit', e => { e.preventDefault(); this.saveLead(); });
+        document.getElementById('messageForm').addEventListener('submit', e => { e.preventDefault(); this.saveMessage(); });
+        document.getElementById('taskForm').addEventListener('submit', e => { e.preventDefault(); this.saveTask(); });
+
+        document.getElementById('companySearch').addEventListener('input', e => this.renderCompanies(e.target.value));
+        document.getElementById('leadSearch').addEventListener('input', e => this.renderLeads(e.target.value));
+      },
+
       bindCalendar() {
-  const prevBtn = document.getElementById('calendarPrevBtn');
-  const nextBtn = document.getElementById('calendarNextBtn');
+        const prevBtn = document.getElementById('calendarPrevBtn');
+        const nextBtn = document.getElementById('calendarNextBtn');
 
-  if (prevBtn) {
-    prevBtn.addEventListener('click', () => {
-      const d = new Date(this.state.calendarDate);
-      d.setMonth(d.getMonth() - 1);
-      this.state.calendarDate = d;
-      this.renderSidebarCalendar();
-    });
-  }
+        if (prevBtn) {
+          prevBtn.addEventListener('click', () => {
+            const d = new Date(this.state.calendarDate);
+            d.setMonth(d.getMonth() - 1);
+            this.state.calendarDate = d;
+            this.renderCalendar();
+          });
+        }
 
-  if (nextBtn) {
-    nextBtn.addEventListener('click', () => {
-      const d = new Date(this.state.calendarDate);
-      d.setMonth(d.getMonth() + 1);
-      this.state.calendarDate = d;
-      this.renderSidebarCalendar();
-    });
-  }
-},
+        if (nextBtn) {
+          nextBtn.addEventListener('click', () => {
+            const d = new Date(this.state.calendarDate);
+            d.setMonth(d.getMonth() + 1);
+            this.state.calendarDate = d;
+            this.renderCalendar();
+          });
+        }
+      },
+
+      showCompanyPanel() {
+        document.getElementById('companyPanel').classList.remove('hidden');
+        document.getElementById('companyPanelTitle').textContent = 'Neuen Partner anlegen';
+        this.resetCompanyForm();
+      },
+      hideCompanyPanel() {
+        document.getElementById('companyPanel').classList.add('hidden');
+      },
+
+      showDealPanel() {
+        document.getElementById('dealPanel').classList.remove('hidden');
+        document.getElementById('dealPanelTitle').textContent = 'Neuen Deal anlegen';
+        this.resetDealForm();
+      },
+      hideDealPanel() {
+        document.getElementById('dealPanel').classList.add('hidden');
+      },
+
+      showPlacementPanel() {
+        document.getElementById('placementPanel').classList.remove('hidden');
+        document.getElementById('placementPanelTitle').textContent = 'Neues Placement anlegen';
+        this.resetPlacementForm();
+      },
+      hidePlacementPanel() {
+        document.getElementById('placementPanel').classList.add('hidden');
+      },
+
+      showLinkPanel() {
+        document.getElementById('linkPanel').classList.remove('hidden');
+        document.getElementById('linkPanelTitle').textContent = 'Neuen Link anlegen';
+        this.resetLinkForm();
+      },
+      hideLinkPanel() {
+        document.getElementById('linkPanel').classList.add('hidden');
+      },
 
       loadStoredConfig() {
         document.getElementById('supabase_url').value = localStorage.getItem('crm_supabase_url') || '';
@@ -1176,20 +1285,23 @@ filament brand eu"></textarea>
           this.toast('Bitte zuerst Supabase URL und Anon Key eintragen.', true);
           return;
         }
+
         try {
           await Promise.all([
-  this.loadCompanies(),
-  this.loadDeals(),
-  this.loadPlacements(),
-  this.loadLinks(),
-  this.loadSocialAccounts(),
-  this.loadSocialSnapshots(),
-  this.loadLeads(),
-  this.loadMessages(),
-  this.loadTasks(),
-  this.loadDashboardOnly()
-]);
+            this.loadCompanies(),
+            this.loadDeals(),
+            this.loadPlacements(),
+            this.loadLinks(),
+            this.loadSocialAccounts(),
+            this.loadSocialSnapshots(),
+            this.loadLeads(),
+            this.loadMessages(),
+            this.loadTasks(),
+            this.loadDashboardOnly()
+          ]);
+
           this.populateRelationSelects();
+          this.renderCalendar();
           this.toast('Daten aktualisiert.');
         } catch (err) {
           this.toast('Fehler beim Laden: ' + err.message, true);
@@ -1223,16 +1335,16 @@ filament brand eu"></textarea>
       },
 
       async loadPlacements() {
-  const { data, error } = await this.state.supabase
-    .from('placements')
-    .select('*, companies(name), deals(title)')
-    .order('published_at', { ascending: false, nullsFirst: false });
+        const { data, error } = await this.state.supabase
+          .from('placements')
+          .select('*, companies(name), deals(title)')
+          .order('published_at', { ascending: false, nullsFirst: false });
 
-  if (error) throw error;
-  this.state.placements = data || [];
-  this.renderPlacements();
-  this.renderSidebarCalendar();
-},
+        if (error) throw error;
+        this.state.placements = data || [];
+        this.renderPlacements();
+        this.renderCalendar();
+      },
 
       async loadLinks() {
         const { data, error } = await this.state.supabase.from('link_library_view').select('*').order('created_at', { ascending: false });
@@ -1267,96 +1379,23 @@ filament brand eu"></textarea>
       },
 
       async loadMessages() {
-  const { data, error } = await this.state.supabase
-    .from('outreach_messages')
-    .select('*, companies(name), lead_candidates(company_name)')
-    .order('created_at', { ascending: false });
+        const { data, error } = await this.state.supabase
+          .from('outreach_messages')
+          .select('*, companies(name), lead_candidates(company_name)')
+          .order('created_at', { ascending: false });
 
-  if (error) throw error;
-  this.state.messages = data || [];
-  this.renderMessages();
-},
+        if (error) throw error;
+        this.state.messages = data || [];
+        this.renderMessages();
+      },
 
       async loadTasks() {
         const { data, error } = await this.state.supabase.from('tasks').select('*').order('due_date', { ascending: true, nullsFirst: false });
         if (error) throw error;
         this.state.tasks = data || [];
         this.renderTasks();
+        this.renderCalendar();
       },
-      renderSidebarCalendar() {
-  const monthLabel = document.getElementById('calendarMonthLabel');
-  const grid = document.getElementById('calendarGrid');
-  const upcomingList = document.getElementById('calendarUpcomingList');
-
-  if (!monthLabel || !grid || !upcomingList) return;
-
-  const current = this.state.calendarDate || new Date();
-  const year = current.getFullYear();
-  const month = current.getMonth();
-
-  const firstDay = new Date(year, month, 1);
-  const lastDay = new Date(year, month + 1, 0);
-
-  let startWeekday = firstDay.getDay();
-  startWeekday = startWeekday === 0 ? 6 : startWeekday - 1;
-
-  const daysInMonth = lastDay.getDate();
-  const today = new Date();
-  const todayStr = today.toISOString().slice(0, 10);
-
-  monthLabel.textContent = new Intl.DateTimeFormat('de-DE', {
-    month: 'long',
-    year: 'numeric'
-  }).format(firstDay);
-
-  const placementDates = new Set(
-    (this.state.placements || [])
-      .filter(p => p.published_at)
-      .map(p => String(p.published_at).slice(0, 10))
-  );
-
-  const cells = [];
-
-  for (let i = 0; i < startWeekday; i++) {
-    cells.push(`<div class="calendar-day muted-day"></div>`);
-  }
-
-  for (let day = 1; day <= daysInMonth; day++) {
-    const dateObj = new Date(year, month, day);
-    const dateStr = [
-      dateObj.getFullYear(),
-      String(dateObj.getMonth() + 1).padStart(2, '0'),
-      String(dateObj.getDate()).padStart(2, '0')
-    ].join('-');
-
-    const isToday = dateStr === todayStr;
-    const hasPlacement = placementDates.has(dateStr);
-    const isFuturePlacement = hasPlacement && dateStr >= todayStr;
-
-    cells.push(`
-      <div class="calendar-day ${isToday ? 'today' : ''} ${hasPlacement ? 'has-placement' : ''} ${isFuturePlacement ? 'future-placement' : ''}" title="${dateStr}">
-        ${day}
-      </div>
-    `);
-  }
-
-  grid.innerHTML = cells.join('');
-
-  const upcoming = [...(this.state.placements || [])]
-    .filter(p => p.published_at && String(p.published_at).slice(0, 10) >= todayStr)
-    .sort((a, b) => String(a.published_at).localeCompare(String(b.published_at)))
-    .slice(0, 5);
-
-  upcomingList.innerHTML = upcoming.length
-    ? upcoming.map(p => `
-        <div class="calendar-event-item">
-          <b>${p.content_title || 'Ohne Titel'}</b>
-          <div class="date">${String(p.published_at).slice(0, 10)} · ${p.platform || ''}</div>
-          <div class="small muted">${p.companies?.name || this.companyNameById(p.company_id) || ''}</div>
-        </div>
-      `).join('')
-    : '<div class="small muted">Keine geplanten Placements.</div>';
-},
 
       renderDashboard() {
         const kpiContainer = document.getElementById('dashboardKpis');
@@ -1371,11 +1410,20 @@ filament brand eu"></textarea>
           ['Outreach gesendet', map.outreach_sent || this.state.messages.filter(m => m.status === 'sent').length || 0],
           ['Social Snapshots', map.social_snapshots_total || this.state.socialSnapshots.length || 0]
         ];
-        kpiContainer.innerHTML = cards.map(([label, value]) => `<div class="card"><div class="kpi"><div class="label">${label}</div><div class="value">${value}</div></div></div>`).join('');
+
+        kpiContainer.innerHTML = cards.map(([label, value]) => `
+          <div class="card">
+            <div class="kpi">
+              <div class="label">${label}</div>
+              <div class="value">${value}</div>
+            </div>
+          </div>
+        `).join('');
 
         const statuses = ['new','qualified','unqualified'];
         const counts = statuses.map(s => this.state.leads.filter(l => l.qualification_status === s).length);
         const max = Math.max(1, ...counts);
+
         document.getElementById('leadPipelineBars').innerHTML = statuses.map((s, i) => `
           <div class="bar-row">
             <div class="bar-label"><span>${s}</span><span>${counts[i]}</span></div>
@@ -1390,6 +1438,7 @@ filament brand eu"></textarea>
           byCompany[name].count += 1;
           byCompany[name].revenue += Number(l.revenue || 0);
         });
+
         document.getElementById('topPartnersBody').innerHTML = Object.entries(byCompany)
           .sort((a,b) => b[1].revenue - a[1].revenue)
           .slice(0,8)
@@ -1398,25 +1447,25 @@ filament brand eu"></textarea>
       },
 
       renderCompanies(search='') {
-  const q = search.toLowerCase();
-  const rows = this.state.companies.filter(c =>
-    !q || [c.name, c.category, c.website, c.status, c.contact_person, c.contact_email].join(' ').toLowerCase().includes(q)
-  );
+        const q = search.toLowerCase();
+        const rows = this.state.companies.filter(c =>
+          !q || [c.name, c.category, c.website, c.status, c.contact_person, c.contact_email].join(' ').toLowerCase().includes(q)
+        );
 
-  document.getElementById('companiesBody').innerHTML = rows.map(c => `
-    <tr>
-      <td><b>${c.name || ''}</b></td>
-      <td><span class="pill">${c.status || ''}</span></td>
-      <td>${c.contact_person || ''}</td>
-      <td>${c.contact_email || ''}</td>
-      <td>${c.website ? `<a href="${c.website}" target="_blank">${c.website}</a>` : ''}</td>
-      <td class="actions">
-        <button class="btn" onclick="App.editCompany('${c.id}')">Bearbeiten</button>
-        <button class="btn danger" onclick="App.deleteRow('companies','${c.id}')">Löschen</button>
-      </td>
-    </tr>
-  `).join('') || '<tr><td colspan="6" class="muted">Keine Partner gefunden.</td></tr>';
-},
+        document.getElementById('companiesBody').innerHTML = rows.map(c => `
+          <tr>
+            <td><b>${c.name || ''}</b></td>
+            <td><span class="pill">${c.status || ''}</span></td>
+            <td>${c.contact_person || ''}</td>
+            <td>${c.contact_email || ''}</td>
+            <td>${c.website ? `<a href="${c.website}" target="_blank" rel="noopener"><span class="link-short">${this.shortenUrl(c.website, 30)}</span></a>` : ''}</td>
+            <td class="actions">
+              <button class="btn" onclick="App.editCompany('${c.id}')">Bearbeiten</button>
+              <button class="btn danger" onclick="App.deleteRow('companies','${c.id}')">Löschen</button>
+            </td>
+          </tr>
+        `).join('') || '<tr><td colspan="6" class="muted">Keine Partner gefunden.</td></tr>';
+      },
 
       renderDeals() {
         document.getElementById('dealsBody').innerHTML = this.state.deals.map(d => `
@@ -1437,7 +1486,7 @@ filament brand eu"></textarea>
       renderPlacements() {
         document.getElementById('placementsBody').innerHTML = this.state.placements.map(p => `
           <tr>
-            <td><b>${p.content_title || ''}</b><div class="small muted">${p.video_timestamp || ''}</div></td>
+            <td><b>${this.placementLabel(p)}</b></td>
             <td>${p.platform || ''} / ${p.content_type || ''}</td>
             <td>${p.published_at || ''}</td>
             <td>${p.companies?.name || this.companyNameById(p.company_id) || ''}</td>
@@ -1450,19 +1499,22 @@ filament brand eu"></textarea>
       },
 
       renderLinks() {
-        document.getElementById('linksBody').innerHTML = this.state.links.map(l => `
-          <tr>
-            <td><b>${l.company_name || this.companyNameById(l.company_id) || ''}</b><div class="small muted">${l.short_url || l.original_url || ''}</div></td>
-            <td>${l.link_type || ''}</td>
-            <td>${l.clicks || 0}</td>
-            <td>${Number(l.revenue || 0).toFixed(2)} €</td>
-            <td>${l.placement_title || this.placementTitleById(l.placement_id) || ''}</td>
-            <td class="actions">
-              <button class="btn" onclick="App.editLink('${l.id}')">Bearbeiten</button>
-              <button class="btn danger" onclick="App.deleteRow('tracking_links','${l.id}')">Löschen</button>
-            </td>
-          </tr>
-        `).join('') || '<tr><td colspan="6" class="muted">Keine Links vorhanden.</td></tr>';
+        document.getElementById('linksBody').innerHTML = this.state.links.map(l => {
+          const url = l.short_url || l.original_url || '';
+          return `
+            <tr>
+              <td><b>${l.company_name || this.companyNameById(l.company_id) || ''}</b></td>
+              <td>${l.link_type || ''}</td>
+              <td>${l.clicks || 0}</td>
+              <td>${Number(l.revenue || 0).toFixed(2)} €</td>
+              <td>${url ? `<a href="${url}" target="_blank" rel="noopener"><span class="link-short">${this.shortenUrl(url, 34)}</span></a>` : ''}</td>
+              <td class="actions">
+                <button class="btn" onclick="App.editLink('${l.id}')">Bearbeiten</button>
+                <button class="btn danger" onclick="App.deleteRow('tracking_links','${l.id}')">Löschen</button>
+              </td>
+            </tr>
+          `;
+        }).join('') || '<tr><td colspan="6" class="muted">Keine Links vorhanden.</td></tr>';
       },
 
       renderSocial() {
@@ -1470,13 +1522,14 @@ filament brand eu"></textarea>
         this.state.socialSnapshots.forEach(s => {
           if (!latestByAccount[s.social_account_id]) latestByAccount[s.social_account_id] = s;
         });
+
         document.getElementById('socialBody').innerHTML = Object.values(latestByAccount).map(s => `
           <tr>
             <td>${s.social_accounts?.handle || this.socialHandleById(s.social_account_id) || ''}</td>
             <td>${s.snapshot_date || ''}</td>
             <td>${s.followers || 0}</td>
-            <td>${s.reach || 0}</td>
-            <td>${s.website_clicks || 0}</td>
+            <td>${s.posts_count || 0}</td>
+            <td>${s.profile_visits || 0}</td>
           </tr>
         `).join('') || '<tr><td colspan="5" class="muted">Noch keine Snapshots.</td></tr>';
       },
@@ -1499,15 +1552,15 @@ filament brand eu"></textarea>
       },
 
       renderMessages() {
-  document.getElementById('messagesBody').innerHTML = this.state.messages.map(m => `
-    <tr>
-      <td><b>${m.subject || ''}</b><div class="small muted">${m.channel || ''}</div></td>
-      <td><span class="pill">${m.status || ''}</span></td>
-      <td>${m.companies?.name || this.companyNameById(m.company_id) || m.lead_candidates?.company_name || ''}</td>
-      <td>${m.sent_at ? String(m.sent_at).slice(0,10) : ''}</td>
-    </tr>
-  `).join('') || '<tr><td colspan="4" class="muted">Keine Outreach Nachrichten.</td></tr>';
-},
+        document.getElementById('messagesBody').innerHTML = this.state.messages.map(m => `
+          <tr>
+            <td><b>${m.subject || ''}</b><div class="small muted">${m.channel || ''}</div></td>
+            <td><span class="pill">${m.status || ''}</span></td>
+            <td>${m.companies?.name || this.companyNameById(m.company_id) || m.lead_candidates?.company_name || ''}</td>
+            <td>${m.sent_at ? String(m.sent_at).slice(0,10) : ''}</td>
+          </tr>
+        `).join('') || '<tr><td colspan="4" class="muted">Keine Outreach Nachrichten.</td></tr>';
+      },
 
       renderTasks() {
         document.getElementById('tasksBody').innerHTML = this.state.tasks.map(t => `
@@ -1524,129 +1577,278 @@ filament brand eu"></textarea>
         `).join('') || '<tr><td colspan="5" class="muted">Keine Tasks vorhanden.</td></tr>';
       },
 
+      renderCalendar() {
+        const monthLabel = document.getElementById('calendarMonthLabel');
+        const grid = document.getElementById('calendarGrid');
+        const upcomingList = document.getElementById('calendarUpcomingList');
+
+        if (!monthLabel || !grid || !upcomingList) return;
+
+        const current = this.state.calendarDate || new Date();
+        const year = current.getFullYear();
+        const month = current.getMonth();
+
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+
+        let startWeekday = firstDay.getDay();
+        startWeekday = startWeekday === 0 ? 6 : startWeekday - 1;
+
+        const daysInMonth = lastDay.getDate();
+        const today = new Date();
+        const todayStr = today.toISOString().slice(0, 10);
+
+        monthLabel.textContent = new Intl.DateTimeFormat('de-DE', {
+          month: 'long',
+          year: 'numeric'
+        }).format(firstDay);
+
+        const placementMap = {};
+        (this.state.placements || []).forEach(p => {
+          const d = String(p.published_at || '').slice(0, 10);
+          if (!d) return;
+          if (!placementMap[d]) placementMap[d] = [];
+          placementMap[d].push(p);
+        });
+
+        const taskMap = {};
+        (this.state.tasks || []).forEach(t => {
+          const d = String(t.due_date || '').slice(0, 10);
+          if (!d) return;
+          if (!taskMap[d]) taskMap[d] = [];
+          taskMap[d].push(t);
+        });
+
+        const cells = [];
+
+        for (let i = 0; i < startWeekday; i++) {
+          cells.push(`<div class="calendar-day muted-day"></div>`);
+        }
+
+        for (let day = 1; day <= daysInMonth; day++) {
+          const dateObj = new Date(year, month, day);
+          const dateStr = [
+            dateObj.getFullYear(),
+            String(dateObj.getMonth() + 1).padStart(2, '0'),
+            String(dateObj.getDate()).padStart(2, '0')
+          ].join('-');
+
+          const isToday = dateStr === todayStr;
+          const dayPlacements = placementMap[dateStr] || [];
+          const dayTasks = taskMap[dateStr] || [];
+
+          cells.push(`
+            <div class="calendar-day ${isToday ? 'today' : ''}">
+              <div class="calendar-day-head">
+                <span>${day}</span>
+                <span class="small muted">${dayTasks.length + dayPlacements.length > 0 ? (dayTasks.length + dayPlacements.length) + ' Einträge' : ''}</span>
+              </div>
+              <div class="calendar-markers">
+                ${dayTasks.slice(0,2).map(t => `<div class="calendar-marker task">Task: ${escapeHtml(t.title || 'Ohne Titel')}</div>`).join('')}
+                ${dayPlacements.slice(0,2).map(p => `<div class="calendar-marker placement">Placement: ${escapeHtml(this.placementLabel(p))}</div>`).join('')}
+              </div>
+            </div>
+          `);
+        }
+
+        grid.innerHTML = cells.join('');
+
+        const upcoming = [
+          ...(this.state.tasks || [])
+            .filter(t => t.due_date && String(t.due_date).slice(0,10) >= todayStr)
+            .map(t => ({
+              type: 'Task',
+              date: String(t.due_date).slice(0,10),
+              title: t.title || 'Ohne Titel',
+              subtitle: t.priority || ''
+            })),
+          ...(this.state.placements || [])
+            .filter(p => p.published_at && String(p.published_at).slice(0,10) >= todayStr)
+            .map(p => ({
+              type: 'Placement',
+              date: String(p.published_at).slice(0,10),
+              title: this.placementLabel(p),
+              subtitle: p.companies?.name || this.companyNameById(p.company_id) || ''
+            }))
+        ]
+        .sort((a, b) => a.date.localeCompare(b.date))
+        .slice(0, 10);
+
+        upcomingList.innerHTML = upcoming.length
+          ? upcoming.map(item => `
+              <div class="calendar-side-item">
+                <b>${item.type}: ${escapeHtml(item.title)}</b>
+                <div class="small muted">${item.date}</div>
+                <div class="small muted">${escapeHtml(item.subtitle || '')}</div>
+              </div>
+            `).join('')
+          : '<div class="small muted">Keine anstehenden Einträge.</div>';
+      },
+
       renderEmptySelects() {
-  ['deal_company_id','placement_company_id','link_company_id','message_company_id'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.innerHTML = '<option value="">Bitte zuerst Partner anlegen</option>';
-  });
-},
+        ['deal_company_id','placement_company_id','link_company_id','message_company_id'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.innerHTML = '<option value="">Bitte zuerst Partner anlegen</option>';
+        });
+      },
 
       populateRelationSelects() {
-  const companyOptions = '<option value="">Bitte wählen</option>' + this.state.companies.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
-  ['deal_company_id','placement_company_id','link_company_id','message_company_id'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.innerHTML = companyOptions;
-  });
+        const companyOptions = '<option value="">Bitte wählen</option>' + this.state.companies.map(c => `<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('');
+        ['deal_company_id','placement_company_id','link_company_id','message_company_id'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.innerHTML = companyOptions;
+        });
 
-  const dealOptions = '<option value="">Bitte wählen</option>' + this.state.deals.map(d => `<option value="${d.id}">${d.title}</option>`).join('');
-  ['placement_deal_id','link_deal_id'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.innerHTML = dealOptions;
-  });
+        const dealOptions = '<option value="">Bitte wählen</option>' + this.state.deals.map(d => `<option value="${d.id}">${escapeHtml(d.title || '')}</option>`).join('');
+        ['placement_deal_id','link_deal_id'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.innerHTML = dealOptions;
+        });
 
-  const placementOptions = '<option value="">Bitte wählen</option>' + this.state.placements.map(p => `<option value="${p.id}">${p.content_title || p.content_url || p.id}</option>`).join('');
-  const placementEl = document.getElementById('link_placement_id');
-  if (placementEl) placementEl.innerHTML = placementOptions;
+        const placementOptions = '<option value="">Bitte wählen</option>' + this.state.placements.map(p => `<option value="${p.id}">${escapeHtml(this.placementLabel(p))}</option>`).join('');
+        const placementEl = document.getElementById('link_placement_id');
+        if (placementEl) placementEl.innerHTML = placementOptions;
 
-  const leadOptions = '<option value="">Bitte wählen</option>' + this.state.leads.map(l => `<option value="${l.id}">${l.company_name}</option>`).join('');
-  document.getElementById('message_lead_candidate_id').innerHTML = leadOptions;
+        const leadOptions = '<option value="">Bitte wählen</option>' + this.state.leads.map(l => `<option value="${l.id}">${escapeHtml(l.company_name || '')}</option>`).join('');
+        document.getElementById('message_lead_candidate_id').innerHTML = leadOptions;
 
-  const socialOptions = '<option value="">Bitte wählen</option>' + this.state.socialAccounts.map(a => `<option value="${a.id}">${a.platform} — ${a.handle}</option>`).join('');
-  document.getElementById('social_account_id').innerHTML = socialOptions || '<option value="">Bitte zuerst social_accounts befüllen</option>';
-},
+        const socialOptions = '<option value="">Bitte wählen</option>' + this.state.socialAccounts.map(a => `<option value="${a.id}">${escapeHtml((a.platform || '') + ' — ' + (a.handle || ''))}</option>`).join('');
+        document.getElementById('social_account_id').innerHTML = socialOptions || '<option value="">Bitte zuerst social_accounts befüllen</option>';
+      },
 
       async saveCompany() {
-  const payload = {
-    name: v('company_name'),
-    website: v('company_website'),
-    contact_person: v('company_contact_person'),
-    contact_email: v('company_contact_email'),
-    category: v('company_category'),
-    partner_type: v('company_partner_type'),
-    status: v('company_status'),
-    priority: v('company_priority'),
-    description: v('company_description'),
-    notes: v('company_notes')
-  };
-  await this.upsert('companies', 'company_id', payload, this.resetCompanyForm.bind(this), this.loadAll.bind(this));
-},
-     
+        const payload = {
+          name: v('company_name'),
+          website: v('company_website'),
+          contact_person: v('company_contact_person'),
+          contact_email: v('company_contact_email'),
+          category: v('company_category'),
+          partner_type: v('company_partner_type'),
+          status: v('company_status'),
+          priority: v('company_priority'),
+          description: v('company_description'),
+          notes: v('company_notes')
+        };
+        await this.upsert('companies', 'company_id', payload, this.resetCompanyForm.bind(this), async () => {
+          await this.loadAll();
+          this.hideCompanyPanel();
+        });
+      },
+
       async saveDeal() {
         const payload = {
-          company_id: nullable(v('deal_company_id')), title: v('deal_title'), deal_type: v('deal_deal_type'), status: v('deal_status'), start_date: nullable(v('deal_start_date')),
-          end_date: nullable(v('deal_end_date')), amount: num(v('deal_amount')), currency: v('deal_currency'), coupon_code: v('deal_coupon_code'),
-          contract_url: v('deal_contract_url'), notes: v('deal_notes')
+          company_id: nullable(v('deal_company_id')),
+          title: v('deal_title'),
+          deal_type: v('deal_deal_type'),
+          status: v('deal_status'),
+          start_date: nullable(v('deal_start_date')),
+          end_date: nullable(v('deal_end_date')),
+          amount: num(v('deal_amount')),
+          currency: v('deal_currency'),
+          coupon_code: v('deal_coupon_code'),
+          contract_url: v('deal_contract_url'),
+          notes: v('deal_notes')
         };
-        await this.upsert('deals', 'deal_id', payload, this.resetDealForm.bind(this), this.loadAll.bind(this));
+        await this.upsert('deals', 'deal_id', payload, this.resetDealForm.bind(this), async () => {
+          await this.loadAll();
+          this.hideDealPanel();
+        });
       },
+
       async savePlacement() {
-  const payload = {
-    company_id: nullable(v('placement_company_id')),
-    deal_id: nullable(v('placement_deal_id')),
-    platform: v('placement_platform'),
-    content_type: v('placement_content_type'),
-    published_at: nullable(v('placement_published_at')),
-    caption_text: v('placement_caption_text'),
-    notes: v('placement_notes')
-  };
-  await this.upsert('placements', 'placement_id', payload, this.resetPlacementForm.bind(this), this.loadAll.bind(this));
-},
+        const payload = {
+          company_id: nullable(v('placement_company_id')),
+          deal_id: nullable(v('placement_deal_id')),
+          platform: v('placement_platform'),
+          content_type: v('placement_content_type'),
+          published_at: nullable(v('placement_published_at')),
+          caption_text: v('placement_caption_text'),
+          notes: v('placement_notes')
+        };
+        await this.upsert('placements', 'placement_id', payload, this.resetPlacementForm.bind(this), async () => {
+          await this.loadAll();
+          this.hidePlacementPanel();
+        });
+      },
+
       async saveLink() {
-  const payload = {
-    company_id: nullable(v('link_company_id')),
-    deal_id: nullable(v('link_deal_id')),
-    placement_id: nullable(v('link_placement_id')),
-    link_type: v('link_link_type'),
-    original_url: v('link_original_url'),
-    short_url: v('link_short_url'),
-    coupon_code: v('link_coupon_code'),
-    clicks: num(v('link_clicks')),
-    revenue: num(v('link_revenue')),
-    commission_earned: num(v('link_commission_earned'))
-  };
-  await this.upsert('tracking_links', 'link_id', payload, this.resetLinkForm.bind(this), this.loadAll.bind(this));
-},
-     async saveSocialSnapshot() {
-  const payload = {
-    social_account_id: nullable(v('social_account_id')),
-    snapshot_date: nullable(v('social_snapshot_date')),
-    followers: num(v('social_followers')),
-    posts_count: num(v('social_posts_count')),
-    profile_visits: num(v('social_profile_visits'))
-  };
+        const payload = {
+          company_id: nullable(v('link_company_id')),
+          deal_id: nullable(v('link_deal_id')),
+          placement_id: nullable(v('link_placement_id')),
+          link_type: v('link_link_type'),
+          original_url: v('link_original_url'),
+          short_url: v('link_short_url'),
+          coupon_code: v('link_coupon_code'),
+          clicks: num(v('link_clicks')),
+          revenue: num(v('link_revenue')),
+          commission_earned: num(v('link_commission_earned'))
+        };
+        await this.upsert('tracking_links', 'link_id', payload, this.resetLinkForm.bind(this), async () => {
+          await this.loadAll();
+          this.hideLinkPanel();
+        });
+      },
 
-  const { error } = await this.state.supabase.from('social_snapshots').insert(payload);
-  if (error) return this.toast(error.message, true);
+      async saveSocialSnapshot() {
+        const payload = {
+          social_account_id: nullable(v('social_account_id')),
+          snapshot_date: nullable(v('social_snapshot_date')),
+          followers: num(v('social_followers')),
+          posts_count: num(v('social_posts_count')),
+          profile_visits: num(v('social_profile_visits'))
+        };
 
-  this.toast('Snapshot gespeichert.');
-  document.getElementById('socialForm').reset();
-  this.setTodayDefaults();
-  this.loadAll();
-},
+        const { error } = await this.state.supabase.from('social_snapshots').insert(payload);
+        if (error) return this.toast(error.message, true);
+
+        this.toast('Snapshot gespeichert.');
+        document.getElementById('socialForm').reset();
+        this.setTodayDefaults();
+        this.loadAll();
+      },
+
       async saveLead() {
         const payload = {
-          company_name: v('lead_company_name'), website: v('lead_website'), email: v('lead_email'), instagram_handle: v('lead_instagram_handle'), country: v('lead_country'),
-          category: v('lead_category'), source_url: v('lead_source_url'), source_type: v('lead_source_type'), lead_score: num(v('lead_lead_score')),
-          qualification_status: v('lead_qualification_status'), outreach_status: v('lead_outreach_status'), summary: v('lead_summary'), notes: v('lead_notes')
+          company_name: v('lead_company_name'),
+          website: v('lead_website'),
+          email: v('lead_email'),
+          instagram_handle: v('lead_instagram_handle'),
+          country: v('lead_country'),
+          category: v('lead_category'),
+          source_url: v('lead_source_url'),
+          source_type: v('lead_source_type'),
+          lead_score: num(v('lead_lead_score')),
+          qualification_status: v('lead_qualification_status'),
+          outreach_status: v('lead_outreach_status'),
+          summary: v('lead_summary'),
+          notes: v('lead_notes')
         };
         await this.upsert('lead_candidates', 'lead_id', payload, this.resetLeadForm.bind(this), this.loadAll.bind(this));
       },
-     async saveMessage() {
-  const payload = {
-    company_id: nullable(v('message_company_id')),
-    lead_candidate_id: nullable(v('message_lead_candidate_id')),
-    channel: v('message_channel'),
-    subject: v('message_subject'),
-    body: v('message_body'),
-    status: v('message_status'),
-    follow_up_number: num(v('message_follow_up_number'))
-  };
-  await this.upsert('outreach_messages', 'message_id', payload, () => document.getElementById('messageForm').reset(), this.loadAll.bind(this));
-},
+
+      async saveMessage() {
+        const payload = {
+          company_id: nullable(v('message_company_id')),
+          lead_candidate_id: nullable(v('message_lead_candidate_id')),
+          channel: v('message_channel'),
+          subject: v('message_subject'),
+          body: v('message_body'),
+          status: v('message_status'),
+          follow_up_number: num(v('message_follow_up_number'))
+        };
+        await this.upsert('outreach_messages', 'message_id', payload, () => document.getElementById('messageForm').reset(), this.loadAll.bind(this));
+      },
+
       async saveTask() {
         const payload = {
-          title: v('task_title'), due_date: nullable(v('task_due_date')), status: v('task_status'), priority: v('task_priority'), related_type: v('task_related_type'),
-          related_id: v('task_related_id'), notes: v('task_notes')
+          title: v('task_title'),
+          due_date: nullable(v('task_due_date')),
+          status: v('task_status'),
+          priority: v('task_priority'),
+          related_type: v('task_related_type'),
+          related_id: v('task_related_id'),
+          notes: v('task_notes')
         };
         await this.upsert('tasks', 'task_id', payload, () => document.getElementById('taskForm').reset(), this.loadAll.bind(this));
       },
@@ -1664,7 +1866,7 @@ filament brand eu"></textarea>
             this.toast('Eintrag gespeichert.');
           }
           resetFn();
-          reloadFn();
+          await reloadFn();
         } catch (err) {
           this.toast(err.message, true);
         }
@@ -1682,92 +1884,174 @@ filament brand eu"></textarea>
         }
       },
 
-     editCompany(id) {
-  const c = this.state.companies.find(x => x.id === id);
-  if (!c) return;
+      editCompany(id) {
+        const c = this.state.companies.find(x => x.id === id);
+        if (!c) return;
+        this.showCompanyPanel();
+        document.getElementById('companyPanelTitle').textContent = 'Partner bearbeiten';
 
-  setv('company_id', c.id);
-  setv('company_name', c.name);
-  setv('company_website', c.website);
-  setv('company_contact_person', c.contact_person);
-  setv('company_contact_email', c.contact_email);
-  setv('company_category', c.category);
-  setv('company_partner_type', c.partner_type);
-  setv('company_status', c.status);
-  setv('company_priority', c.priority);
-  setv('company_description', c.description);
-  setv('company_notes', c.notes);
-},
-      
+        setv('company_id', c.id);
+        setv('company_name', c.name);
+        setv('company_website', c.website);
+        setv('company_contact_person', c.contact_person);
+        setv('company_contact_email', c.contact_email);
+        setv('company_category', c.category);
+        setv('company_partner_type', c.partner_type);
+        setv('company_status', c.status);
+        setv('company_priority', c.priority);
+        setv('company_description', c.description);
+        setv('company_notes', c.notes);
+      },
+
       editDeal(id) {
-        const d = this.state.deals.find(x => x.id === id); if (!d) return;
-        setv('deal_id', d.id); setv('deal_company_id', d.company_id); setv('deal_title', d.title); setv('deal_deal_type', d.deal_type); setv('deal_status', d.status);
-        setv('deal_start_date', d.start_date); setv('deal_end_date', d.end_date); setv('deal_amount', d.amount); setv('deal_currency', d.currency); setv('deal_coupon_code', d.coupon_code); setv('deal_contract_url', d.contract_url); setv('deal_notes', d.notes);
+        const d = this.state.deals.find(x => x.id === id);
+        if (!d) return;
+        this.showDealPanel();
+        document.getElementById('dealPanelTitle').textContent = 'Deal bearbeiten';
+
+        setv('deal_id', d.id);
+        setv('deal_company_id', d.company_id);
+        setv('deal_title', d.title);
+        setv('deal_deal_type', d.deal_type);
+        setv('deal_status', d.status);
+        setv('deal_start_date', d.start_date);
+        setv('deal_end_date', d.end_date);
+        setv('deal_amount', d.amount);
+        setv('deal_currency', d.currency);
+        setv('deal_coupon_code', d.coupon_code);
+        setv('deal_contract_url', d.contract_url);
+        setv('deal_notes', d.notes);
       },
+
       editPlacement(id) {
-  const p = this.state.placements.find(x => x.id === id);
-  if (!p) return;
+        const p = this.state.placements.find(x => x.id === id);
+        if (!p) return;
+        this.showPlacementPanel();
+        document.getElementById('placementPanelTitle').textContent = 'Placement bearbeiten';
 
-  setv('placement_id', p.id);
-  setv('placement_company_id', p.company_id);
-  setv('placement_deal_id', p.deal_id);
-  setv('placement_platform', p.platform);
-  setv('placement_content_type', p.content_type);
-  setv('placement_published_at', p.published_at);
-  setv('placement_caption_text', p.caption_text);
-  setv('placement_notes', p.notes);
-},
-      editLink(id) {
-  const l = this.state.links.find(x => x.id === id);
-  if (!l) return;
-
-  setv('link_id', l.id);
-  setv('link_company_id', l.company_id);
-  setv('link_deal_id', l.deal_id);
-  setv('link_placement_id', l.placement_id);
-  setv('link_link_type', l.link_type);
-  setv('link_original_url', l.original_url);
-  setv('link_short_url', l.short_url);
-  setv('link_coupon_code', l.coupon_code);
-  setv('link_clicks', l.clicks);
-  setv('link_revenue', l.revenue);
-  setv('link_commission_earned', l.commission_earned);
-},
-      editLead(id) {
-        const l = this.state.leads.find(x => x.id === id); if (!l) return;
-        setv('lead_id', l.id); setv('lead_company_name', l.company_name); setv('lead_website', l.website); setv('lead_email', l.email); setv('lead_instagram_handle', l.instagram_handle);
-        setv('lead_country', l.country); setv('lead_category', l.category); setv('lead_source_url', l.source_url); setv('lead_source_type', l.source_type); setv('lead_lead_score', l.lead_score);
-        setv('lead_qualification_status', l.qualification_status); setv('lead_outreach_status', l.outreach_status); setv('lead_summary', l.summary); setv('lead_notes', l.notes);
+        setv('placement_id', p.id);
+        setv('placement_company_id', p.company_id);
+        setv('placement_deal_id', p.deal_id);
+        setv('placement_platform', p.platform);
+        setv('placement_content_type', p.content_type);
+        setv('placement_published_at', p.published_at);
+        setv('placement_caption_text', p.caption_text);
+        setv('placement_notes', p.notes);
       },
+
+      editLink(id) {
+        const l = this.state.links.find(x => x.id === id);
+        if (!l) return;
+        this.showLinkPanel();
+        document.getElementById('linkPanelTitle').textContent = 'Link bearbeiten';
+
+        setv('link_id', l.id);
+        setv('link_company_id', l.company_id);
+        setv('link_deal_id', l.deal_id);
+        setv('link_placement_id', l.placement_id);
+        setv('link_link_type', l.link_type);
+        setv('link_original_url', l.original_url);
+        setv('link_short_url', l.short_url);
+        setv('link_coupon_code', l.coupon_code);
+        setv('link_clicks', l.clicks);
+        setv('link_revenue', l.revenue);
+        setv('link_commission_earned', l.commission_earned);
+      },
+
+      editLead(id) {
+        const l = this.state.leads.find(x => x.id === id);
+        if (!l) return;
+        setv('lead_id', l.id);
+        setv('lead_company_name', l.company_name);
+        setv('lead_website', l.website);
+        setv('lead_email', l.email);
+        setv('lead_instagram_handle', l.instagram_handle);
+        setv('lead_country', l.country);
+        setv('lead_category', l.category);
+        setv('lead_source_url', l.source_url);
+        setv('lead_source_type', l.source_type);
+        setv('lead_lead_score', l.lead_score);
+        setv('lead_qualification_status', l.qualification_status);
+        setv('lead_outreach_status', l.outreach_status);
+        setv('lead_summary', l.summary);
+        setv('lead_notes', l.notes);
+      },
+
       editTask(id) {
-        const t = this.state.tasks.find(x => x.id === id); if (!t) return;
-        setv('task_id', t.id); setv('task_title', t.title); setv('task_due_date', t.due_date); setv('task_status', t.status); setv('task_priority', t.priority);
-        setv('task_related_type', t.related_type); setv('task_related_id', t.related_id); setv('task_notes', t.notes);
+        const t = this.state.tasks.find(x => x.id === id);
+        if (!t) return;
+        setv('task_id', t.id);
+        setv('task_title', t.title);
+        setv('task_due_date', t.due_date);
+        setv('task_status', t.status);
+        setv('task_priority', t.priority);
+        setv('task_related_type', t.related_type);
+        setv('task_related_id', t.related_id);
+        setv('task_notes', t.notes);
       },
 
       resetCompanyForm() {
-  document.getElementById('companyForm').reset();
-  setv('company_id','');
-  setv('company_status','lead_new');
-  setv('company_partner_type','brand');
-  setv('company_priority','medium');
-},
-      
-      resetDealForm() { document.getElementById('dealForm').reset(); setv('deal_id',''); setv('deal_currency','EUR'); setv('deal_status','draft'); setv('deal_deal_type','affiliate'); this.setTodayDefaults(); },
-      resetPlacementForm() { document.getElementById('placementForm').reset(); setv('placement_id',''); setv('placement_platform','youtube'); setv('placement_content_type','video'); this.setTodayDefaults(); },
+        document.getElementById('companyForm').reset();
+        setv('company_id','');
+        setv('company_status','lead_new');
+        setv('company_partner_type','brand');
+        setv('company_priority','medium');
+      },
+
+      resetDealForm() {
+        document.getElementById('dealForm').reset();
+        setv('deal_id','');
+        setv('deal_currency','EUR');
+        setv('deal_status','draft');
+        setv('deal_deal_type','affiliate');
+        this.setTodayDefaults();
+      },
+
+      resetPlacementForm() {
+        document.getElementById('placementForm').reset();
+        setv('placement_id','');
+        setv('placement_platform','youtube');
+        setv('placement_content_type','video');
+        this.setTodayDefaults();
+      },
+
       resetLinkForm() {
-  document.getElementById('linkForm').reset();
-  setv('link_id','');
-  setv('link_clicks','0');
-  setv('link_revenue','0');
-  setv('link_commission_earned','0');
-},
-      resetLeadForm() { document.getElementById('leadForm').reset(); setv('lead_id',''); setv('lead_lead_score','50'); setv('lead_qualification_status','new'); setv('lead_outreach_status','not_started'); },
+        document.getElementById('linkForm').reset();
+        setv('link_id','');
+        setv('link_clicks','0');
+        setv('link_revenue','0');
+        setv('link_commission_earned','0');
+      },
+
+      resetLeadForm() {
+        document.getElementById('leadForm').reset();
+        setv('lead_id','');
+        setv('lead_lead_score','50');
+        setv('lead_qualification_status','new');
+        setv('lead_outreach_status','not_started');
+      },
 
       companyNameById(id) { return this.state.companies.find(x => x.id === id)?.name || ''; },
-      
       placementTitleById(id) { return this.state.placements.find(x => x.id === id)?.content_title || ''; },
       socialHandleById(id) { return this.state.socialAccounts.find(x => x.id === id)?.handle || ''; },
+
+      placementLabel(p) {
+        const platform = p.platform || 'Placement';
+        const type = p.content_type || '';
+        const company = p.companies?.name || this.companyNameById(p.company_id) || '';
+        return [platform, type, company].filter(Boolean).join(' · ');
+      },
+
+      shortenUrl(url, max = 36) {
+        if (!url) return '';
+        try {
+          const u = new URL(url);
+          const text = (u.hostname + u.pathname).replace(/\/$/, '');
+          return text.length > max ? text.slice(0, max - 1) + '…' : text;
+        } catch {
+          return url.length > max ? url.slice(0, max - 1) + '…' : url;
+        }
+      },
 
       toast(message, isError=false) {
         const existing = document.querySelector('.toast');
@@ -1775,7 +2059,7 @@ filament brand eu"></textarea>
         const el = document.createElement('div');
         el.className = 'toast';
         el.style.borderColor = isError ? 'rgba(239,68,68,.3)' : 'var(--border)';
-        el.innerHTML = `<b>${isError ? 'Fehler' : 'Info'}</b><div class="small" style="margin-top:4px;line-height:1.5;">${message}</div>`;
+        el.innerHTML = `<b>${isError ? 'Fehler' : 'Info'}</b><div class="small" style="margin-top:4px;line-height:1.5;">${escapeHtml(message)}</div>`;
         document.body.appendChild(el);
         setTimeout(() => el.remove(), 3400);
       }
@@ -1785,6 +2069,14 @@ filament brand eu"></textarea>
     function setv(id, value) { const el = document.getElementById(id); if (el) el.value = value ?? ''; }
     function nullable(value) { return value === '' ? null : value; }
     function num(value) { return value === '' ? 0 : Number(value); }
+    function escapeHtml(str) {
+      return String(str ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
 
     window.App = App;
     App.init();
