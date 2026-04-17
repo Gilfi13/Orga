@@ -1052,17 +1052,14 @@ filament brand eu"></textarea>
     },
 
     async init() {
-
-     async init() {
-  this.bindNav();
-  this.bindForms();
-  this.bindCalendar();
-  this.loadStoredConfig();
-  this.setTodayDefaults();
-  this.renderEmptySelects();
-  this.renderSidebarCalendar();
-},
-
+      this.bindNav();
+      this.bindForms();
+      this.bindCalendar();
+      this.loadStoredConfig();
+      this.setTodayDefaults();
+      this.renderEmptySelects();
+      this.renderSidebarCalendar();
+    },
       bindNav() {
         document.querySelectorAll('.nav-btn').forEach(btn => {
           btn.addEventListener('click', () => {
