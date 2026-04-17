@@ -1035,21 +1035,23 @@ filament brand eu"></textarea>
   </div>
 
   <script>
+  const App = {
     state: {
-  supabase: null,
-  companies: [],
-  deals: [],
-  placements: [],
-  links: [],
-  socialAccounts: [],
-  socialSnapshots: [],
-  leads: [],
-  messages: [],
-  tasks: [],
-  dashboard: [],
-  calendarDate: new Date()
-},
-},
+      supabase: null,
+      companies: [],
+      deals: [],
+      placements: [],
+      links: [],
+      socialAccounts: [],
+      socialSnapshots: [],
+      leads: [],
+      messages: [],
+      tasks: [],
+      dashboard: [],
+      calendarDate: new Date()
+    },
+
+    async init() {
 
      async init() {
   this.bindNav();
@@ -1581,36 +1583,49 @@ filament brand eu"></textarea>
         await this.upsert('deals', 'deal_id', payload, this.resetDealForm.bind(this), this.loadAll.bind(this));
       },
       async savePlacement() {
-        const payload = {
-          company_id: nullable(v('placement_company_id')), deal_id: nullable(v('placement_deal_id')), platform: v('placement_platform'), content_type: v('placement_content_type'),
-          content_title: v('placement_content_title'), content_url: v('placement_content_url'), published_at: nullable(v('placement_published_at')), video_timestamp: v('placement_video_timestamp'),
-          mention_type: v('placement_mention_type'), caption_text: v('placement_caption_text'), notes: v('placement_notes')
-        };
-        await this.upsert('placements', 'placement_id', payload, this.resetPlacementForm.bind(this), this.loadAll.bind(this));
-      },
+  const payload = {
+    company_id: nullable(v('placement_company_id')),
+    deal_id: nullable(v('placement_deal_id')),
+    platform: v('placement_platform'),
+    content_type: v('placement_content_type'),
+    published_at: nullable(v('placement_published_at')),
+    caption_text: v('placement_caption_text'),
+    notes: v('placement_notes')
+  };
+  await this.upsert('placements', 'placement_id', payload, this.resetPlacementForm.bind(this), this.loadAll.bind(this));
+},
       async saveLink() {
-        const payload = {
-          company_id: nullable(v('link_company_id')), deal_id: nullable(v('link_deal_id')), placement_id: nullable(v('link_placement_id')), link_type: v('link_link_type'),
-          original_url: v('link_original_url'), short_url: v('link_short_url'), utm_source: v('link_utm_source'), utm_medium: v('link_utm_medium'), utm_campaign: v('link_utm_campaign'),
-          utm_content: v('link_utm_content'), coupon_code: v('link_coupon_code'), clicks: num(v('link_clicks')), conversions: num(v('link_conversions')),
-          revenue: num(v('link_revenue')), commission_earned: num(v('link_commission_earned'))
-        };
-        await this.upsert('tracking_links', 'link_id', payload, this.resetLinkForm.bind(this), this.loadAll.bind(this));
-      },
-      async saveSocialSnapshot() {
-        const payload = {
-          social_account_id: nullable(v('social_account_id')), snapshot_date: nullable(v('social_snapshot_date')), followers: num(v('social_followers')),
-          following: num(v('social_following')), posts_count: num(v('social_posts_count')), impressions: num(v('social_impressions')), reach: num(v('social_reach')),
-          profile_visits: num(v('social_profile_visits')), website_clicks: num(v('social_website_clicks')), likes: num(v('social_likes')), comments: num(v('social_comments')),
-          shares: num(v('social_shares')), saves: num(v('social_saves')), views: num(v('social_views'))
-        };
-        const { error } = await this.state.supabase.from('social_snapshots').insert(payload);
-        if (error) return this.toast(error.message, true);
-        this.toast('Snapshot gespeichert.');
-        document.getElementById('socialForm').reset();
-        this.setTodayDefaults();
-        this.loadAll();
-      },
+  const payload = {
+    company_id: nullable(v('link_company_id')),
+    deal_id: nullable(v('link_deal_id')),
+    placement_id: nullable(v('link_placement_id')),
+    link_type: v('link_link_type'),
+    original_url: v('link_original_url'),
+    short_url: v('link_short_url'),
+    coupon_code: v('link_coupon_code'),
+    clicks: num(v('link_clicks')),
+    revenue: num(v('link_revenue')),
+    commission_earned: num(v('link_commission_earned'))
+  };
+  await this.upsert('tracking_links', 'link_id', payload, this.resetLinkForm.bind(this), this.loadAll.bind(this));
+},
+     async saveSocialSnapshot() {
+  const payload = {
+    social_account_id: nullable(v('social_account_id')),
+    snapshot_date: nullable(v('social_snapshot_date')),
+    followers: num(v('social_followers')),
+    posts_count: num(v('social_posts_count')),
+    profile_visits: num(v('social_profile_visits'))
+  };
+
+  const { error } = await this.state.supabase.from('social_snapshots').insert(payload);
+  if (error) return this.toast(error.message, true);
+
+  this.toast('Snapshot gespeichert.');
+  document.getElementById('socialForm').reset();
+  this.setTodayDefaults();
+  this.loadAll();
+},
       async saveLead() {
         const payload = {
           company_name: v('lead_company_name'), website: v('lead_website'), email: v('lead_email'), instagram_handle: v('lead_instagram_handle'), country: v('lead_country'),
@@ -1693,17 +1708,34 @@ filament brand eu"></textarea>
         setv('deal_start_date', d.start_date); setv('deal_end_date', d.end_date); setv('deal_amount', d.amount); setv('deal_currency', d.currency); setv('deal_coupon_code', d.coupon_code); setv('deal_contract_url', d.contract_url); setv('deal_notes', d.notes);
       },
       editPlacement(id) {
-        const p = this.state.placements.find(x => x.id === id); if (!p) return;
-        setv('placement_id', p.id); setv('placement_company_id', p.company_id); setv('placement_deal_id', p.deal_id); setv('placement_platform', p.platform); setv('placement_content_type', p.content_type);
-        setv('placement_content_title', p.content_title); setv('placement_content_url', p.content_url); setv('placement_published_at', p.published_at); setv('placement_video_timestamp', p.video_timestamp);
-        setv('placement_mention_type', p.mention_type); setv('placement_caption_text', p.caption_text); setv('placement_notes', p.notes);
-      },
+  const p = this.state.placements.find(x => x.id === id);
+  if (!p) return;
+
+  setv('placement_id', p.id);
+  setv('placement_company_id', p.company_id);
+  setv('placement_deal_id', p.deal_id);
+  setv('placement_platform', p.platform);
+  setv('placement_content_type', p.content_type);
+  setv('placement_published_at', p.published_at);
+  setv('placement_caption_text', p.caption_text);
+  setv('placement_notes', p.notes);
+},
       editLink(id) {
-        const l = this.state.links.find(x => x.id === id); if (!l) return;
-        setv('link_id', l.id); setv('link_company_id', l.company_id); setv('link_deal_id', l.deal_id); setv('link_placement_id', l.placement_id); setv('link_link_type', l.link_type);
-        setv('link_original_url', l.original_url); setv('link_short_url', l.short_url); setv('link_utm_source', l.utm_source); setv('link_utm_medium', l.utm_medium); setv('link_utm_campaign', l.utm_campaign);
-        setv('link_utm_content', l.utm_content); setv('link_coupon_code', l.coupon_code); setv('link_clicks', l.clicks); setv('link_conversions', l.conversions); setv('link_revenue', l.revenue); setv('link_commission_earned', l.commission_earned);
-      },
+  const l = this.state.links.find(x => x.id === id);
+  if (!l) return;
+
+  setv('link_id', l.id);
+  setv('link_company_id', l.company_id);
+  setv('link_deal_id', l.deal_id);
+  setv('link_placement_id', l.placement_id);
+  setv('link_link_type', l.link_type);
+  setv('link_original_url', l.original_url);
+  setv('link_short_url', l.short_url);
+  setv('link_coupon_code', l.coupon_code);
+  setv('link_clicks', l.clicks);
+  setv('link_revenue', l.revenue);
+  setv('link_commission_earned', l.commission_earned);
+},
       editLead(id) {
         const l = this.state.leads.find(x => x.id === id); if (!l) return;
         setv('lead_id', l.id); setv('lead_company_name', l.company_name); setv('lead_website', l.website); setv('lead_email', l.email); setv('lead_instagram_handle', l.instagram_handle);
@@ -1726,7 +1758,13 @@ filament brand eu"></textarea>
       
       resetDealForm() { document.getElementById('dealForm').reset(); setv('deal_id',''); setv('deal_currency','EUR'); setv('deal_status','draft'); setv('deal_deal_type','affiliate'); this.setTodayDefaults(); },
       resetPlacementForm() { document.getElementById('placementForm').reset(); setv('placement_id',''); setv('placement_platform','youtube'); setv('placement_content_type','video'); this.setTodayDefaults(); },
-      resetLinkForm() { document.getElementById('linkForm').reset(); setv('link_id',''); setv('link_clicks','0'); setv('link_conversions','0'); setv('link_revenue','0'); setv('link_commission_earned','0'); },
+      resetLinkForm() {
+  document.getElementById('linkForm').reset();
+  setv('link_id','');
+  setv('link_clicks','0');
+  setv('link_revenue','0');
+  setv('link_commission_earned','0');
+},
       resetLeadForm() { document.getElementById('leadForm').reset(); setv('lead_id',''); setv('lead_lead_score','50'); setv('lead_qualification_status','new'); setv('lead_outreach_status','not_started'); },
 
       companyNameById(id) { return this.state.companies.find(x => x.id === id)?.name || ''; },
