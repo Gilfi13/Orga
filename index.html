@@ -890,38 +890,60 @@
       </section>
 
       <section class="section" id="section-leads">
-        <div class="row" style="margin-bottom:16px;">
+        <div class="split">
           <div class="card">
-            <h3>Leads automatisch finden</h3>
-            <div class="grid-form">
+            <div class="section-toolbar">
+              <div class="actions">
+                <button class="btn primary" type="button" id="runLeadSearchBtn">Leads automatisch finden</button>
+                <button class="btn" type="button" id="reloadLeadsBtn">Leads neu laden</button>
+              </div>
+              <div style="min-width:280px; flex:1;">
+                <input id="leadSearch" placeholder="Lead suchen..." />
+              </div>
+            </div>
+
+            <div class="grid-form" style="margin-bottom:16px;">
               <div class="full">
                 <label>Keywords (eine Zeile pro Keyword)</label>
                 <textarea id="leadSearchKeywords" placeholder="3d printing filament europe
 3d printer accessories germany
 filament brand eu"></textarea>
               </div>
-
               <div>
                 <label>Location</label>
                 <input id="leadSearchLocation" type="text" value="Europe" />
               </div>
-
               <div>
-                <label>Max Results</label>
+                <label>Max Results pro Keyword</label>
                 <input id="leadSearchMaxResults" type="number" value="10" />
               </div>
+            </div>
 
-              <div class="full actions">
-                <button class="btn primary" type="button" id="runLeadSearchBtn">Leads automatisch finden</button>
-                <button class="btn" type="button" id="reloadLeadsBtn">Leads neu laden</button>
-              </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Firma</th>
+                    <th>Score</th>
+                    <th>Dublette</th>
+                    <th>Outreach</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="leadsBody"></tbody>
+              </table>
             </div>
           </div>
-        </div>
 
-        <div class="split">
-          <div class="card">
-            <h3>Lead manuell anlegen</h3>
+          <div class="card hidden" id="leadPanel">
+            <div class="detail-panel-header">
+              <div>
+                <h3 class="detail-title" id="leadPanelTitle">Lead prüfen</h3>
+                <div class="small muted">Lead bewerten, dokumentieren und Outreach vorbereiten</div>
+              </div>
+              <button class="btn ghost" type="button" onclick="App.hideLeadPanel()">Schließen</button>
+            </div>
+
             <form id="leadForm" class="grid-form">
               <input type="hidden" id="lead_id" />
               <div><label>Firmenname</label><input id="lead_company_name" required /></div>
@@ -948,33 +970,40 @@ filament brand eu"></textarea>
                   <option value="replied">replied</option>
                 </select>
               </div>
+              <div><label>Matched Partner</label><input id="lead_matched_company" readonly /></div>
               <div class="full"><label>Summary</label><textarea id="lead_summary"></textarea></div>
               <div class="full"><label>Notizen</label><textarea id="lead_notes"></textarea></div>
               <div class="full actions">
                 <button class="btn primary" type="submit">Lead speichern</button>
+                <button class="btn" type="button" onclick="App.openOutreachFromLead()">Outreach vorbereiten</button>
+                <button class="btn" type="button" onclick="App.convertLeadToCompany()">Als Partner übernehmen</button>
                 <button class="btn" type="button" onclick="App.resetLeadForm()">Reset</button>
               </div>
             </form>
-          </div>
-
-          <div class="card">
-            <div class="toolbar">
-              <input id="leadSearch" placeholder="Lead suchen..." />
-            </div>
-            <div class="table-wrap">
-              <table>
-                <thead><tr><th>Firma</th><th>Score</th><th>Quali</th><th>Outreach</th><th></th></tr></thead>
-                <tbody id="leadsBody"></tbody>
-              </table>
-            </div>
           </div>
         </div>
       </section>
 
       <section class="section" id="section-outreach">
-        <div class="split">
+        <div class="row row-2">
           <div class="card">
-            <h3>Outreach Nachricht anlegen</h3>
+            <h3>Outreach Queue</h3>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Betreff</th><th>Status</th><th>Firma</th><th>Gesendet</th><th></th></tr></thead>
+                <tbody id="messagesBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="detail-panel-header">
+              <div>
+                <h3 class="detail-title">Nachricht erstellen / bearbeiten</h3>
+                <div class="small muted">Für Leads oder bestehende Partner</div>
+              </div>
+            </div>
+
             <form id="messageForm" class="grid-form">
               <input type="hidden" id="message_id" />
               <div><label>Firma</label><select id="message_company_id"></select></div>
@@ -985,8 +1014,6 @@ filament brand eu"></textarea>
                   <option value="instagram_dm">instagram_dm</option>
                 </select>
               </div>
-              <div class="full"><label>Betreff</label><input id="message_subject" /></div>
-              <div class="full"><label>Body</label><textarea id="message_body"></textarea></div>
               <div><label>Status</label>
                 <select id="message_status">
                   <option value="draft">draft</option>
@@ -996,17 +1023,41 @@ filament brand eu"></textarea>
                   <option value="failed">failed</option>
                 </select>
               </div>
+              <div class="full"><label>Betreff</label><input id="message_subject" /></div>
+              <div class="full"><label>Body</label><textarea id="message_body"></textarea></div>
               <div><label>Follow-up Nummer</label><input id="message_follow_up_number" type="number" value="0" /></div>
-              <div class="full actions"><button class="btn primary" type="submit">Nachricht speichern</button></div>
+              <div class="full actions">
+                <button class="btn primary" type="submit">Nachricht speichern</button>
+                <button class="btn" type="button" id="sendQueuedOutreachBtn">Queued Nachrichten senden</button>
+              </div>
             </form>
           </div>
-          <div class="card">
-            <div class="table-wrap">
-              <table>
-                <thead><tr><th>Betreff</th><th>Status</th><th>Firma</th><th>Gesendet</th></tr></thead>
-                <tbody id="messagesBody"></tbody>
-              </table>
+        </div>
+
+        <div class="card" style="margin-top:16px;">
+          <div class="section-toolbar">
+            <div>
+              <h3 style="margin:0;">Inbox / Antworten</h3>
+              <div class="small muted">Eingehende Antworten aus deinem E-Mail-Postfach</div>
             </div>
+            <div class="actions">
+              <button class="btn" type="button" id="syncInboxBtn">Inbox synchronisieren</button>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Von</th>
+                  <th>Betreff</th>
+                  <th>Partner / Lead</th>
+                  <th>Datum</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="inboxBody"></tbody>
+            </table>
           </div>
         </div>
       </section>
@@ -1089,8 +1140,9 @@ filament brand eu"></textarea>
           <form id="settingsForm" class="grid-form">
             <div class="full"><label>Supabase URL</label><input id="supabase_url" placeholder="https://xyzcompany.supabase.co" /></div>
             <div class="full"><label>Supabase Anon Key</label><textarea id="supabase_anon_key" placeholder="eyJ..."></textarea></div>
-            <label>n8n Lead Webhook URL</label>
-            <input id="n8nLeadWebhook" type="text" placeholder="https://domebi.app.n8n.cloud/webhook-test/find-leeds" />
+            <div class="full"><label>n8n Lead Finder Webhook URL</label><input id="n8nLeadWebhook" type="text" placeholder="https://.../webhook/crm-lead-finder" /></div>
+            <div class="full"><label>n8n Outreach Send Webhook URL</label><input id="n8nOutreachWebhook" type="text" placeholder="https://.../webhook/crm-send-outreach" /></div>
+            <div class="full"><label>n8n Inbox Sync Webhook URL</label><input id="n8nInboxWebhook" type="text" placeholder="https://.../webhook/crm-sync-inbox" /></div>
             <div class="full actions">
               <button class="btn primary" type="submit">Verbindung speichern</button>
               <button class="btn" type="button" id="testConnectionBtn">Verbindung testen</button>
@@ -1116,7 +1168,9 @@ filament brand eu"></textarea>
         messages: [],
         tasks: [],
         dashboard: [],
-        calendarDate: new Date()
+        calendarDate: new Date(),
+        leadMatches: {},
+        inboxMessages: []
       },
 
       async init() {
@@ -1127,6 +1181,7 @@ filament brand eu"></textarea>
         this.setTodayDefaults();
         this.renderEmptySelects();
         this.renderCalendar();
+        this.renderInbox();
       },
 
       bindNav() {
@@ -1145,11 +1200,11 @@ filament brand eu"></textarea>
               placements: 'Dokumentiere geplante und veröffentlichte Placements.',
               links: 'Alle Partnerlinks mit Performance, Placement und Umsatz.',
               social: 'Follower und KPIs als historische Snapshots tracken.',
-              leads: 'Neue potenzielle Partner sammeln und qualifizieren.',
-              outreach: 'Outreach-Nachrichten, Drafts und Statusübersicht.',
+              leads: 'Neue potenzielle Partner sammeln, prüfen und qualifizieren.',
+              outreach: 'Outreach Queue und eingehende Antworten.',
               tasks: 'Offene Schritte, Follow-ups und Erinnerungen.',
               calendar: 'Monatsansicht für Tasks und Placements.',
-              settings: 'Supabase-Verbindung und lokale Konfiguration.'
+              settings: 'Supabase-Verbindung und Webhook-Konfiguration.'
             };
             document.getElementById('pageSubtitle').textContent = subtitles[btn.dataset.section] || '';
           });
@@ -1173,6 +1228,11 @@ filament brand eu"></textarea>
 
         document.getElementById('companySearch').addEventListener('input', e => this.renderCompanies(e.target.value));
         document.getElementById('leadSearch').addEventListener('input', e => this.renderLeads(e.target.value));
+
+        document.getElementById('runLeadSearchBtn').addEventListener('click', () => this.runLeadFinder());
+        document.getElementById('reloadLeadsBtn').addEventListener('click', () => this.loadLeads());
+        document.getElementById('sendQueuedOutreachBtn').addEventListener('click', () => this.sendQueuedOutreach());
+        document.getElementById('syncInboxBtn').addEventListener('click', () => this.syncInbox());
       },
 
       bindCalendar() {
@@ -1234,9 +1294,22 @@ filament brand eu"></textarea>
         document.getElementById('linkPanel').classList.add('hidden');
       },
 
+      showLeadPanel() {
+        document.getElementById('leadPanel').classList.remove('hidden');
+        document.getElementById('leadPanelTitle').textContent = 'Lead prüfen';
+      },
+
+      hideLeadPanel() {
+        document.getElementById('leadPanel').classList.add('hidden');
+      },
+
       loadStoredConfig() {
         document.getElementById('supabase_url').value = localStorage.getItem('crm_supabase_url') || '';
         document.getElementById('supabase_anon_key').value = localStorage.getItem('crm_supabase_anon_key') || '';
+        document.getElementById('n8nLeadWebhook').value = localStorage.getItem('crm_n8n_lead_webhook') || '';
+        document.getElementById('n8nOutreachWebhook').value = localStorage.getItem('crm_n8n_outreach_webhook') || '';
+        document.getElementById('n8nInboxWebhook').value = localStorage.getItem('crm_n8n_inbox_webhook') || '';
+
         if (document.getElementById('supabase_url').value && document.getElementById('supabase_anon_key').value) {
           this.setupSupabase();
           this.loadAll();
@@ -1256,6 +1329,9 @@ filament brand eu"></textarea>
         const key = document.getElementById('supabase_anon_key').value.trim();
         localStorage.setItem('crm_supabase_url', url);
         localStorage.setItem('crm_supabase_anon_key', key);
+        localStorage.setItem('crm_n8n_lead_webhook', document.getElementById('n8nLeadWebhook').value.trim());
+        localStorage.setItem('crm_n8n_outreach_webhook', document.getElementById('n8nOutreachWebhook').value.trim());
+        localStorage.setItem('crm_n8n_inbox_webhook', document.getElementById('n8nInboxWebhook').value.trim());
         this.setupSupabase();
         this.toast('Supabase Verbindung gespeichert.');
         this.loadAll();
@@ -1302,6 +1378,7 @@ filament brand eu"></textarea>
 
           this.populateRelationSelects();
           this.renderCalendar();
+          this.renderInbox();
           this.toast('Daten aktualisiert.');
         } catch (err) {
           this.toast('Fehler beim Laden: ' + err.message, true);
@@ -1537,18 +1614,23 @@ filament brand eu"></textarea>
       renderLeads(search='') {
         const q = search.toLowerCase();
         const rows = this.state.leads.filter(l => !q || [l.company_name,l.website,l.email,l.category,l.summary].join(' ').toLowerCase().includes(q));
-        document.getElementById('leadsBody').innerHTML = rows.map(l => `
-          <tr>
-            <td><b>${l.company_name || ''}</b><div class="small muted">${l.email || ''}</div></td>
-            <td>${l.lead_score || 0}</td>
-            <td><span class="pill">${l.qualification_status || ''}</span></td>
-            <td>${l.outreach_status || ''}</td>
-            <td class="actions">
-              <button class="btn" onclick="App.editLead('${l.id}')">Bearbeiten</button>
-              <button class="btn danger" onclick="App.deleteRow('lead_candidates','${l.id}')">Löschen</button>
-            </td>
-          </tr>
-        `).join('') || '<tr><td colspan="5" class="muted">Keine Leads vorhanden.</td></tr>';
+
+        document.getElementById('leadsBody').innerHTML = rows.map(l => {
+          const duplicateLabel = l.assigned_company_id ? 'bestehender Partner' : 'neu';
+          return `
+            <tr>
+              <td><b>${l.company_name || ''}</b><div class="small muted">${l.email || l.website || ''}</div></td>
+              <td>${l.lead_score || 0}</td>
+              <td><span class="pill">${duplicateLabel}</span></td>
+              <td>${l.outreach_status || ''}</td>
+              <td class="actions">
+                <button class="btn" onclick="App.editLead('${l.id}'); App.showLeadPanel();">Prüfen</button>
+                <button class="btn" onclick="App.editLead('${l.id}'); App.openOutreachFromLead();">Anschreiben</button>
+                <button class="btn danger" onclick="App.deleteRow('lead_candidates','${l.id}')">Löschen</button>
+              </td>
+            </tr>
+          `;
+        }).join('') || '<tr><td colspan="5" class="muted">Keine Leads vorhanden.</td></tr>';
       },
 
       renderMessages() {
@@ -1558,8 +1640,26 @@ filament brand eu"></textarea>
             <td><span class="pill">${m.status || ''}</span></td>
             <td>${m.companies?.name || this.companyNameById(m.company_id) || m.lead_candidates?.company_name || ''}</td>
             <td>${m.sent_at ? String(m.sent_at).slice(0,10) : ''}</td>
+            <td class="actions">
+              <button class="btn" onclick="App.prefillMessage('${m.id}')">Bearbeiten</button>
+            </td>
           </tr>
-        `).join('') || '<tr><td colspan="4" class="muted">Keine Outreach Nachrichten.</td></tr>';
+        `).join('') || '<tr><td colspan="5" class="muted">Keine Outreach Nachrichten.</td></tr>';
+      },
+
+      renderInbox() {
+        const body = document.getElementById('inboxBody');
+        if (!body) return;
+
+        body.innerHTML = (this.state.inboxMessages || []).map(m => `
+          <tr>
+            <td>${m.from_email || ''}</td>
+            <td><b>${m.subject || ''}</b><div class="small muted">${escapeHtml((m.body_text || '').slice(0, 90))}</div></td>
+            <td>${m.company_name || m.lead_company_name || ''}</td>
+            <td>${m.received_at ? String(m.received_at).slice(0,16).replace('T',' ') : ''}</td>
+            <td><span class="pill">${m.needs_action ? 'offen' : 'erledigt'}</span></td>
+          </tr>
+        `).join('') || '<tr><td colspan="5" class="muted">Keine eingehenden Nachrichten.</td></tr>';
       },
 
       renderTasks() {
@@ -1714,6 +1814,126 @@ filament brand eu"></textarea>
 
         const socialOptions = '<option value="">Bitte wählen</option>' + this.state.socialAccounts.map(a => `<option value="${a.id}">${escapeHtml((a.platform || '') + ' — ' + (a.handle || ''))}</option>`).join('');
         document.getElementById('social_account_id').innerHTML = socialOptions || '<option value="">Bitte zuerst social_accounts befüllen</option>';
+      },
+
+      async runLeadFinder() {
+        const url = localStorage.getItem('crm_n8n_lead_webhook');
+        if (!url) return this.toast('Bitte zuerst die n8n Lead Finder Webhook URL in Einstellungen eintragen.', true);
+
+        const payload = {
+          keywords: document.getElementById('leadSearchKeywords').value,
+          location: document.getElementById('leadSearchLocation').value,
+          maxResults: Number(document.getElementById('leadSearchMaxResults').value || 10)
+        };
+
+        try {
+          const res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          if (!res.ok) throw new Error('Lead Finder Request fehlgeschlagen');
+          const data = await res.json();
+          this.toast(`Lead Finder abgeschlossen. Neu: ${data.inserted || 0}, Dubletten: ${data.duplicates || 0}`);
+          await this.loadAll();
+        } catch (err) {
+          this.toast(err.message, true);
+        }
+      },
+
+      async sendQueuedOutreach() {
+        const url = localStorage.getItem('crm_n8n_outreach_webhook');
+        if (!url) return this.toast('Bitte zuerst die n8n Outreach Webhook URL in Einstellungen eintragen.', true);
+
+        try {
+          const res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ mode: 'queued' })
+          });
+          if (!res.ok) throw new Error('Outreach Versand fehlgeschlagen');
+          const data = await res.json();
+          this.toast(`Outreach verarbeitet. Gesendet: ${data.sent || 0}, Fehler: ${data.failed || 0}`);
+          await this.loadAll();
+        } catch (err) {
+          this.toast(err.message, true);
+        }
+      },
+
+      async syncInbox() {
+        const url = localStorage.getItem('crm_n8n_inbox_webhook');
+        if (!url) return this.toast('Bitte zuerst die n8n Inbox Webhook URL in Einstellungen eintragen.', true);
+
+        try {
+          const res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ mode: 'sync' })
+          });
+          if (!res.ok) throw new Error('Inbox Sync fehlgeschlagen');
+          const data = await res.json();
+          this.state.inboxMessages = data.messages || [];
+          this.renderInbox();
+          this.toast(`Inbox synchronisiert. Nachrichten: ${this.state.inboxMessages.length}`);
+        } catch (err) {
+          this.toast(err.message, true);
+        }
+      },
+
+      openOutreachFromLead() {
+        const leadId = v('lead_id');
+        const leadName = v('lead_company_name');
+        if (!leadId) return this.toast('Bitte zuerst einen Lead speichern oder öffnen.', true);
+
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelector('.nav-btn[data-section="outreach"]')?.classList.add('active');
+        document.getElementById('section-outreach').classList.add('active');
+        document.getElementById('pageTitle').textContent = 'Outreach';
+        document.getElementById('pageSubtitle').textContent = 'Outreach Queue und eingehende Antworten.';
+
+        setv('message_lead_candidate_id', leadId);
+        setv('message_subject', `Kooperation mit ${leadName}`);
+        if (!v('message_body')) {
+          setv('message_body', `Hallo ${leadName},\n\nich bin auf euch aufmerksam geworden und wollte eine mögliche Kooperation anfragen.\n\nViele Grüße`);
+        }
+        setv('message_status', 'draft');
+      },
+
+      async convertLeadToCompany() {
+        const leadId = v('lead_id');
+        if (!leadId) return this.toast('Bitte zuerst einen Lead öffnen.', true);
+
+        const lead = this.state.leads.find(x => x.id === leadId);
+        if (!lead) return this.toast('Lead nicht gefunden.', true);
+
+        try {
+          const payload = {
+            name: lead.company_name,
+            website: lead.website,
+            contact_email: lead.email,
+            category: lead.category,
+            status: 'lead_new',
+            partner_type: 'lead',
+            priority: 'medium',
+            notes: `Übernommen aus Lead ${lead.id}`
+          };
+
+          const { data, error } = await this.state.supabase.from('companies').insert(payload).select().single();
+          if (error) throw error;
+
+          await this.state.supabase
+            .from('lead_candidates')
+            .update({ assigned_company_id: data.id })
+            .eq('id', lead.id);
+
+          this.toast('Lead als Partner übernommen.');
+          await this.loadAll();
+          setv('lead_matched_company', data.name);
+        } catch (err) {
+          this.toast(err.message, true);
+        }
       },
 
       async saveCompany() {
@@ -1884,6 +2104,19 @@ filament brand eu"></textarea>
         }
       },
 
+      prefillMessage(id) {
+        const m = this.state.messages.find(x => x.id === id);
+        if (!m) return;
+        setv('message_id', m.id);
+        setv('message_company_id', m.company_id);
+        setv('message_lead_candidate_id', m.lead_candidate_id);
+        setv('message_channel', m.channel);
+        setv('message_subject', m.subject);
+        setv('message_body', m.body);
+        setv('message_status', m.status);
+        setv('message_follow_up_number', m.follow_up_number);
+      },
+
       editCompany(id) {
         const c = this.state.companies.find(x => x.id === id);
         if (!c) return;
@@ -1934,7 +2167,7 @@ filament brand eu"></textarea>
         setv('placement_deal_id', p.deal_id);
         setv('placement_platform', p.platform);
         setv('placement_content_type', p.content_type);
-        setv('placement_published_at', p.published_at);
+        setv('placement_published_at', p.published_at ? String(p.published_at).slice(0,10) : '');
         setv('placement_caption_text', p.caption_text);
         setv('placement_notes', p.notes);
       },
@@ -1975,6 +2208,7 @@ filament brand eu"></textarea>
         setv('lead_outreach_status', l.outreach_status);
         setv('lead_summary', l.summary);
         setv('lead_notes', l.notes);
+        setv('lead_matched_company', this.companyNameById(l.assigned_company_id));
       },
 
       editTask(id) {
@@ -2029,6 +2263,7 @@ filament brand eu"></textarea>
         setv('lead_lead_score','50');
         setv('lead_qualification_status','new');
         setv('lead_outreach_status','not_started');
+        setv('lead_matched_company','');
       },
 
       companyNameById(id) { return this.state.companies.find(x => x.id === id)?.name || ''; },
