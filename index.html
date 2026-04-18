@@ -1832,44 +1832,73 @@ filament brand eu"></textarea>
       },
 
       renderEmptySelects() {
-        ['deal_company_id','placement_company_id','link_company_id','message_company_id','finance_company_id'].forEach(id => {
-          const el = document.getElementById(id);
-          if (el) el.innerHTML = '<option value="">Bitte zuerst Partner anlegen</option>';
-        });
-      },
+  ['message_company_id', 'finance_company_id', 'message_lead_candidate_id', 'social_account_id', 'finance_deal_id'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = '<option value="">Bitte wählen</option>';
+  });
+},
 
       populateRelationSelects() {
-        const companyOptions = '<option value="">Bitte wählen</option>' + this.state.companies.map(c => `<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('');
-        ['deal_company_id','placement_company_id','link_company_id','message_company_id','finance_company_id'].forEach(id => {
-          const el = document.getElementById(id);
-          if (el) el.innerHTML = companyOptions;
-        });
+  const companyOptions =
+    '<option value="">Bitte wählen</option>' +
+    this.state.companies.map(c => `<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('');
 
-        const dealOptions = '<option value="">Bitte wählen</option>' + this.state.deals.map(d => `<option value="${d.id}">${escapeHtml(d.title || '')}</option>`).join('');
-        ['placement_deal_id','link_deal_id','finance_deal_id'].forEach(id => {
-          const el = document.getElementById(id);
-          if (el) el.innerHTML = dealOptions;
-        });
+  const dealOptions =
+    '<option value="">Bitte wählen</option>' +
+    this.state.deals.map(d => `<option value="${d.id}">${escapeHtml(d.title || '')}</option>`).join('');
 
-        const placementOptions = '<option value="">Bitte wählen</option>' + this.state.placements.map(p => `<option value="${p.id}">${escapeHtml(this.placementLabel(p))}</option>`).join('');
-        document.getElementById('link_placement_id').innerHTML = placementOptions;
+  const placementOptions =
+    '<option value="">Bitte wählen</option>' +
+    this.state.placements.map(p => `<option value="${p.id}">${escapeHtml(this.placementLabel(p))}</option>`).join('');
 
-        const leadOptions = '<option value="">Bitte wählen</option>' + this.state.leads.map(l => `<option value="${l.id}">${escapeHtml(l.company_name || '')}</option>`).join('');
-        document.getElementById('message_lead_candidate_id').innerHTML = leadOptions;
+  const leadOptions =
+    '<option value="">Bitte wählen</option>' +
+    this.state.leads.map(l => `<option value="${l.id}">${escapeHtml(l.company_name || '')}</option>`).join('');
 
-        const socialEl = document.getElementById('social_account_id');
-if (socialEl) {
-  if (!this.state.socialAccounts.length) {
-    socialEl.innerHTML = '<option value="">Keine Instagram- oder TikTok-Accounts vorhanden</option>';
-  } else {
-    socialEl.innerHTML =
-      '<option value="">Bitte wählen</option>' +
-      this.state.socialAccounts
-        .map(a => `<option value="${a.id}">${escapeHtml((a.platform || '') + ' — ' + (a.handle || ''))}</option>`)
-        .join('');
-  }
-}
-      },
+  const socialOptions =
+    this.state.socialAccounts.length
+      ? '<option value="">Bitte wählen</option>' +
+        this.state.socialAccounts
+          .map(a => `<option value="${a.id}">${escapeHtml((a.platform || '') + ' — ' + (a.handle || ''))}</option>`)
+          .join('')
+      : '<option value="">Keine Instagram- oder TikTok-Accounts vorhanden</option>';
+
+  const map = {
+    message_company_id: companyOptions,
+    finance_company_id: companyOptions,
+    message_lead_candidate_id: leadOptions,
+    social_account_id: socialOptions,
+    finance_deal_id: dealOptions
+  };
+
+  Object.entries(map).forEach(([id, html]) => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = html;
+  });
+},
+      getCompanyOptionsHtml(selectedValue = '') {
+  return '<option value="">Bitte wählen</option>' + this.state.companies.map(c => `
+    <option value="${c.id}" ${String(selectedValue) === String(c.id) ? 'selected' : ''}>
+      ${escapeHtml(c.name)}
+    </option>
+  `).join('');
+},
+
+getDealOptionsHtml(selectedValue = '') {
+  return '<option value="">Bitte wählen</option>' + this.state.deals.map(d => `
+    <option value="${d.id}" ${String(selectedValue) === String(d.id) ? 'selected' : ''}>
+      ${escapeHtml(d.title || '')}
+    </option>
+  `).join('');
+},
+
+getPlacementOptionsHtml(selectedValue = '') {
+  return '<option value="">Bitte wählen</option>' + this.state.placements.map(p => `
+    <option value="${p.id}" ${String(selectedValue) === String(p.id) ? 'selected' : ''}>
+      ${escapeHtml(this.placementLabel(p))}
+    </option>
+  `).join('');
+},
 
       openEntityDrawer(entity, id = null, mode = 'read') {
         this.state.drawer = { entity, id, mode };
@@ -2025,144 +2054,69 @@ if (socialEl) {
         return '<div class="muted">Keine Daten.</div>';
       },
 
-      buildDrawerEditForm(entity) {
-        if (entity === 'company') {
-          return `
-            <form class="grid-form" onsubmit="event.preventDefault(); App.saveCompanyFromDrawer();">
-              <input type="hidden" id="drawer_company_id" />
-              <div><label>Name</label><input id="drawer_company_name" required /></div>
-              <div><label>Website</label><input id="drawer_company_website" placeholder="https://..." /></div>
-              <div><label>Ansprechpartner</label><input id="drawer_company_contact_person" /></div>
-              <div><label>E-Mail</label><input id="drawer_company_contact_email" type="email" /></div>
-              <div><label>Kategorie</label><input id="drawer_company_category" /></div>
-              <div><label>Partner-Typ</label>
-                <select id="drawer_company_partner_type">
-                  <option value="brand">Brand</option>
-                  <option value="affiliate">Affiliate</option>
-                  <option value="partner">Partner</option>
-                  <option value="lead">Lead</option>
-                </select>
-              </div>
-              <div><label>Status</label>
-                <select id="drawer_company_status">
-                  <option value="lead_new">lead new</option>
-                  <option value="researched">researched</option>
-                  <option value="contacted">contacted</option>
-                  <option value="interested">interested</option>
-                  <option value="active">active</option>
-                  <option value="closed">closed</option>
-                </select>
-              </div>
-              <div><label>Priorität</label>
-                <select id="drawer_company_priority">
-                  <option value="low">low</option>
-                  <option value="medium">medium</option>
-                  <option value="high">high</option>
-                </select>
-              </div>
-              <div class="full"><label>Beschreibung</label><textarea id="drawer_company_description"></textarea></div>
-              <div class="full"><label>Notizen</label><textarea id="drawer_company_notes"></textarea></div>
-              <div class="full actions"><button class="btn primary" type="submit">Speichern</button></div>
-            </form>
-          `;
-        }
+      prefillDrawerEdit(entity, id) {
+  if (entity === 'company') {
+    const c = this.state.companies.find(x => x.id === id);
+    if (!c) return;
+    setv('drawer_company_id', c.id);
+    setv('drawer_company_name', c.name);
+    setv('drawer_company_website', c.website);
+    setv('drawer_company_contact_person', c.contact_person);
+    setv('drawer_company_contact_email', c.contact_email);
+    setv('drawer_company_category', c.category);
+    setv('drawer_company_partner_type', c.partner_type);
+    setv('drawer_company_status', c.status);
+    setv('drawer_company_priority', c.priority);
+    setv('drawer_company_description', c.description);
+    setv('drawer_company_notes', c.notes);
+  }
 
-        if (entity === 'deal') {
-          return `
-            <form class="grid-form" onsubmit="event.preventDefault(); App.saveDealFromDrawer();">
-              <input type="hidden" id="drawer_deal_id" />
-              <div><label>Firma</label><select id="drawer_deal_company_id">${document.getElementById('deal_company_id')?.innerHTML || ''}</select></div>
-              <div><label>Titel</label><input id="drawer_deal_title" required /></div>
-              <div><label>Deal-Typ</label>
-                <select id="drawer_deal_deal_type">
-                  <option value="affiliate">affiliate</option>
-                  <option value="paid_post">paid_post</option>
-                  <option value="product_seeding">product_seeding</option>
-                  <option value="long_term">long_term</option>
-                  <option value="discount_code">discount_code</option>
-                  <option value="sponsoring">sponsoring</option>
-                </select>
-              </div>
-              <div><label>Status</label>
-                <select id="drawer_deal_status">
-                  <option value="draft">draft</option>
-                  <option value="active">active</option>
-                  <option value="completed">completed</option>
-                  <option value="cancelled">cancelled</option>
-                </select>
-              </div>
-              <div><label>Startdatum</label><input id="drawer_deal_start_date" type="date" /></div>
-              <div><label>Enddatum</label><input id="drawer_deal_end_date" type="date" /></div>
-              <div><label>Betrag</label><input id="drawer_deal_amount" type="number" step="0.01" /></div>
-              <div><label>Währung</label><input id="drawer_deal_currency" value="EUR" /></div>
-              <div><label>Coupon Code</label><input id="drawer_deal_coupon_code" /></div>
-              <div><label>Vertrag URL</label><input id="drawer_deal_contract_url" /></div>
-              <div class="full"><label>Notizen</label><textarea id="drawer_deal_notes"></textarea></div>
-              <div class="full actions"><button class="btn primary" type="submit">Speichern</button></div>
-            </form>
-          `;
-        }
+  if (entity === 'deal') {
+    const d = this.state.deals.find(x => x.id === id);
+    if (!d) return;
+    setv('drawer_deal_id', d.id);
+    document.getElementById('drawer_deal_company_id').innerHTML = this.getCompanyOptionsHtml(d.company_id);
+    setv('drawer_deal_title', d.title);
+    setv('drawer_deal_deal_type', d.deal_type);
+    setv('drawer_deal_status', d.status);
+    setv('drawer_deal_start_date', d.start_date);
+    setv('drawer_deal_end_date', d.end_date);
+    setv('drawer_deal_amount', d.amount);
+    setv('drawer_deal_currency', d.currency);
+    setv('drawer_deal_coupon_code', d.coupon_code);
+    setv('drawer_deal_contract_url', d.contract_url);
+    setv('drawer_deal_notes', d.notes);
+  }
 
-        if (entity === 'placement') {
-          return `
-            <form class="grid-form" onsubmit="event.preventDefault(); App.savePlacementFromDrawer();">
-              <input type="hidden" id="drawer_placement_id" />
-              <div><label>Firma</label><select id="drawer_placement_company_id">${document.getElementById('placement_company_id')?.innerHTML || ''}</select></div>
-              <div><label>Deal</label><select id="drawer_placement_deal_id">${document.getElementById('placement_deal_id')?.innerHTML || ''}</select></div>
-              <div><label>Plattform</label>
-                <select id="drawer_placement_platform">
-                  <option value="youtube">youtube</option>
-                  <option value="instagram">instagram</option>
-                  <option value="tiktok">tiktok</option>
-                  <option value="website">website</option>
-                </select>
-              </div>
-              <div><label>Content Typ</label>
-                <select id="drawer_placement_content_type">
-                  <option value="video">video</option>
-                  <option value="reel">reel</option>
-                  <option value="story">story</option>
-                  <option value="post">post</option>
-                  <option value="short">short</option>
-                </select>
-              </div>
-              <div><label>Veröffentlicht</label><input id="drawer_placement_published_at" type="date" /></div>
-              <div class="full"><label>Caption / CTA</label><textarea id="drawer_placement_caption_text"></textarea></div>
-              <div class="full"><label>Notizen</label><textarea id="drawer_placement_notes"></textarea></div>
-              <div class="full actions"><button class="btn primary" type="submit">Speichern</button></div>
-            </form>
-          `;
-        }
+  if (entity === 'placement') {
+    const p = this.state.placements.find(x => x.id === id);
+    if (!p) return;
+    setv('drawer_placement_id', p.id);
+    document.getElementById('drawer_placement_company_id').innerHTML = this.getCompanyOptionsHtml(p.company_id);
+    document.getElementById('drawer_placement_deal_id').innerHTML = this.getDealOptionsHtml(p.deal_id);
+    setv('drawer_placement_platform', p.platform);
+    setv('drawer_placement_content_type', p.content_type);
+    setv('drawer_placement_published_at', p.published_at ? String(p.published_at).slice(0,10) : '');
+    setv('drawer_placement_caption_text', p.caption_text);
+    setv('drawer_placement_notes', p.notes);
+  }
 
-        if (entity === 'link') {
-          return `
-            <form class="grid-form" onsubmit="event.preventDefault(); App.saveLinkFromDrawer();">
-              <input type="hidden" id="drawer_link_id" />
-              <div><label>Firma</label><select id="drawer_link_company_id">${document.getElementById('link_company_id')?.innerHTML || ''}</select></div>
-              <div><label>Deal</label><select id="drawer_link_deal_id">${document.getElementById('link_deal_id')?.innerHTML || ''}</select></div>
-              <div><label>Placement</label><select id="drawer_link_placement_id">${document.getElementById('link_placement_id')?.innerHTML || ''}</select></div>
-              <div><label>Link Typ</label>
-                <select id="drawer_link_link_type">
-                  <option value="affiliate">affiliate</option>
-                  <option value="discount">discount</option>
-                  <option value="landingpage">landingpage</option>
-                  <option value="product">product</option>
-                </select>
-              </div>
-              <div class="full"><label>Original URL</label><input id="drawer_link_original_url" required /></div>
-              <div class="full"><label>Short URL</label><input id="drawer_link_short_url" /></div>
-              <div><label>Coupon Code</label><input id="drawer_link_coupon_code" /></div>
-              <div><label>Klicks</label><input id="drawer_link_clicks" type="number" value="0" /></div>
-              <div><label>Revenue</label><input id="drawer_link_revenue" type="number" step="0.01" value="0" /></div>
-              <div><label>Provision %</label><input id="drawer_link_commission_earned" type="number" step="0.01" value="0" /></div>
-              <div class="full actions"><button class="btn primary" type="submit">Speichern</button></div>
-            </form>
-          `;
-        }
-
-        return '';
-      },
-
+  if (entity === 'link') {
+    const l = this.state.links.find(x => x.id === id);
+    if (!l) return;
+    setv('drawer_link_id', l.id);
+    document.getElementById('drawer_link_company_id').innerHTML = this.getCompanyOptionsHtml(l.company_id);
+    document.getElementById('drawer_link_deal_id').innerHTML = this.getDealOptionsHtml(l.deal_id);
+    document.getElementById('drawer_link_placement_id').innerHTML = this.getPlacementOptionsHtml(l.placement_id);
+    setv('drawer_link_link_type', l.link_type);
+    setv('drawer_link_original_url', l.original_url);
+    setv('drawer_link_short_url', l.short_url);
+    setv('drawer_link_coupon_code', l.coupon_code);
+    setv('drawer_link_clicks', l.clicks);
+    setv('drawer_link_revenue', l.revenue);
+    setv('drawer_link_commission_earned', l.commission_earned);
+  }
+},
       prefillDrawerCreate(entity) {
         if (entity === 'company') {
           setv('drawer_company_partner_type','brand');
