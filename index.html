@@ -285,16 +285,27 @@
     input, select, textarea, button { font: inherit; }
 
     input, select, textarea {
-      width: 100%;
-      background: rgba(255,255,255,.03);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 11px 12px;
-      border-radius: 14px;
-      outline: none;
-      transition: border-color .18s ease, box-shadow .18s ease;
-    }
+  width: 100%;
+  background: rgba(255,255,255,.03);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 11px 12px;
+  border-radius: 14px;
+  outline: none;
+  transition: border-color .18s ease, box-shadow .18s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
 
+select {
+  background-color: #151515;
+  color: var(--text);
+}
+
+select option {
+  background: #151515;
+  color: var(--text);
+}
     input:focus, select:focus, textarea:focus {
       border-color: rgba(255,122,0,.5);
       box-shadow: 0 0 0 4px rgba(255,122,0,.10);
@@ -1003,7 +1014,17 @@ filament brand eu"></textarea>
                   <option value="high">high</option>
                 </select>
               </div>
-              <div><label>Typ</label><input id="task_related_type" placeholder="allgemein, partner, deal, outreach..." /></div>
+              <div><label>Typ</label>
+  <select id="task_related_type">
+    <option value="">kein Bezug</option>
+    <option value="company">company</option>
+    <option value="deal">deal</option>
+    <option value="placement">placement</option>
+    <option value="lead">lead</option>
+    <option value="outreach">outreach</option>
+    <option value="finance">finance</option>
+  </select>
+</div>
               <div class="full"><label>Notizen</label><textarea id="task_notes"></textarea></div>
               <div class="full actions"><button class="btn primary" type="submit">Task speichern</button></div>
             </form>
@@ -1836,8 +1857,18 @@ filament brand eu"></textarea>
         const leadOptions = '<option value="">Bitte wählen</option>' + this.state.leads.map(l => `<option value="${l.id}">${escapeHtml(l.company_name || '')}</option>`).join('');
         document.getElementById('message_lead_candidate_id').innerHTML = leadOptions;
 
-        const socialOptions = '<option value="">Bitte wählen</option>' + this.state.socialAccounts.map(a => `<option value="${a.id}">${escapeHtml((a.platform || '') + ' — ' + (a.handle || ''))}</option>`).join('');
-        document.getElementById('social_account_id').innerHTML = socialOptions || '<option value="">Bitte zuerst social_accounts befüllen</option>';
+        const socialEl = document.getElementById('social_account_id');
+if (socialEl) {
+  if (!this.state.socialAccounts.length) {
+    socialEl.innerHTML = '<option value="">Keine Instagram- oder TikTok-Accounts vorhanden</option>';
+  } else {
+    socialEl.innerHTML =
+      '<option value="">Bitte wählen</option>' +
+      this.state.socialAccounts
+        .map(a => `<option value="${a.id}">${escapeHtml((a.platform || '') + ' — ' + (a.handle || ''))}</option>`)
+        .join('');
+  }
+}
       },
 
       openEntityDrawer(entity, id = null, mode = 'read') {
@@ -2456,16 +2487,25 @@ filament brand eu"></textarea>
       },
 
       async saveTask() {
-        const payload = {
-          title: v('task_title'),
-          due_date: nullable(v('task_due_date')),
-          status: v('task_status'),
-          priority: v('task_priority'),
-          related_type: v('task_related_type'),
-          notes: v('task_notes')
-        };
-        await this.upsert('tasks', 'task_id', payload, () => document.getElementById('taskForm').reset(), this.loadAll.bind(this));
-      },
+  const payload = {
+    title: v('task_title'),
+    due_date: nullable(v('task_due_date')),
+    status: v('task_status'),
+    priority: v('task_priority'),
+    related_type: nullable(v('task_related_type')),
+    notes: v('task_notes')
+  };
+  await this.upsert(
+    'tasks',
+    'task_id',
+    payload,
+    () => {
+      document.getElementById('taskForm').reset();
+      setv('task_related_type', '');
+    },
+    this.loadAll.bind(this)
+  );
+},
 
       async saveFinanceEntry() {
         const payload = {
