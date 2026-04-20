@@ -8,23 +8,23 @@
   <style>
     :root {
       --bg: #060606;
---bg-2: #0d0d0d;
---panel: rgba(18,18,18,.92);
---panel-2: rgba(28,28,28,.96);
---panel-3: rgba(38,38,38,.96);
---text: #f5f5f7;
---muted: #a1a1aa;
---accent: #3b82f6;       
---accent-2: #60a5fa;  
---accent-soft: rgba(59,130,246,.12);
---success: #2bd576;
---warn: #f5a524;
---danger: #ff5c5c;
---border: rgba(255,255,255,.08);
---shadow: 0 20px 60px rgba(0,0,0,.35);
---radius: 22px;
---blur: blur(18px);
---sidebar-width: 280px;
+      --bg-2: #0d0d0d;
+      --panel: rgba(18,18,18,.92);
+      --panel-2: rgba(28,28,28,.96);
+      --panel-3: rgba(38,38,38,.96);
+      --text: #f5f5f7;
+      --muted: #a1a1aa;
+      --accent: #3b82f6;
+      --accent-2: #60a5fa;
+      --accent-soft: rgba(59,130,246,.12);
+      --success: #2bd576;
+      --warn: #f5a524;
+      --danger: #ff5c5c;
+      --border: rgba(255,255,255,.08);
+      --shadow: 0 20px 60px rgba(0,0,0,.35);
+      --radius: 22px;
+      --blur: blur(18px);
+      --sidebar-width: 280px;
     }
 
     * { box-sizing: border-box; }
@@ -425,7 +425,8 @@
       align-items: start;
     }
 
-    .entity-drawer {
+    .entity-drawer,
+    .lead-compose-drawer {
       position: fixed;
       top: 18px;
       right: 18px;
@@ -443,7 +444,8 @@
       transition: transform .24s ease;
     }
 
-    .entity-drawer.open { transform: translateX(0); }
+    .entity-drawer.open,
+    .lead-compose-drawer.open { transform: translateX(0); }
 
     .detail-panel-header {
       display: flex;
@@ -628,13 +630,29 @@
       line-height: 1.55;
     }
 
+    .import-hint {
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(255,255,255,.03);
+      line-height: 1.55;
+      margin-bottom: 14px;
+    }
+
+    .lead-row-action {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
     @media (max-width: 1180px) {
       .app { grid-template-columns: 1fr; }
       aside { position: relative; height: auto; }
       .row-2, .row-3, .row-4, .calendar-shell, .detail-grid { grid-template-columns: 1fr; }
       .grid-form { grid-template-columns: 1fr; }
       .topbar { flex-direction: column; align-items: stretch; }
-      .entity-drawer {
+      .entity-drawer,
+      .lead-compose-drawer {
         top: auto;
         left: 12px;
         right: 12px;
@@ -851,28 +869,37 @@
           <div class="card glass-card">
             <div class="section-toolbar">
               <div class="actions">
-                <button class="btn primary" type="button" id="runLeadSearchBtn">Leads automatisch finden</button>
                 <button class="btn" type="button" id="reloadLeadsBtn">Leads neu laden</button>
+                <button class="btn primary" type="button" id="importLeadJsonBtn">JSON importieren</button>
               </div>
               <div style="min-width:280px; flex:1;">
                 <input id="leadSearch" placeholder="Lead suchen..." />
               </div>
             </div>
 
+            <div class="import-hint">
+              JSON-Import für Leads. Erlaubte Felder pro Eintrag:
+              <b>name</b> oder <b>company_name</b>,
+              <b>email</b>,
+              <b>category</b>.
+              Optional auch <b>website</b>, <b>country</b>, <b>summary</b>, <b>notes</b>.
+            </div>
+
             <div class="grid-form" style="margin-bottom:16px;">
               <div class="full">
-                <label>Keywords (eine Zeile pro Keyword)</label>
-                <textarea id="leadSearchKeywords" placeholder="3d printing filament europe
-3d printer accessories germany
-filament brand eu"></textarea>
-              </div>
-              <div>
-                <label>Location</label>
-                <input id="leadSearchLocation" type="text" value="Europe" />
-              </div>
-              <div>
-                <label>Max Results pro Keyword</label>
-                <input id="leadSearchMaxResults" type="number" value="10" />
+                <label>Lead JSON</label>
+                <textarea id="leadJsonImport" placeholder='[
+  {
+    "name": "Firma A",
+    "email": "hello@firma-a.de",
+    "category": "3D Printing"
+  },
+  {
+    "company_name": "Firma B",
+    "email": "contact@firma-b.com",
+    "category": "Filament"
+  }
+]'></textarea>
               </div>
             </div>
 
@@ -881,8 +908,8 @@ filament brand eu"></textarea>
                 <thead>
                   <tr>
                     <th>Firma</th>
-                    <th>Score</th>
-                    <th>Dublette</th>
+                    <th>E-Mail</th>
+                    <th>Kategorie</th>
                     <th>Outreach</th>
                     <th></th>
                   </tr>
@@ -916,6 +943,7 @@ filament brand eu"></textarea>
                 <select id="lead_outreach_status">
                   <option value="not_started">not_started</option>
                   <option value="drafted">drafted</option>
+                  <option value="queued">queued</option>
                   <option value="sent">sent</option>
                   <option value="replied">replied</option>
                 </select>
@@ -925,7 +953,7 @@ filament brand eu"></textarea>
               <div class="full"><label>Notizen</label><textarea id="lead_notes"></textarea></div>
               <div class="full actions">
                 <button class="btn primary" type="submit">Lead speichern</button>
-                <button class="btn" type="button" onclick="App.openOutreachFromLead()">Outreach vorbereiten</button>
+                <button class="btn" type="button" onclick="App.openLeadComposeDrawer()">Mail öffnen</button>
                 <button class="btn" type="button" onclick="App.convertLeadToCompany()">Als Partner übernehmen</button>
                 <button class="btn" type="button" onclick="App.resetLeadForm()">Reset</button>
               </div>
@@ -1205,6 +1233,29 @@ filament brand eu"></textarea>
       <div id="drawerReadView"></div>
       <div id="drawerEditView" class="hidden"></div>
     </div>
+
+    <div class="lead-compose-drawer" id="leadComposeDrawer">
+      <div class="detail-panel-header">
+        <div>
+          <h3 class="detail-title">Lead anschreiben</h3>
+          <div class="small muted">E-Mail wird übernommen und per n8n in die Queue gelegt</div>
+        </div>
+        <div class="actions">
+          <button class="btn ghost" type="button" id="leadComposeCloseBtn">Schließen</button>
+        </div>
+      </div>
+
+      <form id="leadComposeForm" class="grid-form">
+        <input type="hidden" id="compose_lead_id" />
+        <div><label>Firma</label><input id="compose_company_name" readonly /></div>
+        <div><label>E-Mail</label><input id="compose_email" readonly /></div>
+        <div class="full"><label>Betreff</label><input id="compose_subject" /></div>
+        <div class="full"><label>Mailtext</label><textarea id="compose_body" placeholder="Hier deinen Mailtext einfügen..."></textarea></div>
+        <div class="full actions">
+          <button class="btn primary" type="submit">In Queue legen</button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <script>
@@ -1234,6 +1285,7 @@ filament brand eu"></textarea>
         this.bindCalendar();
         this.bindDrawer();
         this.bindSidebar();
+        this.bindLeadComposeDrawer();
         this.loadStoredConfig();
         this.setTodayDefaults();
         this.renderEmptySelects();
@@ -1268,13 +1320,16 @@ filament brand eu"></textarea>
         const closeBtn = document.getElementById('drawerCloseBtn');
         const editBtn = document.getElementById('drawerEditBtn');
 
-        if (closeBtn) {
-          closeBtn.addEventListener('click', () => this.closeEntityDrawer());
-        }
+        if (closeBtn) closeBtn.addEventListener('click', () => this.closeEntityDrawer());
+        if (editBtn) editBtn.addEventListener('click', () => this.switchDrawerToEdit());
+      },
 
-        if (editBtn) {
-          editBtn.addEventListener('click', () => this.switchDrawerToEdit());
-        }
+      bindLeadComposeDrawer() {
+        document.getElementById('leadComposeCloseBtn')?.addEventListener('click', () => this.closeLeadComposeDrawer());
+        document.getElementById('leadComposeForm')?.addEventListener('submit', e => {
+          e.preventDefault();
+          this.queueLeadOutreach();
+        });
       },
 
       bindNav() {
@@ -1293,7 +1348,7 @@ filament brand eu"></textarea>
               placements: 'Placements im Überblick mit sicherer Detailansicht.',
               links: 'Links im Überblick mit sicherer Detailansicht.',
               social: 'Instagram und TikTok übersichtlich tracken.',
-              leads: 'Leads sammeln, prüfen und in Outreach überführen.',
+              leads: 'Leads per JSON importieren und direkt für Outreach nutzen.',
               outreach: 'Outreach Queue und eingehende Antworten.',
               tasks: 'Offene Schritte, Follow-ups und Erinnerungen.',
               calendar: 'Tasks und Placements im Monatsüberblick.',
@@ -1320,8 +1375,8 @@ filament brand eu"></textarea>
         document.getElementById('companySearch')?.addEventListener('input', e => this.renderCompanies(e.target.value));
         document.getElementById('leadSearch')?.addEventListener('input', e => this.renderLeads(e.target.value));
 
-        document.getElementById('runLeadSearchBtn')?.addEventListener('click', () => this.runLeadFinder());
         document.getElementById('reloadLeadsBtn')?.addEventListener('click', () => this.loadLeads());
+        document.getElementById('importLeadJsonBtn')?.addEventListener('click', () => this.importLeadJson());
         document.getElementById('sendQueuedOutreachBtn')?.addEventListener('click', () => this.sendQueuedOutreach());
         document.getElementById('syncInboxBtn')?.addEventListener('click', () => this.syncInbox());
       },
@@ -1685,21 +1740,18 @@ filament brand eu"></textarea>
       renderLeads(search='') {
         const q = String(search || '').toLowerCase();
         const rows = this.state.leads.filter(l => !q || [l.company_name,l.website,l.email,l.category,l.summary].join(' ').toLowerCase().includes(q));
-        document.getElementById('leadsBody').innerHTML = rows.map(l => {
-          const duplicateLabel = l.assigned_company_id ? 'bestehender Partner' : 'neu';
-          return `
-            <tr>
-              <td><b>${escapeHtml(l.company_name || '')}</b><div class="small muted">${escapeHtml(l.email || l.website || '')}</div></td>
-              <td>${escapeHtml(l.lead_score || 0)}</td>
-              <td><span class="pill">${duplicateLabel}</span></td>
-              <td>${escapeHtml(l.outreach_status || '')}</td>
-              <td class="actions">
-                <button class="btn" onclick="App.editLead('${l.id}')">Prüfen</button>
-                <button class="btn" onclick="App.editLead('${l.id}'); App.openOutreachFromLead();">Anschreiben</button>
-              </td>
-            </tr>
-          `;
-        }).join('') || '<tr><td colspan="5" class="muted">Keine Leads vorhanden.</td></tr>';
+        document.getElementById('leadsBody').innerHTML = rows.map(l => `
+          <tr>
+            <td><b>${escapeHtml(l.company_name || '')}</b></td>
+            <td>${escapeHtml(l.email || '')}</td>
+            <td>${escapeHtml(l.category || '')}</td>
+            <td>${escapeHtml(l.outreach_status || '')}</td>
+            <td class="lead-row-action">
+              <button class="btn" onclick="App.editLead('${l.id}')">Prüfen</button>
+              <button class="btn" onclick="App.openLeadComposeDrawer('${l.id}')">Anschreiben</button>
+            </td>
+          </tr>
+        `).join('') || '<tr><td colspan="5" class="muted">Keine Leads vorhanden.</td></tr>';
       },
 
       renderMessages() {
@@ -2400,25 +2452,175 @@ filament brand eu"></textarea>
         });
       },
 
-      async runLeadFinder() {
-        const url = localStorage.getItem('crm_n8n_lead_webhook');
-        if (!url) return this.toast('Bitte zuerst die n8n Lead Finder Webhook URL in Einstellungen eintragen.', true);
+      async importLeadJson() {
+        if (!this.state.supabase) {
+          this.toast('Bitte zuerst Supabase konfigurieren.', true);
+          return;
+        }
 
-        const payload = {
-          keywords: document.getElementById('leadSearchKeywords').value,
-          location: document.getElementById('leadSearchLocation').value,
-          maxResults: Number(document.getElementById('leadSearchMaxResults').value || 10)
-        };
+        const raw = v('leadJsonImport');
+        if (!raw) {
+          this.toast('Bitte JSON einfügen.', true);
+          return;
+        }
+
+        let parsed;
+        try {
+          parsed = JSON.parse(raw);
+        } catch {
+          this.toast('Ungültiges JSON.', true);
+          return;
+        }
+
+        if (!Array.isArray(parsed) || parsed.length === 0) {
+          this.toast('JSON muss ein Array mit Einträgen sein.', true);
+          return;
+        }
+
+        const existingCompanies = this.state.companies || [];
+        const existingLeads = this.state.leads || [];
+
+        const normalized = parsed
+          .map(item => {
+            const companyName = String(item.company_name || item.name || '').trim();
+            const email = String(item.email || '').trim();
+            const category = String(item.category || '').trim();
+            const website = String(item.website || '').trim();
+            const country = String(item.country || '').trim();
+            const summary = String(item.summary || '').trim();
+            const notes = String(item.notes || '').trim();
+
+            if (!companyName) return null;
+
+            const matchedCompany = existingCompanies.find(c =>
+              String(c.name || '').toLowerCase() === companyName.toLowerCase()
+            );
+
+            const alreadyLead = existingLeads.find(l =>
+              String(l.company_name || '').toLowerCase() === companyName.toLowerCase() ||
+              (email && String(l.email || '').toLowerCase() === email.toLowerCase())
+            );
+
+            if (alreadyLead) return null;
+
+            return {
+              company_name: companyName,
+              email: email || null,
+              category: category || null,
+              website: website || null,
+              country: country || null,
+              source_type: 'manual',
+              summary: summary || null,
+              notes: notes || null,
+              lead_score: 50,
+              qualification_status: 'new',
+              outreach_status: 'not_started',
+              assigned_company_id: matchedCompany?.id || null
+            };
+          })
+          .filter(Boolean);
+
+        if (!normalized.length) {
+          this.toast('Keine neuen Leads zum Importieren gefunden.', true);
+          return;
+        }
 
         try {
-          const res = await fetch(url, {
+          const { error } = await this.state.supabase.from('lead_candidates').insert(normalized);
+          if (error) throw error;
+          this.toast(`${normalized.length} Leads importiert.`);
+          setv('leadJsonImport', '');
+          await this.loadAll();
+        } catch (err) {
+          this.toast(err.message, true);
+        }
+      },
+
+      openLeadComposeDrawer(leadId = '') {
+        const targetId = leadId || v('lead_id');
+        if (!targetId) {
+          this.toast('Bitte zuerst einen Lead auswählen.', true);
+          return;
+        }
+
+        const lead = this.state.leads.find(x => x.id === targetId);
+        if (!lead) {
+          this.toast('Lead nicht gefunden.', true);
+          return;
+        }
+
+        setv('compose_lead_id', lead.id);
+        setv('compose_company_name', lead.company_name || '');
+        setv('compose_email', lead.email || '');
+        setv('compose_subject', `Kooperation mit ${lead.company_name || ''}`);
+        setv('compose_body', '');
+
+        document.getElementById('leadComposeDrawer')?.classList.add('open');
+      },
+
+      closeLeadComposeDrawer() {
+        document.getElementById('leadComposeDrawer')?.classList.remove('open');
+      },
+
+      async queueLeadOutreach() {
+        const webhookUrl = localStorage.getItem('crm_n8n_outreach_webhook');
+        if (!webhookUrl) {
+          this.toast('Bitte zuerst die n8n Outreach Webhook URL in Einstellungen eintragen.', true);
+          return;
+        }
+
+        const leadId = v('compose_lead_id');
+        const lead = this.state.leads.find(x => x.id === leadId);
+
+        if (!lead) {
+          this.toast('Lead nicht gefunden.', true);
+          return;
+        }
+
+        if (!lead.email) {
+          this.toast('Dieser Lead hat keine E-Mail-Adresse.', true);
+          return;
+        }
+
+        const payload = {
+          mode: 'queue_single',
+          lead_id: lead.id,
+          company_name: lead.company_name,
+          to_email: lead.email,
+          subject: v('compose_subject'),
+          body: v('compose_body')
+        };
+
+        if (!payload.subject || !payload.body) {
+          this.toast('Bitte Betreff und Mailtext ausfüllen.', true);
+          return;
+        }
+
+        try {
+          const res = await fetch(webhookUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
           });
-          if (!res.ok) throw new Error('Lead Finder Request fehlgeschlagen');
-          const data = await res.json();
-          this.toast(`Lead Finder abgeschlossen. Neu: ${data.inserted || 0}, Dubletten: ${data.duplicates || 0}`);
+
+          let data = {};
+          try {
+            data = await res.json();
+          } catch {}
+
+          if (!res.ok) {
+            throw new Error(data?.message || 'Mail konnte nicht in die Queue gelegt werden.');
+          }
+
+          try {
+            await this.state.supabase
+              .from('lead_candidates')
+              .update({ outreach_status: 'queued' })
+              .eq('id', lead.id);
+          } catch {}
+
+          this.toast('Mail wurde in die Queue gelegt.');
+          this.closeLeadComposeDrawer();
           await this.loadAll();
         } catch (err) {
           this.toast(err.message, true);
@@ -2462,26 +2664,6 @@ filament brand eu"></textarea>
         } catch (err) {
           this.toast(err.message, true);
         }
-      },
-
-      openOutreachFromLead() {
-        const leadId = v('lead_id');
-        const leadName = v('lead_company_name');
-        if (!leadId) return this.toast('Bitte zuerst einen Lead öffnen.', true);
-
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.querySelector('.nav-btn[data-section="outreach"]')?.classList.add('active');
-        document.getElementById('section-outreach')?.classList.add('active');
-        document.getElementById('pageTitle').textContent = 'Outreach';
-        document.getElementById('pageSubtitle').textContent = 'Outreach Queue und eingehende Antworten.';
-
-        setv('message_lead_candidate_id', leadId);
-        setv('message_subject', `Kooperation mit ${leadName}`);
-        if (!v('message_body')) {
-          setv('message_body', `Hallo ${leadName},\n\nich bin auf euch aufmerksam geworden und wollte eine mögliche Kooperation anfragen.\n\nViele Grüße`);
-        }
-        setv('message_status', 'draft');
       },
 
       async convertLeadToCompany() {
