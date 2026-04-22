@@ -2475,7 +2475,6 @@
       category: category || null,
       website: website || null,
       country: country || null,
-      source_type: null,
       summary: summary || null,
       notes: notes || null,
       lead_score: 50,
@@ -2694,7 +2693,7 @@
           country: v('lead_country'),
           category: v('lead_category'),
           source_url: v('lead_source_url'),
-          source_type: v('lead_source_type'),
+          
           lead_score: num(v('lead_lead_score')),
           qualification_status: v('lead_qualification_status'),
           outreach_status: v('lead_outreach_status'),
