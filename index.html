@@ -888,18 +888,11 @@
             <div class="grid-form" style="margin-bottom:16px;">
               <div class="full">
                 <label>Lead JSON</label>
-                <textarea id="leadJsonImport" placeholder='[
-  {
+                <textarea id="leadJsonImport" placeholder='[{
     "name": "Firma A",
     "email": "hello@firma-a.de",
     "category": "3D Printing"
-  },
-  {
-    "company_name": "Firma B",
-    "email": "contact@firma-b.com",
-    "category": "Filament"
-  }
-]'></textarea>
+  },]'></textarea>
               </div>
             </div>
 
@@ -929,10 +922,6 @@
               <div><label>Instagram</label><input id="lead_instagram_handle" /></div>
               <div><label>Land</label><input id="lead_country" /></div>
               <div><label>Kategorie</label><input id="lead_category" /></div>
-              <div><label>Quelle URL</label><input id="lead_source_url" /></div>
-              <div><label>Quelle Typ</label><input id="lead_source_type" placeholder="google, directory, manual" /></div>
-              <div><label>Lead Score</label><input id="lead_lead_score" type="number" min="0" max="100" value="50" /></div>
-              <div><label>Qualification</label>
                 <select id="lead_qualification_status">
                   <option value="new">new</option>
                   <option value="qualified">qualified</option>
@@ -948,12 +937,11 @@
                   <option value="replied">replied</option>
                 </select>
               </div>
-              <div><label>Matched Partner</label><input id="lead_matched_company" readonly /></div>
+             
               <div class="full"><label>Summary</label><textarea id="lead_summary"></textarea></div>
               <div class="full"><label>Notizen</label><textarea id="lead_notes"></textarea></div>
               <div class="full actions">
                 <button class="btn primary" type="submit">Lead speichern</button>
-                <button class="btn" type="button" onclick="App.openLeadComposeDrawer()">Mail öffnen</button>
                 <button class="btn" type="button" onclick="App.convertLeadToCompany()">Als Partner übernehmen</button>
                 <button class="btn" type="button" onclick="App.resetLeadForm()">Reset</button>
               </div>
@@ -1234,29 +1222,7 @@
       <div id="drawerEditView" class="hidden"></div>
     </div>
 
-    <div class="lead-compose-drawer" id="leadComposeDrawer">
-      <div class="detail-panel-header">
-        <div>
-          <h3 class="detail-title">Lead anschreiben</h3>
-          <div class="small muted">E-Mail wird übernommen und per n8n in die Queue gelegt</div>
-        </div>
-        <div class="actions">
-          <button class="btn ghost" type="button" id="leadComposeCloseBtn">Schließen</button>
-        </div>
-      </div>
-
-      <form id="leadComposeForm" class="grid-form">
-        <input type="hidden" id="compose_lead_id" />
-        <div><label>Firma</label><input id="compose_company_name" readonly /></div>
-        <div><label>E-Mail</label><input id="compose_email" readonly /></div>
-        <div class="full"><label>Betreff</label><input id="compose_subject" /></div>
-        <div class="full"><label>Mailtext</label><textarea id="compose_body" placeholder="Hier deinen Mailtext einfügen..."></textarea></div>
-        <div class="full actions">
-          <button class="btn primary" type="submit">In Queue legen</button>
-        </div>
-      </form>
-    </div>
-  </div>
+  
 
   <script>
     const App = {
@@ -1748,7 +1714,8 @@
             <td>${escapeHtml(l.outreach_status || '')}</td>
             <td class="lead-row-action">
               <button class="btn" onclick="App.editLead('${l.id}')">Prüfen</button>
-              <button class="btn" onclick="App.openLeadComposeDrawer('${l.id}')">Anschreiben</button>
+
+              
             </td>
           </tr>
         `).join('') || '<tr><td colspan="5" class="muted">Keine Leads vorhanden.</td></tr>';
