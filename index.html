@@ -878,21 +878,15 @@
             </div>
 
             <div class="import-hint">
-              JSON-Import für Leads. Erlaubte Felder pro Eintrag:
-              <b>name</b> oder <b>company_name</b>,
-              <b>email</b>,
-              <b>category</b>.
-              Optional auch <b>website</b>, <b>country</b>, <b>summary</b>, <b>notes</b>.
+              JSON-Import für Leads.
             </div>
 
             <div class="grid-form" style="margin-bottom:16px;">
               <div class="full">
                 <label>Lead JSON</label>
-                <textarea id="leadJsonImport" placeholder='[{
-    "name": "Firma A",
+                <textarea id="leadJsonImport" placeholder='[{"name": "Firma A",
     "email": "hello@firma-a.de",
-    "category": "3D Printing"
-  },]'></textarea>
+    "category": "3D Printing"},]'></textarea>
               </div>
             </div>
 
@@ -913,21 +907,29 @@
           </div>
 
           <div class="card glass-card">
-            <h3>Lead prüfen</h3>
-            <form id="leadForm" class="grid-form">
-              <input type="hidden" id="lead_id" />
-              <div><label>Firmenname</label><input id="lead_company_name" required /></div>
-              <div><label>Website</label><input id="lead_website" /></div>
-              <div><label>E-Mail</label><input id="lead_email" type="email" /></div>
-              <div><label>Instagram</label><input id="lead_instagram_handle" /></div>
-              <div><label>Land</label><input id="lead_country" /></div>
-              <div><label>Kategorie</label><input id="lead_category" /></div>
-                <select id="lead_qualification_status">
-                  <option value="new">new</option>
-                  <option value="qualified">qualified</option>
-                  <option value="unqualified">unqualified</option>
-                </select>
-              </div>
+  <h3>Lead prüfen</h3>
+  <form id="leadForm" class="grid-form">
+    <input type="hidden" id="lead_id" />
+
+    <div><label>Firmenname</label><input id="lead_company_name" required /></div>
+    <div><label>Website</label><input id="lead_website" /></div>
+    <div><label>E-Mail</label><input id="lead_email" type="email" /></div>
+    <div><label>Instagram</label><input id="lead_instagram_handle" /></div>
+
+    <div><label>Kategorie</label><input id="lead_category" /></div>
+
+    
+    <div>
+      <label>Status</label>
+      <select id="lead_status">
+        <option value="new">new</option>
+        <option value="qualified">qualified</option>
+        <option value="unqualified">unqualified</option>
+      </select>
+    </div>
+
+  </form>
+</div>
               <div><label>Outreach</label>
                 <select id="lead_outreach_status">
                   <option value="not_started">not_started</option>
