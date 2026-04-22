@@ -918,38 +918,36 @@
 
     <div><label>Kategorie</label><input id="lead_category" /></div>
 
-    
     <div>
       <label>Status</label>
-      <select id="lead_status">
+      <select id="lead_qualification_status">
         <option value="new">new</option>
         <option value="qualified">qualified</option>
         <option value="unqualified">unqualified</option>
       </select>
     </div>
 
+    <div>
+      <label>Outreach</label>
+      <select id="lead_outreach_status">
+        <option value="not_started">not_started</option>
+        <option value="drafted">drafted</option>
+        <option value="queued">queued</option>
+        <option value="sent">sent</option>
+        <option value="replied">replied</option>
+      </select>
+    </div>
+
+    <div class="full"><label>Summary</label><textarea id="lead_summary"></textarea></div>
+    <div class="full"><label>Notizen</label><textarea id="lead_notes"></textarea></div>
+
+    <div class="full actions">
+      <button class="btn primary" type="submit">Lead speichern</button>
+      <button class="btn" type="button" onclick="App.convertLeadToCompany()">Als Partner übernehmen</button>
+      <button class="btn" type="button" onclick="App.resetLeadForm()">Reset</button>
+    </div>
   </form>
 </div>
-              <div><label>Outreach</label>
-                <select id="lead_outreach_status">
-                  <option value="not_started">not_started</option>
-                  <option value="drafted">drafted</option>
-                  <option value="queued">queued</option>
-                  <option value="sent">sent</option>
-                  <option value="replied">replied</option>
-                </select>
-              </div>
-             
-              <div class="full"><label>Summary</label><textarea id="lead_summary"></textarea></div>
-              <div class="full"><label>Notizen</label><textarea id="lead_notes"></textarea></div>
-              <div class="full actions">
-                <button class="btn primary" type="submit">Lead speichern</button>
-                <button class="btn" type="button" onclick="App.convertLeadToCompany()">Als Partner übernehmen</button>
-                <button class="btn" type="button" onclick="App.resetLeadForm()">Reset</button>
-              </div>
-            </form>
-          </div>
-        </div>
       </section>
 
       <section class="section" id="section-outreach">
