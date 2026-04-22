@@ -2447,45 +2447,44 @@
         const existingCompanies = this.state.companies || [];
         const existingLeads = this.state.leads || [];
 
-        const normalized = parsed
-          .map(item => {
-            const companyName = String(item.company_name || item.name || '').trim();
-            const email = String(item.email || '').trim();
-            const category = String(item.category || '').trim();
-            const website = String(item.website || '').trim();
-            const country = String(item.country || '').trim();
-            const summary = String(item.summary || '').trim();
-            const notes = String(item.notes || '').trim();
+       const normalized = parsed
+  .map(item => {
+    const companyName = String(item.company_name || item.name || '').trim();
+    const email = String(item.email || '').trim();
+    const category = String(item.category || '').trim();
+    const website = String(item.website || '').trim();
+    const country = String(item.country || '').trim();
+    const summary = String(item.summary || '').trim();
+    const notes = String(item.notes || '').trim();
 
-            if (!companyName) return null;
+    if (!companyName) return null;
 
-            const matchedCompany = existingCompanies.find(c =>
-              String(c.name || '').toLowerCase() === companyName.toLowerCase()
-            );
+    const matchedCompany = existingCompanies.find(c =>
+      String(c.name || '').toLowerCase() === companyName.toLowerCase()
+    );
 
-            const alreadyLead = existingLeads.find(l =>
-              String(l.company_name || '').toLowerCase() === companyName.toLowerCase() ||
-              (email && String(l.email || '').toLowerCase() === email.toLowerCase())
-            );
+    const alreadyLead = existingLeads.find(l =>
+      email && String(l.email || '').toLowerCase() === email.toLowerCase()
+    );
 
-            if (alreadyLead) return null;
+    if (alreadyLead) return null;
 
-            return {
-              company_name: companyName,
-              email: email || null,
-              category: category || null,
-              website: website || null,
-              country: country || null,
-              source_type: 'manual',
-              summary: summary || null,
-              notes: notes || null,
-              lead_score: 50,
-              qualification_status: 'new',
-              outreach_status: 'not_started',
-              assigned_company_id: matchedCompany?.id || null
-            };
-          })
-          .filter(Boolean);
+    return {
+      company_name: companyName,
+      email: email || null,
+      category: category || null,
+      website: website || null,
+      country: country || null,
+      source_type: 'manual',
+      summary: summary || null,
+      notes: notes || null,
+      lead_score: 50,
+      qualification_status: 'new',
+      outreach_status: 'not_started',
+      assigned_company_id: matchedCompany?.id || null
+    };
+  })
+  .filter(Boolean);
 
         if (!normalized.length) {
           this.toast('Keine neuen Leads zum Importieren gefunden.', true);
