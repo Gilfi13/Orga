@@ -561,6 +561,8 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
+      cursor: pointer;
+      transition: .16s ease;
     }
 
     .calendar-day.muted-day { opacity: .35; }
@@ -568,6 +570,17 @@
     .calendar-day.today {
       outline: 1px solid rgba(255,122,0,.55);
       background: rgba(255,122,0,.08);
+    }
+
+    .calendar-day:hover {
+      border-color: rgba(255,122,0,.34);
+      transform: translateY(-1px);
+    }
+
+    .calendar-day.selected {
+      border-color: rgba(96,165,250,.7);
+      background: rgba(59,130,246,.14);
+      box-shadow: inset 0 0 0 1px rgba(96,165,250,.36);
     }
 
     .calendar-day-head {
@@ -592,6 +605,7 @@
 
     .calendar-marker.task { background: rgba(255,122,0,.14); }
     .calendar-marker.placement { background: rgba(255,159,67,.10); }
+    .calendar-marker.post { background: rgba(59,130,246,.16); }
 
     .calendar-side-list { display: grid; gap: 10px; }
 
@@ -605,6 +619,14 @@
     .calendar-side-item b {
       display: block;
       margin-bottom: 4px;
+    }
+
+    .calendar-detail {
+      margin-top: 14px;
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+      display: grid;
+      gap: 12px;
     }
 
     .platform-badges {
@@ -637,6 +659,30 @@
       background: rgba(255,255,255,.03);
       line-height: 1.55;
       margin-bottom: 14px;
+    }
+
+    .lead-filter-bar {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      width: 100%;
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.02);
+    }
+
+    .lead-filter-bar > div {
+      display: grid;
+      gap: 6px;
+    }
+
+    .json-import-card {
+      border: 1px solid rgba(255,122,0,.18);
+      border-radius: 18px;
+      padding: 14px;
+      background: linear-gradient(180deg, rgba(255,122,0,.08), rgba(255,122,0,.03));
+      margin-bottom: 16px;
     }
 
     .lead-row-action {
@@ -675,6 +721,7 @@
       aside { position: relative; height: auto; }
       .row-2, .row-3, .row-4, .calendar-shell, .detail-grid { grid-template-columns: 1fr; }
       .grid-form { grid-template-columns: 1fr; }
+      .lead-filter-bar { grid-template-columns: 1fr; }
       .topbar { flex-direction: column; align-items: stretch; }
       .entity-drawer,
       .lead-compose-drawer {
@@ -731,7 +778,6 @@
         <button class="nav-btn" data-section="links"><span class="nav-icon">↗</span><span class="nav-label">Link-Bibliothek</span></button>
         <button class="nav-btn" data-section="social"><span class="nav-icon">☆</span><span class="nav-label">Social Tracking</span></button>
         <button class="nav-btn" data-section="leads"><span class="nav-icon">✦</span><span class="nav-label">Lead Finder</span></button>
-        <button class="nav-btn" data-section="outreach"><span class="nav-icon">✉</span><span class="nav-label">Outreach</span></button>
         <button class="nav-btn" data-section="tasks"><span class="nav-icon">✓</span><span class="nav-label">Tasks</span></button>
         <button class="nav-btn" data-section="calendar"><span class="nav-icon">◷</span><span class="nav-label">Kalender</span></button>
         <button class="nav-btn" data-section="finance"><span class="nav-icon">€</span><span class="nav-label">Finanzen</span></button>
@@ -896,9 +942,21 @@
               <div class="actions">
                 <button class="btn" type="button" id="reloadLeadsBtn">Leads neu laden</button>
                 <button class="btn primary" type="button" id="toggleLeadJsonBtn">JSON importieren</button>
+              </div>
+              <div style="min-width:280px; flex:1;">
+                <input id="leadSearch" placeholder="Lead suchen..." />
+              </div>
+            </div>
+
+            <div class="lead-filter-bar">
+              <div>
+                <label class="small muted">Kategorie</label>
                 <select id="leadCategoryFilter">
                   <option value="">Alle Kategorien</option>
                 </select>
+              </div>
+              <div>
+                <label class="small muted">Outreach</label>
                 <select id="leadOutreachFilter">
                   <option value="">Alle Outreach</option>
                   <option value="not_started">not_started</option>
@@ -907,6 +965,9 @@
                   <option value="sent">sent</option>
                   <option value="replied">replied</option>
                 </select>
+              </div>
+              <div>
+                <label class="small muted">Qualifizierung</label>
                 <select id="leadStatusFilter">
                   <option value="">Alle Status</option>
                   <option value="new">new</option>
@@ -914,16 +975,17 @@
                   <option value="unqualified">unqualified</option>
                 </select>
               </div>
-              <div style="min-width:280px; flex:1;">
-                <input id="leadSearch" placeholder="Lead suchen..." />
+              <div>
+                <label class="small muted">JSON</label>
+                <button class="btn" type="button" id="clearLeadFiltersBtn">Filter zurücksetzen</button>
               </div>
             </div>
 
-            <div class="import-hint">
-              JSON-Import für Leads.
-            </div>
-
-            <div class="grid-form lead-json-panel" id="leadJsonPanel">
+            <div class="json-import-card lead-json-panel" id="leadJsonPanel">
+              <div class="import-hint" style="margin-bottom:12px;">
+                Füge ein Array mit Lead-Objekten ein. Unterstützt u.a. Felder wie <b>name</b>, <b>company_name</b>, <b>email</b>, <b>category</b>, <b>website</b> und <b>instagram_handle</b>.
+              </div>
+              <div class="grid-form">
               <div class="full">
                 <label>Lead JSON</label>
                 <textarea id="leadJsonImport" placeholder='[{"name": "Firma A",
@@ -932,6 +994,7 @@
               </div>
               <div class="full actions">
                 <button class="btn primary" type="button" id="importLeadJsonBtn">JSON jetzt importieren</button>
+              </div>
               </div>
             </div>
 
@@ -952,7 +1015,10 @@
           </div>
 
           <div class="card glass-card lead-detail-card" id="leadDetailCard">
-  <h3>Lead prüfen</h3>
+  <div class="section-toolbar" style="margin-bottom:10px;">
+    <h3 style="margin:0;">Lead prüfen</h3>
+    <button class="btn ghost" type="button" onclick="App.closeLeadDetails()">Schließen</button>
+  </div>
   <form id="leadForm" class="grid-form">
     <input type="hidden" id="lead_id" />
 
@@ -993,78 +1059,6 @@
     </div>
   </form>
 </div>
-      </section>
-
-      <section class="section" id="section-outreach">
-        <div class="row row-2">
-          <div class="card glass-card">
-            <h3>Outreach Queue</h3>
-            <div class="table-wrap">
-              <table>
-                <thead><tr><th>Betreff</th><th>Status</th><th>Firma</th><th>Gesendet</th><th></th></tr></thead>
-                <tbody id="messagesBody"></tbody>
-              </table>
-            </div>
-          </div>
-
-          <div class="card glass-card">
-            <h3>Nachricht erstellen / bearbeiten</h3>
-            <form id="messageForm" class="grid-form">
-              <input type="hidden" id="message_id" />
-              <div><label>Firma</label><select id="message_company_id"></select></div>
-              <div><label>Lead</label><select id="message_lead_candidate_id"></select></div>
-              <div><label>Channel</label>
-                <select id="message_channel">
-                  <option value="email">email</option>
-                  <option value="instagram_dm">instagram_dm</option>
-                </select>
-              </div>
-              <div><label>Status</label>
-                <select id="message_status">
-                  <option value="draft">draft</option>
-                  <option value="queued">queued</option>
-                  <option value="sent">sent</option>
-                  <option value="replied">replied</option>
-                  <option value="failed">failed</option>
-                </select>
-              </div>
-              <div class="full"><label>Betreff</label><input id="message_subject" /></div>
-              <div class="full"><label>Body</label><textarea id="message_body"></textarea></div>
-              <div><label>Follow-up Nummer</label><input id="message_follow_up_number" type="number" value="0" /></div>
-              <div class="full actions">
-                <button class="btn primary" type="submit">Nachricht speichern</button>
-                <button class="btn" type="button" id="sendQueuedOutreachBtn">Queued Nachrichten senden</button>
-              </div>
-            </form>
-          </div>
-        </div>
-
-        <div class="card glass-card" style="margin-top:16px;">
-          <div class="section-toolbar">
-            <div>
-              <h3 style="margin:0;">Inbox / Antworten</h3>
-              <div class="small muted">Eingehende Antworten aus deinem E-Mail-Postfach</div>
-            </div>
-            <div class="actions">
-              <button class="btn" type="button" id="syncInboxBtn">Inbox synchronisieren</button>
-            </div>
-          </div>
-
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Von</th>
-                  <th>Betreff</th>
-                  <th>Partner / Lead</th>
-                  <th>Datum</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody id="inboxBody"></tbody>
-            </table>
-          </div>
-        </div>
       </section>
 
       <section class="section" id="section-tasks">
@@ -1145,6 +1139,37 @@
           <div class="card glass-card">
             <h3>Nächste Einträge</h3>
             <div id="calendarUpcomingList" class="calendar-side-list"></div>
+            <div class="calendar-detail">
+              <div>
+                <h3 id="calendarSelectedDateLabel" style="margin:0;">Tag auswählen</h3>
+                <div class="small muted">Klick auf einen Kalendertag, um Details und Planung zu sehen.</div>
+              </div>
+              <div id="calendarSelectedEntries" class="calendar-side-list"></div>
+              <form id="quickTaskForm" class="grid-form">
+                <div class="full"><label>Quick Task</label><input id="quick_task_title" placeholder="z.B. Follow-up vorbereiten" /></div>
+                <div><label>Priorität</label>
+                  <select id="quick_task_priority">
+                    <option value="medium">medium</option>
+                    <option value="high">high</option>
+                    <option value="low">low</option>
+                  </select>
+                </div>
+                <div><label>Status</label>
+                  <select id="quick_task_status">
+                    <option value="open">open</option>
+                    <option value="in_progress">in_progress</option>
+                    <option value="done">done</option>
+                  </select>
+                </div>
+                <div class="full actions"><button class="btn" type="submit">Task am gewählten Tag anlegen</button></div>
+              </form>
+              <form id="quickPostForm" class="grid-form">
+                <div class="full"><label>Geplanter Post / Placement</label><input id="quick_post_title" placeholder="z.B. Placement Reel mit Partner X" /></div>
+                <div><label>Plattform</label><input id="quick_post_platform" placeholder="Instagram/TikTok/YouTube" /></div>
+                <div><label>Typ</label><input id="quick_post_type" placeholder="Reel, Story, LinkedIn Post..." /></div>
+                <div class="full actions"><button class="btn primary" type="submit">Post-Idee einplanen</button></div>
+              </form>
+            </div>
           </div>
         </div>
       </section>
@@ -1285,6 +1310,8 @@
         financeEntries: [],
         dashboard: [],
         calendarDate: new Date(),
+        selectedCalendarDate: '',
+        plannedPosts: [],
         inboxMessages: [],
         drawer: { entity: null, id: null, mode: 'read' },
         leadFilters: {
@@ -1370,9 +1397,8 @@
               links: 'Links im Überblick mit sicherer Detailansicht.',
               social: 'Instagram und TikTok übersichtlich tracken.',
               leads: 'Leads per JSON importieren und direkt für Outreach nutzen.',
-              outreach: 'Outreach Queue und eingehende Antworten.',
               tasks: 'Offene Schritte, Follow-ups und Erinnerungen.',
-              calendar: 'Tasks und Placements im Monatsüberblick.',
+              calendar: 'Interaktive Monatsplanung für Tasks, Placements und geplante Posts.',
               finance: 'Finanzen für EÜR, ausländische Einnahmen und Belege.',
               settings: 'Supabase, Webhooks und Passwort.'
             };
@@ -1410,12 +1436,22 @@
           this.state.leadFilters.status = e.target.value || '';
           this.renderLeads();
         });
+        document.getElementById('clearLeadFiltersBtn')?.addEventListener('click', () => {
+          this.state.leadFilters = { search: '', category: '', outreach: '', status: '' };
+          setv('leadSearch', '');
+          setv('leadCategoryFilter', '');
+          setv('leadOutreachFilter', '');
+          setv('leadStatusFilter', '');
+          this.renderLeads();
+        });
 
         document.getElementById('reloadLeadsBtn')?.addEventListener('click', () => this.loadLeads());
         document.getElementById('importLeadJsonBtn')?.addEventListener('click', () => this.importLeadJson());
         document.getElementById('toggleLeadJsonBtn')?.addEventListener('click', () => this.toggleLeadJsonPanel());
         document.getElementById('sendQueuedOutreachBtn')?.addEventListener('click', () => this.sendQueuedOutreach());
         document.getElementById('syncInboxBtn')?.addEventListener('click', () => this.syncInbox());
+        document.getElementById('quickTaskForm')?.addEventListener('submit', e => { e.preventDefault(); this.createQuickTask(); });
+        document.getElementById('quickPostForm')?.addEventListener('submit', e => { e.preventDefault(); this.createQuickPost(); });
       },
 
       bindCalendar() {
@@ -1444,6 +1480,11 @@
         setv('n8nOutreachWebhook', localStorage.getItem('crm_n8n_outreach_webhook') || '');
         setv('n8nInboxWebhook', localStorage.getItem('crm_n8n_inbox_webhook') || '');
         setv('app_password', localStorage.getItem('crm_app_password') || 'Mesh');
+        try {
+          this.state.plannedPosts = JSON.parse(localStorage.getItem('crm_planned_posts') || '[]');
+        } catch {
+          this.state.plannedPosts = [];
+        }
 
         if (v('supabase_url') && v('supabase_anon_key')) {
           this.setupSupabase();
@@ -1834,7 +1875,9 @@
       },
 
       renderMessages() {
-        document.getElementById('messagesBody').innerHTML = this.state.messages.map(m => `
+        const body = document.getElementById('messagesBody');
+        if (!body) return;
+        body.innerHTML = this.state.messages.map(m => `
           <tr>
             <td><b>${escapeHtml(m.subject || '')}</b><div class="small muted">${escapeHtml(m.channel || '')}</div></td>
             <td><span class="pill">${escapeHtml(m.status || '')}</span></td>
@@ -1869,6 +1912,7 @@
             <td><span class="pill">${escapeHtml(t.status || '')}</span></td>
             <td>${escapeHtml(t.priority || '')}</td>
             <td class="actions">
+              <button class="btn" onclick="App.jumpToCalendarDate('${escapeJs(t.due_date || '')}')">Im Kalender</button>
               <button class="btn" onclick="App.editTask('${t.id}')">Bearbeiten</button>
               <button class="btn danger" onclick="App.safeDelete('tasks','${t.id}','${escapeJs(t.title || '')}')">Löschen</button>
             </td>
@@ -1939,6 +1983,18 @@
           taskMap[d].push(t);
         });
 
+        const plannedPostMap = {};
+        (this.state.plannedPosts || []).forEach(p => {
+          const d = String(p.date || '').slice(0, 10);
+          if (!d) return;
+          if (!plannedPostMap[d]) plannedPostMap[d] = [];
+          plannedPostMap[d].push(p);
+        });
+
+        if (!this.state.selectedCalendarDate) {
+          this.state.selectedCalendarDate = todayStr;
+        }
+
         const cells = [];
         for (let i = 0; i < startWeekday; i++) {
           cells.push(`<div class="calendar-day muted-day"></div>`);
@@ -1955,22 +2011,32 @@
           const isToday = dateStr === todayStr;
           const dayPlacements = placementMap[dateStr] || [];
           const dayTasks = taskMap[dateStr] || [];
+          const dayPosts = plannedPostMap[dateStr] || [];
+          const totalEntries = dayTasks.length + dayPlacements.length + dayPosts.length;
+          const isSelected = dateStr === this.state.selectedCalendarDate;
 
           cells.push(`
-            <div class="calendar-day ${isToday ? 'today' : ''}">
+            <div class="calendar-day ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''}" data-date="${dateStr}">
               <div class="calendar-day-head">
                 <span>${day}</span>
-                <span class="small muted">${dayTasks.length + dayPlacements.length > 0 ? (dayTasks.length + dayPlacements.length) + ' Einträge' : ''}</span>
+                <span class="small muted">${totalEntries > 0 ? totalEntries + ' Einträge' : ''}</span>
               </div>
               <div class="calendar-markers">
                 ${dayTasks.slice(0,2).map(t => `<div class="calendar-marker task">Task: ${escapeHtml(t.title || 'Ohne Titel')}</div>`).join('')}
                 ${dayPlacements.slice(0,2).map(p => `<div class="calendar-marker placement">Placement: ${escapeHtml(this.placementLabel(p))}</div>`).join('')}
+                ${dayPosts.slice(0,1).map(p => `<div class="calendar-marker post">Post: ${escapeHtml(p.title || 'Geplant')}</div>`).join('')}
               </div>
             </div>
           `);
         }
 
         grid.innerHTML = cells.join('');
+        grid.querySelectorAll('.calendar-day[data-date]').forEach(cell => {
+          cell.addEventListener('click', () => {
+            this.state.selectedCalendarDate = cell.dataset.date;
+            this.renderCalendar();
+          });
+        });
 
         const upcoming = [
           ...(this.state.tasks || [])
@@ -1978,7 +2044,10 @@
             .map(t => ({ type: 'Task', date: String(t.due_date).slice(0,10), title: t.title || 'Ohne Titel', subtitle: t.priority || '' })),
           ...(this.state.placements || [])
             .filter(p => p.published_at && String(p.published_at).slice(0,10) >= todayStr)
-            .map(p => ({ type: 'Placement', date: String(p.published_at).slice(0,10), title: this.placementLabel(p), subtitle: p.companies?.name || this.companyNameById(p.company_id) || '' }))
+            .map(p => ({ type: 'Placement', date: String(p.published_at).slice(0,10), title: this.placementLabel(p), subtitle: p.companies?.name || this.companyNameById(p.company_id) || '' })),
+          ...(this.state.plannedPosts || [])
+            .filter(p => p.date && String(p.date).slice(0,10) >= todayStr)
+            .map(p => ({ type: 'Post', date: String(p.date).slice(0,10), title: p.title || 'Geplant', subtitle: [p.platform, p.contentType].filter(Boolean).join(' · ') }))
         ]
           .sort((a, b) => a.date.localeCompare(b.date))
           .slice(0, 10);
@@ -1992,6 +2061,30 @@
               </div>
             `).join('')
           : '<div class="small muted">Keine anstehenden Einträge.</div>';
+
+        this.renderSelectedCalendarDate(taskMap, placementMap, plannedPostMap);
+      },
+
+      renderSelectedCalendarDate(taskMap = {}, placementMap = {}, plannedPostMap = {}) {
+        const selected = this.state.selectedCalendarDate;
+        const label = document.getElementById('calendarSelectedDateLabel');
+        const list = document.getElementById('calendarSelectedEntries');
+        if (!label || !list || !selected) return;
+
+        label.textContent = new Intl.DateTimeFormat('de-DE', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' }).format(new Date(selected));
+        const tasks = taskMap[selected] || [];
+        const placements = placementMap[selected] || [];
+        const posts = plannedPostMap[selected] || [];
+
+        const items = [
+          ...tasks.map(t => ({ type: 'Task', title: t.title || 'Ohne Titel', subtitle: t.priority || '' })),
+          ...placements.map(p => ({ type: 'Placement', title: this.placementLabel(p), subtitle: p.post_type || '' })),
+          ...posts.map(p => ({ type: 'Post-Idee', title: p.title || 'Geplant', subtitle: [p.platform, p.contentType].filter(Boolean).join(' · ') }))
+        ];
+
+        list.innerHTML = items.length
+          ? items.map(item => `<div class="calendar-side-item"><b>${item.type}: ${escapeHtml(item.title)}</b><div class="small muted">${escapeHtml(item.subtitle || '')}</div></div>`).join('')
+          : '<div class="small muted">Noch keine Einträge an diesem Tag.</div>';
       },
 
       renderEmptySelects() {
@@ -2922,6 +3015,10 @@
       editLead(id) {
         const l = this.state.leads.find(x => x.id === id);
         if (!l) return;
+        if (this.state.selectedLeadId === l.id) {
+          this.closeLeadDetails();
+          return;
+        }
         this.state.selectedLeadId = l.id;
         this.updateLeadDetailVisibility();
         setv('lead_id', l.id);
@@ -2941,6 +3038,11 @@
         setv('lead_matched_company', this.companyNameById(l.assigned_company_id));
       },
 
+      closeLeadDetails() {
+        this.state.selectedLeadId = '';
+        this.updateLeadDetailVisibility();
+      },
+
       editTask(id) {
         const t = this.state.tasks.find(x => x.id === id);
         if (!t) return;
@@ -2951,6 +3053,20 @@
         setv('task_priority', t.priority);
         setv('task_related_type', t.related_type);
         setv('task_notes', t.notes);
+      },
+
+      jumpToCalendarDate(dateStr) {
+        if (!dateStr) return this.toast('Task hat kein Fälligkeitsdatum.', true);
+        const [year, month] = String(dateStr).slice(0, 10).split('-').map(Number);
+        this.state.calendarDate = new Date(year, month - 1, 1);
+        this.state.selectedCalendarDate = String(dateStr).slice(0, 10);
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelector('.nav-btn[data-section="calendar"]')?.classList.add('active');
+        document.getElementById('section-calendar')?.classList.add('active');
+        document.getElementById('pageTitle').textContent = 'Kalender';
+        document.getElementById('pageSubtitle').textContent = 'Interaktive Monatsplanung für Tasks, Placements und geplante Posts.';
+        this.renderCalendar();
       },
 
       editFinanceEntry(id) {
@@ -2976,13 +3092,56 @@
 
       resetLeadForm() {
         document.getElementById('leadForm').reset();
-        this.state.selectedLeadId = '';
-        this.updateLeadDetailVisibility();
+        this.closeLeadDetails();
         setv('lead_id','');
         setv('lead_lead_score','50');
         setv('lead_qualification_status','new');
         setv('lead_outreach_status','not_started');
         setv('lead_matched_company','');
+      },
+
+      async createQuickTask() {
+        if (!this.state.selectedCalendarDate) return this.toast('Bitte zuerst einen Kalendertag auswählen.', true);
+        if (!this.state.supabase) return this.toast('Bitte zuerst Supabase verbinden.', true);
+        const title = v('quick_task_title');
+        if (!title) return this.toast('Bitte einen Task-Titel eingeben.', true);
+
+        const payload = {
+          title,
+          due_date: this.state.selectedCalendarDate,
+          status: v('quick_task_status') || 'open',
+          priority: v('quick_task_priority') || 'medium',
+          related_type: 'calendar',
+          notes: `Schnell über Kalender erstellt (${this.state.selectedCalendarDate})`
+        };
+
+        const { error } = await this.state.supabase.from('tasks').insert(payload);
+        if (error) return this.toast(error.message, true);
+        document.getElementById('quickTaskForm')?.reset();
+        setv('quick_task_priority', 'medium');
+        setv('quick_task_status', 'open');
+        this.toast('Task im Kalender angelegt.');
+        this.loadTasks();
+      },
+
+      createQuickPost() {
+        if (!this.state.selectedCalendarDate) return this.toast('Bitte zuerst einen Kalendertag auswählen.', true);
+        const title = v('quick_post_title');
+        if (!title) return this.toast('Bitte einen Titel für den geplanten Post eingeben.', true);
+
+        const entry = {
+          id: crypto.randomUUID(),
+          date: this.state.selectedCalendarDate,
+          title,
+          platform: v('quick_post_platform'),
+          contentType: v('quick_post_type')
+        };
+
+        this.state.plannedPosts.unshift(entry);
+        localStorage.setItem('crm_planned_posts', JSON.stringify(this.state.plannedPosts));
+        document.getElementById('quickPostForm')?.reset();
+        this.toast('Post-Idee eingeplant.');
+        this.renderCalendar();
       },
 
       resetFinanceForm() {
