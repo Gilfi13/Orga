@@ -645,6 +645,31 @@
       flex-wrap: wrap;
     }
 
+    .leads-layout {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .leads-layout.has-selection {
+      grid-template-columns: minmax(0, 1fr) minmax(360px, .95fr);
+    }
+
+    .lead-detail-card {
+      display: none;
+    }
+
+    .lead-detail-card.visible {
+      display: block;
+    }
+
+    .lead-json-panel {
+      display: none;
+      margin-bottom: 16px;
+    }
+
+    .lead-json-panel.open {
+      display: block;
+    }
+
     @media (max-width: 1180px) {
       .app { grid-template-columns: 1fr; }
       aside { position: relative; height: auto; }
@@ -865,12 +890,29 @@
       </section>
 
       <section class="section" id="section-leads">
-        <div class="row row-2">
+        <div class="row row-2 leads-layout" id="leadsLayout">
           <div class="card glass-card">
             <div class="section-toolbar">
               <div class="actions">
                 <button class="btn" type="button" id="reloadLeadsBtn">Leads neu laden</button>
-                <button class="btn primary" type="button" id="importLeadJsonBtn">JSON importieren</button>
+                <button class="btn primary" type="button" id="toggleLeadJsonBtn">JSON importieren</button>
+                <select id="leadCategoryFilter">
+                  <option value="">Alle Kategorien</option>
+                </select>
+                <select id="leadOutreachFilter">
+                  <option value="">Alle Outreach</option>
+                  <option value="not_started">not_started</option>
+                  <option value="drafted">drafted</option>
+                  <option value="queued">queued</option>
+                  <option value="sent">sent</option>
+                  <option value="replied">replied</option>
+                </select>
+                <select id="leadStatusFilter">
+                  <option value="">Alle Status</option>
+                  <option value="new">new</option>
+                  <option value="qualified">qualified</option>
+                  <option value="unqualified">unqualified</option>
+                </select>
               </div>
               <div style="min-width:280px; flex:1;">
                 <input id="leadSearch" placeholder="Lead suchen..." />
@@ -881,12 +923,15 @@
               JSON-Import für Leads.
             </div>
 
-            <div class="grid-form" style="margin-bottom:16px;">
+            <div class="grid-form lead-json-panel" id="leadJsonPanel">
               <div class="full">
                 <label>Lead JSON</label>
                 <textarea id="leadJsonImport" placeholder='[{"name": "Firma A",
     "email": "hello@firma-a.de",
     "category": "3D Printing"},]'></textarea>
+              </div>
+              <div class="full actions">
+                <button class="btn primary" type="button" id="importLeadJsonBtn">JSON jetzt importieren</button>
               </div>
             </div>
 
@@ -906,7 +951,7 @@
             </div>
           </div>
 
-          <div class="card glass-card">
+          <div class="card glass-card lead-detail-card" id="leadDetailCard">
   <h3>Lead prüfen</h3>
   <form id="leadForm" class="grid-form">
     <input type="hidden" id="lead_id" />
@@ -1241,7 +1286,15 @@
         dashboard: [],
         calendarDate: new Date(),
         inboxMessages: [],
-        drawer: { entity: null, id: null, mode: 'read' }
+        drawer: { entity: null, id: null, mode: 'read' },
+        leadFilters: {
+          search: '',
+          category: '',
+          outreach: '',
+          status: ''
+        },
+        selectedLeadId: '',
+        leadJsonOpen: false
       },
 
       async init() {
@@ -1255,6 +1308,8 @@
         this.loadStoredConfig();
         this.setTodayDefaults();
         this.renderEmptySelects();
+        this.updateLeadDetailVisibility();
+        this.toggleLeadJsonPanel(false);
         this.renderCalendar();
         this.renderInbox();
       },
@@ -1339,10 +1394,26 @@
         document.getElementById('financeForm')?.addEventListener('submit', e => { e.preventDefault(); this.saveFinanceEntry(); });
 
         document.getElementById('companySearch')?.addEventListener('input', e => this.renderCompanies(e.target.value));
-        document.getElementById('leadSearch')?.addEventListener('input', e => this.renderLeads(e.target.value));
+        document.getElementById('leadSearch')?.addEventListener('input', e => {
+          this.state.leadFilters.search = e.target.value || '';
+          this.renderLeads();
+        });
+        document.getElementById('leadCategoryFilter')?.addEventListener('change', e => {
+          this.state.leadFilters.category = e.target.value || '';
+          this.renderLeads();
+        });
+        document.getElementById('leadOutreachFilter')?.addEventListener('change', e => {
+          this.state.leadFilters.outreach = e.target.value || '';
+          this.renderLeads();
+        });
+        document.getElementById('leadStatusFilter')?.addEventListener('change', e => {
+          this.state.leadFilters.status = e.target.value || '';
+          this.renderLeads();
+        });
 
         document.getElementById('reloadLeadsBtn')?.addEventListener('click', () => this.loadLeads());
         document.getElementById('importLeadJsonBtn')?.addEventListener('click', () => this.importLeadJson());
+        document.getElementById('toggleLeadJsonBtn')?.addEventListener('click', () => this.toggleLeadJsonPanel());
         document.getElementById('sendQueuedOutreachBtn')?.addEventListener('click', () => this.sendQueuedOutreach());
         document.getElementById('syncInboxBtn')?.addEventListener('click', () => this.syncInbox());
       },
@@ -1525,6 +1596,11 @@
         const { data, error } = await this.state.supabase.from('lead_candidates').select('*').order('created_at', { ascending: false });
         if (error) throw error;
         this.state.leads = data || [];
+        if (this.state.selectedLeadId && !this.state.leads.find(l => l.id === this.state.selectedLeadId)) {
+          this.state.selectedLeadId = '';
+          this.updateLeadDetailVisibility();
+        }
+        this.populateLeadCategoryFilter();
         this.renderLeads();
       },
 
@@ -1703,9 +1779,19 @@
         `).join('') || '<tr><td colspan="6" class="muted">Noch keine Snapshots.</td></tr>';
       },
 
-      renderLeads(search='') {
-        const q = String(search || '').toLowerCase();
-        const rows = this.state.leads.filter(l => !q || [l.company_name,l.website,l.email,l.category,l.summary].join(' ').toLowerCase().includes(q));
+      renderLeads() {
+        const q = String(this.state.leadFilters.search || '').toLowerCase();
+        const categoryFilter = this.state.leadFilters.category;
+        const outreachFilter = this.state.leadFilters.outreach;
+        const statusFilter = this.state.leadFilters.status;
+
+        const rows = this.state.leads.filter(l => {
+          const matchesSearch = !q || [l.company_name,l.website,l.email,l.category,l.summary].join(' ').toLowerCase().includes(q);
+          const matchesCategory = !categoryFilter || String(l.category || '') === categoryFilter;
+          const matchesOutreach = !outreachFilter || String(l.outreach_status || '') === outreachFilter;
+          const matchesStatus = !statusFilter || String(l.qualification_status || '') === statusFilter;
+          return matchesSearch && matchesCategory && matchesOutreach && matchesStatus;
+        });
         document.getElementById('leadsBody').innerHTML = rows.map(l => `
           <tr>
             <td><b>${escapeHtml(l.company_name || '')}</b></td>
@@ -1719,6 +1805,32 @@
             </td>
           </tr>
         `).join('') || '<tr><td colspan="5" class="muted">Keine Leads vorhanden.</td></tr>';
+      },
+
+      populateLeadCategoryFilter() {
+        const select = document.getElementById('leadCategoryFilter');
+        if (!select) return;
+
+        const categories = [...new Set(this.state.leads.map(l => String(l.category || '').trim()).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'de'));
+        const current = this.state.leadFilters.category || '';
+        select.innerHTML = '<option value="">Alle Kategorien</option>' + categories.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+        setv('leadCategoryFilter', current);
+      },
+
+      toggleLeadJsonPanel(forceOpen = null) {
+        if (typeof forceOpen === 'boolean') {
+          this.state.leadJsonOpen = forceOpen;
+        } else {
+          this.state.leadJsonOpen = !this.state.leadJsonOpen;
+        }
+
+        document.getElementById('leadJsonPanel')?.classList.toggle('open', this.state.leadJsonOpen);
+      },
+
+      updateLeadDetailVisibility() {
+        const hasSelection = Boolean(this.state.selectedLeadId);
+        document.getElementById('leadsLayout')?.classList.toggle('has-selection', hasSelection);
+        document.getElementById('leadDetailCard')?.classList.toggle('visible', hasSelection);
       },
 
       renderMessages() {
@@ -2495,6 +2607,7 @@
           if (error) throw error;
           this.toast(`${normalized.length} Leads importiert.`);
           setv('leadJsonImport', '');
+          this.toggleLeadJsonPanel(false);
           await this.loadAll();
         } catch (err) {
           this.toast(err.message, true);
@@ -2809,6 +2922,8 @@
       editLead(id) {
         const l = this.state.leads.find(x => x.id === id);
         if (!l) return;
+        this.state.selectedLeadId = l.id;
+        this.updateLeadDetailVisibility();
         setv('lead_id', l.id);
         setv('lead_company_name', l.company_name);
         setv('lead_website', l.website);
@@ -2861,6 +2976,8 @@
 
       resetLeadForm() {
         document.getElementById('leadForm').reset();
+        this.state.selectedLeadId = '';
+        this.updateLeadDetailVisibility();
         setv('lead_id','');
         setv('lead_lead_score','50');
         setv('lead_qualification_status','new');
